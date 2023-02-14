@@ -6,6 +6,12 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    screens: {
+      sm: '480px',
+      md: '768px',
+      lg: '976px',
+      xl: '1440px',
+    },
     colors: {
       transparent: "transparent",
       current: "currentColor",
@@ -84,6 +90,10 @@ module.exports = {
         400: "#2368A2",
         500: "#1A4971",
         600: "#203D54",
+      },
+      fontFamily: {
+        sans: ['Graphik', 'sans-serif'],
+        serif: ['Merriweather', 'serif'],
       },
     },
     extend: {},
