@@ -24,5 +24,5 @@ export default function Home() {
         <input type="text" placeholder="Input" />
       </main>
     </>
-  )
+  );
 }
