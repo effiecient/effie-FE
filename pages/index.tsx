@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Input from "@/components/input";
 
 export default function Home() {
   return (
@@ -19,7 +20,7 @@ export default function Home() {
         <p>Paragraph</p>
         <a href="#">Link</a>
         <button>Button</button>
-        <input type="text" placeholder="Input" />
+        <Input type="text" id="hello" name="hello" placeholder="Input" />
       </main>
     </>
   );
