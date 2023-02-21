@@ -23,6 +23,7 @@ export default function Browser() {
                 </div>
                 <h5 className="text-neutral-400">Folders</h5>
                 <section className="flex gap-4 w-full flex-wrap">
+                    <LinkCard content="new folder" />
                     <LinkCard title="Folder 1" url="https://google.com" />
                     <LinkCard title="Folder 1" url="https://google.com" />
                     <LinkCard title="Folder 1" url="https://google.com" />
@@ -30,7 +31,7 @@ export default function Browser() {
                 </section>
                 <h5 className="text-neutral-400">Links</h5>
                 <section className="grid grid-cols-4">
-
+                    <LinkCard content="new link" />
                 </section>
             </div>
         </main>
