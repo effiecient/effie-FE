@@ -24,10 +24,10 @@ export default function Browser() {
                 <h5 className="text-neutral-400">Folders</h5>
                 <section className="flex gap-4 w-full flex-wrap">
                     <LinkCard content="new folder" />
-                    <LinkCard title="Folder 1" url="https://google.com" />
-                    <LinkCard title="Folder 1" url="https://google.com" />
-                    <LinkCard title="Folder 1" url="https://google.com" />
-                    <LinkCard title="Folder 1" url="https://google.com" />
+                    <LinkCard title="Folder 1" url="https://google.comaaaaaaaaaaaaaaaaaaaaaS" effieUrl="https://effie.boo" />
+                    <LinkCard title="Folder 1" url="https://google.com" effieUrl="https://effie.boo" />
+                    <LinkCard title="Folder 1" url="https://google.com" effieUrl="https://effie.boo" />
+                    <LinkCard title="Folder 1" url="https://google.com" effieUrl="https://effie.boo" />
                 </section>
                 <h5 className="text-neutral-400">Links</h5>
                 <section className="grid grid-cols-4">
