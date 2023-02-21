@@ -1,5 +1,5 @@
-import Button from "./button";
-import SideModal from "./side-modal";
+import Button from "../button";
+import SideModal from "../side-modal";
 
 type RegisterProps = {
     isOpen: boolean;

@@ -1,5 +1,5 @@
-import Button from "./button";
-import SideModal from "./side-modal";
+import Button from "../button";
+import SideModal from "../side-modal";
 
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
 import { initializeApp } from "firebase/app";
