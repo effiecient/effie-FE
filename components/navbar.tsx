@@ -6,9 +6,14 @@ import Image from "next/image";
 import loginIcon from "../public/icons/login.svg";
 import registerIcon from "../public/icons/register.svg";
 import directoriesIcon from "../public/icons/directories.svg";
+import newLinkIcon from "../public/icons/new_link.svg";
 import userImg from "../public/images/user.png";
 
-export default function Navbar() {
+type NavbarProps = {
+  isOnLanding: boolean;
+};
+
+export default function Navbar({ isOnLanding = false }: NavbarProps) {
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -23,13 +28,39 @@ export default function Navbar() {
         <div className="space-x-1.5">
           {isLoggedIn ? (
             <div className="flex flex-row items-center gap-1.5">
-              <Button type="default" pill={true}>
-                <div className="flex flex-row gap-1.5 items-center">
-                  <Image src={directoriesIcon} alt="register icon" />
-                  My Directories
-                </div>
-              </Button>
-              <Image src={userImg} alt="user image" width={40} height={40} />
+              {isOnLanding ? (
+                <>
+                  <Button type="default" pill={true}>
+                    <div className="flex flex-row gap-1.5 items-center">
+                      {}
+                      <Image src={directoriesIcon} alt="register icon" />
+                      My Directories
+                    </div>
+                  </Button>
+                  <Image
+                    src={userImg}
+                    alt="user image"
+                    width={40}
+                    height={40}
+                  />
+                </>
+              ) : (
+                <>
+                  <Button type="default" pill={true}>
+                    <div className="flex flex-row gap-1.5 items-center">
+                      {}
+                      <Image src={newLinkIcon} alt="new link icon" />
+                      New Link
+                    </div>
+                  </Button>
+                  <Image
+                    src={userImg}
+                    alt="user image"
+                    width={40}
+                    height={40}
+                  />
+                </>
+              )}
             </div>
           ) : (
             <>
