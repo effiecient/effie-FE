@@ -7,8 +7,8 @@ import Navbar from "@/components/navbar";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <div className={poppins.variable}>
-      <Navbar />
+    <div className={`${poppins.variable} selection:bg-secondary-500 accent-tertiary-500`}>
+      <Navbar isOnLanding />
       <Component {...pageProps} />
     </div>
   );
