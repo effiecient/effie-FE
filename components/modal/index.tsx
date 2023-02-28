@@ -11,7 +11,7 @@ import styles from "./modal.module.css";
 export default function Modal({ children, withCloseButton = true, isOpen = false, onClose = () => {}, onOutsideClick = () => {}, className }: ModalProps) {
   // display
   return (
-      <div className={`${styles.container} ${className} ${isOpen ? "z-50" : "-z-10 opacity-0"} duration-200`} onClick={onOutsideClick}>
+      <div className={`${styles.container} ${isOpen ? "z-50" : "-z-10 opacity-0"} duration-200`} onClick={onOutsideClick}>
         <div className={`${styles.modal} relative`} onClick={stopEventPropagationTry}>
           {withCloseButton && (
             // top right corner
@@ -26,7 +26,9 @@ export default function Modal({ children, withCloseButton = true, isOpen = false
               </svg>
             </button>
           )}
-          {children}
+          <div className={className}>
+            {children}
+          </div>
         </div>
       </div>
     );
