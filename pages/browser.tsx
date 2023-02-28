@@ -1,6 +1,7 @@
 import Head from "next/head";
 import LinkCard from "@/components/link-card";
 import Image from "next/image";
+import SideBar from "@/components/side-bar";
 
 export default function Browser() {
     return (
@@ -13,9 +14,7 @@ export default function Browser() {
         </Head>
         <main className="bg-white flex w-full min-h-screen relative">
             {/* SIDEBAR */}
-            <nav className="bg-white sticky top-0 left-0 w-12">
-
-            </nav>
+            <SideBar/>
             {/* BROWSER */}
             <div className="flex flex-col gap-6 flex-grow bg-neutral-50 min-h-full w-full rounded-tl-2xl p-12">
                 <div className="fixed right-0 bottom-0 w-[50vw] h-[70vh] opacity-50">
