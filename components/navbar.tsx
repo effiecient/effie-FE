@@ -65,12 +65,12 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
           ) : (
             <>
               <Button
-                onClick={() => setIsLoginOpen(!isLoginOpen)}
+                onClick={() => {
+                  setIsRegisterOpen(false);
+                  setIsLoginOpen(!isLoginOpen)
+                }}
                 type="custom"
-                disabled={isLoginOpen}
-                className={
-                  "disabled:opacity-50 text-primary-500 bg-white border-primary-500 border-2"
-                }
+                className="text-primary-500 bg-white border-primary-500 border-2"
                 pill={true}
               >
                 <div className="flex flex-row gap-1.5 items-center">
@@ -79,10 +79,12 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
                 </div>
               </Button>
               <Button
-                onClick={() => setIsRegisterOpen(!isRegisterOpen)}
+                onClick={() => {
+                  setIsLoginOpen(false);
+                  setIsRegisterOpen(!isRegisterOpen)}
+                }
                 type="default"
-                disabled={isRegisterOpen}
-                className={"disabled:opacity-50"}
+                className="disabled:opacity-50"
                 pill={true}
               >
                 <div className="flex flex-row gap-1.5 items-center">
@@ -96,10 +98,7 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
       </div>
 
       {/* Register */}
-      <Register
-        isOpen={isRegisterOpen}
-        onClose={() => setIsRegisterOpen(false)}
-      />
+      <Register isOpen={isRegisterOpen} onClose={() => setIsRegisterOpen(false)} />
 
       {/* Login */}
       <Login isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
