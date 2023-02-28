@@ -1,0 +1,1 @@
+export const BASE_URL = 'https://effie-be-git-main-effiecient.vercel.app/api';
