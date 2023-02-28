@@ -4,23 +4,20 @@ type ModalProps = {
   isOpen?: boolean;
   onClose?: () => void;
   onOutsideClick?: () => void;
+  className?: string;
 };
-import { useState } from "react";
 import styles from "./modal.module.css";
 
-export default function Modal({ children, withCloseButton = true, isOpen = false, onClose = () => {}, onOutsideClick = () => {} }: ModalProps) {
+export default function Modal({ children, withCloseButton = true, isOpen = false, onClose = () => {}, onOutsideClick = () => {}, className }: ModalProps) {
   // display
-  if (!isOpen) {
-    return <></>;
-  } else
-    return (
-      <div className={styles.container} onClick={onOutsideClick}>
+  return (
+      <div className={`${styles.container} ${className} ${isOpen ? "z-50" : "-z-10 opacity-0"} duration-200`} onClick={onOutsideClick}>
         <div className={`${styles.modal} relative`} onClick={stopEventPropagationTry}>
           {withCloseButton && (
             // top right corner
             <button
               className={`
-            top-0 right-0 absolute 
+            top-6 right-6 absolute hover:rotate-90 duration-300
             `}
               onClick={onClose}
             >
