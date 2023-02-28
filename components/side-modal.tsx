@@ -14,7 +14,11 @@ export default function SideModal({
     className,
 }: SideModalProps) {
     return (
-        <div className={`${isOpen ? "z-[100]" : "-z-10"} fixed w-full`}>
+        <div
+            className={`${
+                isOpen ? "z-[100]" : "-z-10"
+            } fixed w-full duration-500`}
+        >
             {/* Clickable Background */}
             <div
                 className={`${

@@ -8,9 +8,12 @@ import Image from "next/image";
 import LP1 from "../public/images/lp1.png";
 import LP2 from "../public/images/lp2.png";
 import LP3 from "../public/images/lp3.png";
+import { useRegister } from "@/hooks/useRegister";
 
 export default function Home() {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const isRegisterOpen = useRegister((state) => state.isRegisterOpen);
+    const setIsRegisterOpen = useRegister((state) => state.setIsRegisterOpen);
     return (
         <>
             <Head>
@@ -34,7 +37,10 @@ export default function Home() {
                             Keep your links with folders and custom URLs with
                             Effie.
                         </p>
-                        <Button className="px-3 py-4 mt-8">
+                        <Button
+                            className="px-3 py-4 mt-8"
+                            onClick={() => setIsRegisterOpen(true)}
+                        >
                             Get Started Now
                         </Button>
                     </div>
@@ -56,28 +62,14 @@ export default function Home() {
                         <h1>Simplify how</h1>
                         <h1>you share</h1>
                         <p className="text-neutral-600 text-2xl">
-                            Share shorter links with your colleagues and friends.
+                            Share shorter links with your colleagues and
+                            friends.
                         </p>
                     </div>
                     <div className="flex justify-center">
                         <Image src={LP3} alt="Simplify how you share" />
                     </div>
                 </div>
-                {/* modal */}
-
-                <Modal
-                    isOpen={isModalOpen}
-                    onClose={() => {
-                        setIsModalOpen(false);
-                        console.log("close");
-                    }}
-                    onOutsideClick={() => {
-                        setIsModalOpen(false);
-                        console.log("outside");
-                    }}
-                >
-                    testing
-                </Modal>
             </main>
             <Footer />
         </>
