@@ -136,7 +136,7 @@ export default function Login({ isOpen, onClose } : LoginProps) {
     isLoading && <div>loading...</div>;
     
     return (
-        <SideModal isOpen={isOpen} onClose={onClose} className="flex flex-col gap-6">
+        <SideModal isOpen={isOpen} onClose={onClose} className="flex flex-col gap-6 z-10">
             <h1 className="text-neutral-900">Welcome back!</h1>
             
             {isLoggedIn ? (
