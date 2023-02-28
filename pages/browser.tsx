@@ -1,8 +1,26 @@
 import Head from "next/head";
 import LinkCard from "@/components/link-card";
 import Image from "next/image";
+import { BASE_URL } from "@/config/be-config";
+import { useState, useEffect } from "react";
 
 export default function Browser() {
+    // childrens: Object { bing: {…}, bong: {…} }
+// ​​​
+// bing: Object { title: "Bing", isPinned: false, link: "https:bing.com", … }
+// ​​​
+// bong: Object { isPinned: false, type: "link", link: "https://bong.com", … }
+    const [data, setData] = useState<{childrens: {title: string, isPinned: boolean, link: string, type: string, effieUrl: string}[]}>({childrens: []});
+    // fetch data from API
+    useEffect(() => {
+        fetch(`${BASE_URL}/directory/christojeffrey/`)
+            .then(res => res.json())
+            .then(data => {
+                console.log(data.data);
+                setData(data.data);
+            })
+    }, []);
+
     return (
         <>
         <Head>
@@ -24,14 +42,20 @@ export default function Browser() {
                 <h5 className="text-neutral-400">Folders</h5>
                 <section className="flex gap-4 w-full flex-wrap">
                     <LinkCard content="new folder" />
-                    <LinkCard title="Folder 1" url="https://google.comaaaaaaaaaaaaaaaaaaaaaS" effieUrl="https://effie.boo" />
-                    <LinkCard title="Folder 1" url="https://google.com" effieUrl="https://effie.boo" />
-                    <LinkCard title="Folder 1" url="https://google.com" effieUrl="https://effie.boo" />
-                    <LinkCard title="Folder 1" url="https://google.com" effieUrl="https://effie.boo" />
+                    { data && Object.keys(data.childrens).map((child: any, index) => {
+                        if (data.childrens[child].type === "folder") {
+                            return <LinkCard key={index} title={data.childrens[child].title} url={data.childrens[child].link} effieUrl={data.childrens[child].effieUrl} />
+                        }
+                    })}
                 </section>
                 <h5 className="text-neutral-400">Links</h5>
                 <section className="grid grid-cols-4">
                     <LinkCard content="new link" />
+                    { data && Object.keys(data.childrens).map((child: any, index) => {
+                        if (data.childrens[child].type === "link") {
+                            return <LinkCard key={index} title={data.childrens[child].title} url={data.childrens[child].link} effieUrl={data.childrens[child].effieUrl} />
+                        }
+                    })}
                 </section>
             </div>
         </main>
