@@ -1,18 +1,20 @@
 type InputProps = {
+  ref?: any;
   type: string;
   id: string;
   name: string;
   placeholder?: string;
   required?: boolean;
   autoFocus?: boolean;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
 };
 
-export default function Input({type, id, name, placeholder, autoFocus, required, className}: InputProps) {
+export default function Input({ref, type, id, name, placeholder, autoFocus, onChange, required, className}: InputProps) {
   return (
     <input 
-      type={type} id={id} name={name} placeholder={placeholder} autoFocus={autoFocus} required={required}
-      className={`${className} bg-neutral-100 px-3 py-2 rounded-md text-neutral-900 placeholder:text-neutral-400`}
+      ref={ref} type={type} id={id} name={name} placeholder={placeholder} autoFocus={autoFocus} onChange={onChange} required={required}
+      className={`${className} input`}
     />
   );
 }

@@ -3,7 +3,7 @@ import CopyIcon from "@/public/icons/copy";
 import Image from "next/image";
 
 type LinkCardProps = {
-    content?: "new folder" | "new link";
+    content: "new folder" | "new link" | "link" | "folder" | "display link" | "display folder";
     title?: string;
     url?: string;
     effieUrl?: string;
@@ -25,7 +25,13 @@ export default function LinkCard({ content, title, url, effieUrl, onClick, class
     return (
         <div 
             onClick={onClick}
-            className={`${className} ${content === "new folder" || content === "new link" ? "items-center justify-center gap-2 hover:bg-primary-50 hover:border-primary-50 duration-200" : "flex-col gap-1 hover:border-neutral-200"} group relative flex pt-3 pb-2 px-5 bg-white rounded-xl border border-white duration-100 cursor-pointer focus:border-primary-500 w-[32vw] md:w-[44vw] lg:w-[20vw] max-w-[16rem] min-w-[8rem] min-h-[4rem]`}
+            className={`
+                ${className} 
+                ${content.slice(0,3) === "new" ? "items-center justify-center gap-2 hover:bg-primary-50 hover:border-primary-50 cursor-pointer duration-200" : 
+                content.slice(0,7) === "display" ? "border-neutral-200" : 
+                "flex-col gap-1 hover:border-neutral-200 cursor-pointer"} 
+                group relative flex pt-3 pb-2 px-5 bg-white rounded-xl border border-white focus:border-primary-500 w-[32vw] md:w-[44vw] lg:w-[20vw] max-w-[16rem] min-w-[8rem] min-h-[4rem]`
+            }
         >
             {content === "new folder" ? (
                 <>  
@@ -48,13 +54,15 @@ export default function LinkCard({ content, title, url, effieUrl, onClick, class
                     >
                         {url}
                     </a>
-                    <button className="group-hover:opacity-100 opacity-0 translate-x-1 group-hover:translate-x-0 absolute right-0 bottom-0 flex items-end h-full p-2 z-10 bg-white duration-100 rounded-r-xl" onClick={copyEffieUrl}>
-                        <CopyIcon className="duration-100 h-7 w-7" />
-                        {/* Copy success notif */}
-                        <div ref={copySuccessRef} className="opacity-0 -translate-y-1 absolute top-14 bg-neutral-900/50 text-white rounded-md py-1 px-2 shadow-lg text-left duration-300 max-w-[12rem]">
-                            <p className="text-xs">Link copied!<br /><span className="text-[0.6rem] underline text-neutral-100">{effieUrl}</span></p>
-                        </div>
-                    </button>
+                    {(content === "link" || content === "folder") && (
+                        <button className="group-hover:opacity-100 opacity-0 translate-x-1 group-hover:translate-x-0 absolute right-0 bottom-0 flex items-end h-full p-2 z-10 bg-white duration-100 rounded-r-xl" onClick={copyEffieUrl}>
+                            <CopyIcon className="duration-100 h-7 w-7" />
+                            {/* Copy success notif */}
+                            <div ref={copySuccessRef} className="opacity-0 -translate-y-1 absolute top-14 bg-neutral-900/50 text-white rounded-md py-1 px-2 shadow-lg text-left duration-300 max-w-[12rem]">
+                                <p className="text-xs">Link copied!<br /><span className="text-[0.6rem] underline text-neutral-100">{effieUrl}</span></p>
+                            </div>
+                        </button>
+                    )}
                 </>
             )}
         </div>

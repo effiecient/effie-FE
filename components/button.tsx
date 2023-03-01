@@ -31,7 +31,7 @@ export default function Button({
           ? ""
           : "bg-primary-500 text-white hover:bg-primary-700"
       }
-        ${pill ? "rounded-full" : "rounded-md"} px-3 py-2 duration-300
+        ${pill ? "rounded-full" : "rounded-md"} px-3 py-2 duration-200
         ${className}
     `}
       disabled={disabled}

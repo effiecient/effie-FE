@@ -6,11 +6,6 @@ import { BASE_URL } from "@/config/be-config";
 import { useState, useEffect } from "react";
 
 export default function Browser() {
-    // childrens: Object { bing: {…}, bong: {…} }
-// ​​​
-// bing: Object { title: "Bing", isPinned: false, link: "https:bing.com", … }
-// ​​​
-// bong: Object { isPinned: false, type: "link", link: "https://bong.com", … }
     const [data, setData] = useState<{childrens: {title: string, isPinned: boolean, link: string, type: string, effieUrl: string}[]}>({childrens: []});
     // fetch data from API
     useEffect(() => {
@@ -35,7 +30,7 @@ export default function Browser() {
             <SideBar/>
             {/* BROWSER */}
             <div className="flex flex-col gap-6 flex-grow bg-neutral-50 min-h-full w-full rounded-tl-2xl p-12">
-                <div className="fixed right-0 bottom-0 w-[50vw] h-[70vh] opacity-50">
+                <div className="fixed right-0 bottom-0 w-[50vw] h-[70vh]">
                     <Image src={"/images/background.png"} alt="" fill style={{objectFit: "contain", objectPosition: "right"}} />
                 </div>
                 <h5 className="text-neutral-400">Folders</h5>
@@ -43,7 +38,7 @@ export default function Browser() {
                     <LinkCard content="new folder" />
                     { data && Object.keys(data.childrens).map((child: any, index) => {
                         if (data.childrens[child].type === "folder") {
-                            return <LinkCard key={index} title={data.childrens[child].title} url={data.childrens[child].link} effieUrl={data.childrens[child].effieUrl} />
+                            return <LinkCard key={index} content="folder" title={data.childrens[child].title} url={data.childrens[child].link} effieUrl={data.childrens[child].effieUrl} />
                         }
                     })}
                 </section>
@@ -52,7 +47,7 @@ export default function Browser() {
                     <LinkCard content="new link" />
                     { data && Object.keys(data.childrens).map((child: any, index) => {
                         if (data.childrens[child].type === "link") {
-                            return <LinkCard key={index} title={data.childrens[child].title} url={data.childrens[child].link} effieUrl={data.childrens[child].effieUrl} />
+                            return <LinkCard key={index} content="link" title={data.childrens[child].title} url={data.childrens[child].link} effieUrl={data.childrens[child].effieUrl} />
                         }
                     })}
                 </section>
