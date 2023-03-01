@@ -8,10 +8,12 @@ import {
     onAuthStateChanged,
     signOut,
 } from "firebase/auth";
+
 import { initializeApp } from "firebase/app";
 import { useEffect, useState } from "react";
 
 import { FIREBASE_CONFIG } from "@/config";
+
 type LoginProps = {
     isOpen: boolean;
     onClose: () => void;
@@ -27,7 +29,7 @@ export default function Login({ isOpen, onClose }: LoginProps) {
     const [isLoading, setIsLoading] = useState(true);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     let [userData, setUserData] = useState<any>(null);
-
+    // handle when user log out suddenly
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -70,7 +72,6 @@ export default function Login({ isOpen, onClose }: LoginProps) {
             setIsLoading(false);
         });
     }, [auth]);
-
     function handleSignOut() {
         signOut(auth)
             .then(() => {
