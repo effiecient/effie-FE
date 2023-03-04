@@ -13,7 +13,7 @@ import { initializeApp } from "firebase/app";
 import { useEffect, useState } from "react";
 
 import { BASE_URL, FIREBASE_CONFIG } from "@/config";
-import { useFetchEffieBE } from "@/hooks";
+import { useFetchEffieBE, useUserStore } from "@/hooks";
 import { useRouter } from "next/router";
 
 type LoginProps = {
@@ -32,8 +32,17 @@ export default function Login({ isOpen, onClose }: LoginProps) {
     const [isLoggedInWithGoogle, setIsLoggedInWithGoogle] = useState(false);
     let [userData, setUserData] = useState<any>(null);
 
+    const isLoggedIn = useUserStore((state: any) => state.isLoggedIn);
+
     const router = useRouter();
+
+    useEffect(() => {
+        if (isLoggedInWithGoogle === true) {
+            router.push("/logging-in");
+        }
+    }, [isLoggedInWithGoogle]);
     // handle when user log out suddenly
+
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -41,7 +50,6 @@ export default function Login({ isOpen, onClose }: LoginProps) {
                 const uid = user.uid;
                 console.log("user is signed in");
                 console.log(uid);
-                setIsLoggedInWithGoogle(true);
                 // set user to local storage
                 if (typeof localStorage !== "undefined") {
                     localStorage.setItem("uid", uid);
@@ -56,7 +64,7 @@ export default function Login({ isOpen, onClose }: LoginProps) {
                             localStorage.setItem("accessToken", accessToken);
                         }
                         // route to /logging-in
-                        router.push("/logging-in");
+                        // router.push("/logging-in");
                     })
                     .catch(function (error) {
                         // Handle error
@@ -80,21 +88,7 @@ export default function Login({ isOpen, onClose }: LoginProps) {
     }, [auth]);
 
     function handleSignOut() {
-        signOut(auth)
-            .then(() => {
-                // Sign-out successful.
-                console.log("sign out success");
-                // remove user from local storage
-                if (typeof localStorage !== "undefined") {
-                    localStorage.removeItem("uid");
-                    localStorage.removeItem("idToken");
-                }
-            })
-            .catch((error) => {
-                // An error happened.
-                console.log("sign out failed");
-            });
-        setIsLoggedInWithGoogle(false);
+        router.push("/logout");
     }
 
     function handleLoginButton() {
@@ -108,7 +102,6 @@ export default function Login({ isOpen, onClose }: LoginProps) {
                 const user = result.user;
                 console.log(user);
                 // ...
-                setIsLoggedInWithGoogle(true);
                 // set user to local storage
                 if (typeof localStorage !== "undefined") {
                     localStorage.setItem("uid", user.uid);
@@ -116,12 +109,13 @@ export default function Login({ isOpen, onClose }: LoginProps) {
                 // get id token
                 auth.currentUser
                     ?.getIdToken(true)
-                    .then(function (idToken) {
+                    .then(function (accessToken) {
                         // Send token to your backend via HTTPS
                         // ...
                         if (typeof localStorage !== "undefined") {
-                            localStorage.setItem("idToken", idToken);
+                            localStorage.setItem("accessToken", accessToken);
                         }
+                        setIsLoggedInWithGoogle(true);
                     })
                     .catch(function (error) {
                         // Handle error
@@ -152,7 +146,7 @@ export default function Login({ isOpen, onClose }: LoginProps) {
         >
             <h1 className="text-neutral-900">Welcome back!</h1>
 
-            {isLoggedInWithGoogle ? (
+            {isLoggedIn ? (
                 <div>
                     <p>Logged in as {userData.displayName}</p>
                     <Button onClick={handleSignOut}>Sign Out</Button>

@@ -1,7 +1,7 @@
 import { Button, Input } from "@/components";
 import { useState } from "react";
 import { BASE_URL } from "@/config";
-import { LOCAL_STORAGE_TOKEN } from "@/constants";
+import { EFFIE_AUTH_TOKEN } from "@/constants";
 
 export default function CreateUsername() {
     function handleUsernameInput(e: any) {
@@ -33,7 +33,7 @@ export default function CreateUsername() {
             })
                 .then((res) => res.json())
                 .then((data) => {
-                    localStorage.setItem(LOCAL_STORAGE_TOKEN, data.token);
+                    localStorage.setItem(EFFIE_AUTH_TOKEN, data.token);
                 });
         }
 

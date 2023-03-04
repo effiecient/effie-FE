@@ -1,1 +1,1 @@
-export const LOCAL_STORAGE_TOKEN = "authToken"
+export const EFFIE_AUTH_TOKEN = "authToken";

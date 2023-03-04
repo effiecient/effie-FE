@@ -8,7 +8,7 @@ import registerIcon from "../public/icons/register.svg";
 import directoriesIcon from "../public/icons/directories.svg";
 import newLinkIcon from "../public/icons/new_link.svg";
 import userImg from "../public/images/user.png";
-import { useRegister } from "@/hooks";
+import { useRegister, useUserStore } from "@/hooks";
 import Link from "next/link";
 
 type NavbarProps = {
@@ -19,7 +19,10 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
     const isRegisterOpen = useRegister((state) => state.isRegisterOpen);
     const setIsRegisterOpen = useRegister((state) => state.setIsRegisterOpen);
     const [isLoginOpen, setIsLoginOpen] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    const isLoggedIn = useUserStore((state: any) => state.isLoggedIn);
+    console.log("isLoggedIn");
+    console.log(isLoggedIn);
 
     return (
         <>

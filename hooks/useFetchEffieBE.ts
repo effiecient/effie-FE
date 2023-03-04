@@ -1,4 +1,4 @@
-import { LOCAL_STORAGE_TOKEN } from "@/constants";
+import { EFFIE_AUTH_TOKEN } from "@/constants";
 import { useEffect, useState, useRef } from "react";
 
 // in milliseconds
@@ -18,7 +18,7 @@ const useFetchEffieBE = (
     const bodyRef = useRef(body);
     if (auth === undefined) {
         if (typeof localStorage !== "undefined") {
-            auth = localStorage.getItem(LOCAL_STORAGE_TOKEN);
+            auth = localStorage.getItem(EFFIE_AUTH_TOKEN);
         }
     }
 

@@ -1,5 +1,5 @@
 import { BASE_URL, FE_BASE_URL } from "@/config";
-import { LOCAL_STORAGE_TOKEN } from "@/constants";
+import { EFFIE_AUTH_TOKEN } from "@/constants";
 import { useFetchEffieBE } from "@/hooks";
 import { useRouter } from "next/router";
 
@@ -40,10 +40,10 @@ export default function LoggingIn() {
 
     // set token to local storage
     if (typeof localStorage !== "undefined") {
-        localStorage.setItem(LOCAL_STORAGE_TOKEN, respond.token);
+        localStorage.setItem(EFFIE_AUTH_TOKEN, respond.token);
     }
     // set to cookie
-    document.cookie = `${LOCAL_STORAGE_TOKEN}=${respond.token}; path=/`;
+    document.cookie = `${EFFIE_AUTH_TOKEN}=${respond.token}; path=/`;
 
     // redirect to dashboard
     router.push(`http://${respond.username}.${FE_BASE_URL}`);
