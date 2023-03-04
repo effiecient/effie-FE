@@ -3,7 +3,6 @@ import LinkCard from "@/components/link-card";
 import Image from "next/image";
 import SideBar from "@/components/side-bar";
 import { BASE_URL } from "@/config/be-config";
-import { useState, useEffect } from "react";
 import { useFetchEffieBE } from "@/hooks";
 
 export default function Browser() {

@@ -12,7 +12,9 @@ import {
 import { initializeApp } from "firebase/app";
 import { useEffect, useState } from "react";
 
-import { FIREBASE_CONFIG } from "@/config";
+import { BASE_URL, FIREBASE_CONFIG } from "@/config";
+import { useFetchEffieBE } from "@/hooks";
+import { useRouter } from "next/router";
 
 type LoginProps = {
     isOpen: boolean;
@@ -27,8 +29,10 @@ export default function Login({ isOpen, onClose }: LoginProps) {
     const provider = new GoogleAuthProvider();
 
     const [isLoading, setIsLoading] = useState(true);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoggedInWithGoogle, setIsLoggedInWithGoogle] = useState(false);
     let [userData, setUserData] = useState<any>(null);
+
+    const router = useRouter();
     // handle when user log out suddenly
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
@@ -37,7 +41,7 @@ export default function Login({ isOpen, onClose }: LoginProps) {
                 const uid = user.uid;
                 console.log("user is signed in");
                 console.log(uid);
-                setIsLoggedIn(true);
+                setIsLoggedInWithGoogle(true);
                 // set user to local storage
                 if (typeof localStorage !== "undefined") {
                     localStorage.setItem("uid", uid);
@@ -45,12 +49,14 @@ export default function Login({ isOpen, onClose }: LoginProps) {
                 // get id token
                 auth.currentUser
                     ?.getIdToken(true)
-                    .then(function (idToken) {
+                    .then(function (accessToken) {
                         // Send token to your backend via HTTPS
                         // ...
                         if (typeof localStorage !== "undefined") {
-                            localStorage.setItem("idToken", idToken);
+                            localStorage.setItem("accessToken", accessToken);
                         }
+                        // route to /logging-in
+                        router.push("/logging-in");
                     })
                     .catch(function (error) {
                         // Handle error
@@ -61,7 +67,7 @@ export default function Login({ isOpen, onClose }: LoginProps) {
                 // User is signed out
                 // ...
                 console.log("user is signed out");
-                setIsLoggedIn(false);
+                setIsLoggedInWithGoogle(false);
                 // remove user from local storage
                 //    prevent localStorage not defined error
                 if (typeof localStorage !== "undefined") {
@@ -72,6 +78,7 @@ export default function Login({ isOpen, onClose }: LoginProps) {
             setIsLoading(false);
         });
     }, [auth]);
+
     function handleSignOut() {
         signOut(auth)
             .then(() => {
@@ -87,7 +94,7 @@ export default function Login({ isOpen, onClose }: LoginProps) {
                 // An error happened.
                 console.log("sign out failed");
             });
-        setIsLoggedIn(false);
+        setIsLoggedInWithGoogle(false);
     }
 
     function handleLoginButton() {
@@ -101,7 +108,7 @@ export default function Login({ isOpen, onClose }: LoginProps) {
                 const user = result.user;
                 console.log(user);
                 // ...
-                setIsLoggedIn(true);
+                setIsLoggedInWithGoogle(true);
                 // set user to local storage
                 if (typeof localStorage !== "undefined") {
                     localStorage.setItem("uid", user.uid);
@@ -145,7 +152,7 @@ export default function Login({ isOpen, onClose }: LoginProps) {
         >
             <h1 className="text-neutral-900">Welcome back!</h1>
 
-            {isLoggedIn ? (
+            {isLoggedInWithGoogle ? (
                 <div>
                     <p>Logged in as {userData.displayName}</p>
                     <Button onClick={handleSignOut}>Sign Out</Button>

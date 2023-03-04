@@ -1,15 +1,26 @@
+import { LOCAL_STORAGE_TOKEN } from "@/constants";
 import { useEffect, useState, useRef } from "react";
 
 // in milliseconds
-const FETCT_TIMEOUT = 5000;
+const FETCT_TIMEOUT = 10000;
 
-const useFetchEffieBE = (url: string, method: string, body: any = {}) => {
+const useFetchEffieBE = (
+    url: string,
+    method: string = "GET",
+    auth: any = undefined,
+    body: any = {}
+) => {
     // return { isLoading, isError, respond }
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
     const [respond, setRespond] = useState<any>();
 
     const bodyRef = useRef(body);
+    if (auth === undefined) {
+        if (typeof localStorage !== "undefined") {
+            auth = localStorage.getItem(LOCAL_STORAGE_TOKEN);
+        }
+    }
 
     useEffect(() => {
         if (url) {
@@ -26,6 +37,7 @@ const useFetchEffieBE = (url: string, method: string, body: any = {}) => {
                 options = {
                     method: method,
                     headers: {
+                        Authorization: auth,
                         "Content-Type": "application/json",
                         Accept: "application/json",
                     },
@@ -33,19 +45,23 @@ const useFetchEffieBE = (url: string, method: string, body: any = {}) => {
                     signal,
                 };
             }
+            if (auth) {
+                options.headers.Authorization = auth;
+            }
 
             fetch(url, options)
                 .then((res) => res.json())
                 .then((res) => {
                     setRespond(res);
+                    setIsError(false);
                     setIsLoading(false);
                     // clear timeout
                     clearTimeout(timeout);
                 })
                 .catch((err) => {
+                    setRespond(err);
                     setIsError(true);
                     setIsLoading(false);
-                    setRespond(err);
                     // clear timeout
                 });
         }
