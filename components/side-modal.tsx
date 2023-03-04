@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-
 type SideModalProps = {
     isOpen: boolean;
     onClose: () => void;
@@ -15,23 +13,24 @@ export default function SideModal({
 }: SideModalProps) {
     return (
         <div
-            className={`${
-                isOpen ? "z-[100]" : "-z-10"
-            } fixed w-full duration-500`}
+            className={`fixed left-0 w-full h-full top-[75px] ${
+                isOpen ? "z-10" : ""
+            }`}
         >
             {/* Clickable Background */}
             <div
-                className={`${
-                    isOpen ? "" : "opacity-0"
-                } fixed w-full h-full bg-black bg-opacity-50 backdrop-blur duration-500`}
+                className={`absolute ${
+                    isOpen
+                        ? "w-full h-full bg-black bg-opacity-50 backdrop-blur duration-500"
+                        : "opacity-0"
+                } `}
                 onClick={onClose}
             />
-
-            {/* Modal */}
+            {/* Side Modal */}
             <div
-                className={`${className} ${
-                    isOpen ? "" : "motion-safe:translate-x-[100%] opacity-50"
-                } fixed bg-white h-full w-1/3 right-0 motion-safe:duration-500 ease-in-out p-12`}
+                className={`${className} fixed right-0 ease-in-out duration-300 w-1/4 h-full bg-white p-6 ${
+                    isOpen ? "translate-x-0" : "translate-x-[100%]"
+                }`}
             >
                 {children}
             </div>

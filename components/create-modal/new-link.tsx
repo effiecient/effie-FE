@@ -4,6 +4,7 @@ import Input from "../input";
 import LinkCard from "../link-card";
 import Modal from "../modal";
 import { BASE_URL } from "@/config/be-config";
+// import { unfurl } from 'unfurl.js'
 
 type NewLinkProps = {
     isOpen: boolean;
@@ -28,8 +29,8 @@ export default function NewLink({ isOpen, onClose } : NewLinkProps) {
         }
     }
 
-    const titleRef = useRef<HTMLInputElement>(null);
-    const [title, setTitle] = useState<string | undefined>("Title");
+    const linkNameRef = useRef<HTMLInputElement>(null);
+    const [title, setTitle] = useState<string>("");
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -37,6 +38,8 @@ export default function NewLink({ isOpen, onClose } : NewLinkProps) {
         const linkName = formData.get("link-name");
         let path = linkName;
         const linkUrl = formData.get("link-url");
+        const title = formData.get("title");
+        const thumbnailURL = formData.get("thumbnail-url");
         // Add "/" to the start of the link name if it doesn't exist
         if (linkName && linkName.slice(0,1) !== "/") {
             path = "/" + linkName;
@@ -44,7 +47,7 @@ export default function NewLink({ isOpen, onClose } : NewLinkProps) {
         const data = {
             "username": "christojeffrey",
             "link": linkUrl,
-            "title": "undefined",
+            "title": title,
             "isPinned": false,
             "path": path,
             "relativePath": linkName,
@@ -65,16 +68,53 @@ export default function NewLink({ isOpen, onClose } : NewLinkProps) {
         });
     }
 
+    const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.value !== "") {
+            setTitle(e.target.value);
+        } else {
+            setTitle(linkNameRef.current?.value || "")
+        }
+    }
+
+    const onURLblur = (e: React.FocusEvent<HTMLInputElement>) => {
+        // fetch with header
+
+        const url = 'https://www.zoom.us';
+
+        // unfurl(url);
+
+        // fetch(e.target.value, {
+        //     method: "GET",
+        //     headers: {
+        //         'Accept': 'text/html, application/xhtml+xml',
+        //         'User-Agent': 'facebookexternalhit'
+        //     }
+        // }).then(res => res.text()).then(html => {
+        //     console.log(html)
+        //     // const contentType = res.headers.get("content-type");
+        //     // if (contentType && contentType.indexOf("image") !== -1) {
+        //     //     const thumbnailURL = e.target.value;
+        //     //     const thumbnailURLInput = document.getElementById("thumbnail-url") as HTMLInputElement;
+        //     //     thumbnailURLInput.value = thumbnailURL;
+        //     // }
+        // });
+    }
+
+    const closeModal = () => {
+        onClose();
+        setIsMoreOptionsOpen(false);
+    }
+
     return (
-        <Modal isOpen={isOpen} onClose={() => {onClose(); setIsMoreOptionsOpen(false)}}>
+        <Modal isOpen={isOpen} onClose={closeModal} onOutsideClick={closeModal}>
             <h3 className="text-neutral-800 mb-8">New Link</h3>
             <form onSubmit={onSubmit}>
                 <div className="flex items-center mb-6">
                     <h4 className="text-neutral-600 mr-2">{USER_BASE_URL}</h4>
-                    <Input type="text" id="link-name" name="link-name" placeholder="link-name" className="text-lg text-primary-500 font-bold flex-grow" autoFocus required />
+                    <input ref={linkNameRef} type="text" id="link-name" name="link-name" placeholder="link-name" className="input text-lg text-primary-500 font-bold flex-grow" autoFocus required />
                 </div>
                 <div className="flex w-full gap-4 mb-6">
-                    <Input type="text" id="link-url" name="link-url" placeholder="Paste link here" required className="flex-grow" />
+                    <input type="text" id="link-url" name="link-url" placeholder="Paste link here" required className="input flex-grow" onBlur={onURLblur} />
                     <Button className="min-h-full">Save link</Button>
                 </div>
                 <div role="button" tabIndex={0} onKeyDown={onKeyDown} className="cursor-pointer flex items-center" onClick={() => setIsMoreOptionsOpen(!isMoreOptionsOpen)}>
@@ -83,12 +123,13 @@ export default function NewLink({ isOpen, onClose } : NewLinkProps) {
                 </div>
                 <div className={`${isMoreOptionsOpen ? "max-h-[10rem]" : "max-h-0"} flex gap-6 overflow-clip duration-300`}>
                     <div className="flex flex-col gap-4 flex-grow pt-4">
-                        <input ref={titleRef} type="text" id="title" name="title" placeholder="Title" onChange={() => setTitle(titleRef.current?.value)} className='input' />
-                        <Input type="url" id="thumbnail" name="thumbnail" placeholder="Thumbnail URL" />
+                        <input type="text" id="title" name="title" placeholder="Custom Title" onChange={onTitleChange} required className='input' />
+                        <input type="url" id="thumbnail-url" name="thumbnail-url" placeholder="Thumbnail URL" className="input" />
                     </div>
                     <LinkCard
                         content="display link"
                         title={title}
+                        url={linkNameRef.current?.value || ""}
                         effieUrl=""
                         className="h-fit"
                     />
