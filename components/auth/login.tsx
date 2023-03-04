@@ -28,64 +28,10 @@ export default function Login({ isOpen, onClose }: LoginProps) {
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
 
-    const [isLoading, setIsLoading] = useState(true);
-    const [isLoggedInWithGoogle, setIsLoggedInWithGoogle] = useState(false);
-
     const isLoggedIn = useUserStore((state: any) => state.isLoggedIn);
     const username = useUserStore((state: any) => state.username);
 
     const router = useRouter();
-
-    useEffect(() => {
-        if (isLoggedInWithGoogle === true) {
-            onClose();
-            router.push("/logging-in");
-        }
-    }, [isLoggedInWithGoogle]);
-
-    // handle when user log out suddenly
-    useEffect(() => {
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                // User is signed in, see docs for a list of available properties
-                const uid = user.uid;
-                console.log("user is signed in");
-                console.log(uid);
-                // set user to local storage
-                if (typeof localStorage !== "undefined") {
-                    localStorage.setItem("uid", uid);
-                }
-                // get id token
-                auth.currentUser
-                    ?.getIdToken(true)
-                    .then(function (accessToken) {
-                        // Send token to your backend via HTTPS
-                        // ...
-                        if (typeof localStorage !== "undefined") {
-                            localStorage.setItem("accessToken", accessToken);
-                        }
-                        // route to /logging-in
-                        // router.push("/logging-in");
-                    })
-                    .catch(function (error) {
-                        // Handle error
-                        console.log(error);
-                    });
-            } else {
-                // User is signed out
-                // ...
-                console.log("user is signed out");
-                setIsLoggedInWithGoogle(false);
-                // remove user from local storage
-                //    prevent localStorage not defined error
-                if (typeof localStorage !== "undefined") {
-                    localStorage.removeItem("uid");
-                    localStorage.removeItem("accessToken");
-                }
-            }
-            setIsLoading(false);
-        });
-    }, [auth]);
 
     function handleSignOut() {
         router.push("/logout");
@@ -94,14 +40,8 @@ export default function Login({ isOpen, onClose }: LoginProps) {
     function handleLoginButton() {
         signInWithPopup(auth, provider)
             .then((result) => {
-                // This gives you a Google Access Token. You can use it to access the Google API.
-                const credential =
-                    GoogleAuthProvider.credentialFromResult(result);
-                const token = credential?.accessToken;
                 // The signed-in user info.
                 const user = result.user;
-                console.log(user);
-                // ...
                 // set user to local storage
                 if (typeof localStorage !== "undefined") {
                     localStorage.setItem("uid", user.uid);
@@ -110,12 +50,12 @@ export default function Login({ isOpen, onClose }: LoginProps) {
                 auth.currentUser
                     ?.getIdToken(true)
                     .then(function (accessToken) {
-                        // Send token to your backend via HTTPS
-                        // ...
                         if (typeof localStorage !== "undefined") {
                             localStorage.setItem("accessToken", accessToken);
                         }
-                        setIsLoggedInWithGoogle(true);
+                        // Send token to your backend via HTTPS
+                        onClose();
+                        router.push("/logging-in");
                     })
                     .catch(function (error) {
                         // Handle error
@@ -123,19 +63,8 @@ export default function Login({ isOpen, onClose }: LoginProps) {
                     });
             })
             .catch((error) => {
-                // Handle Errors here.
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                // The email of the user's account used.
-                const email = error.email;
-                // The AuthCredential type that was used.
-                const credential =
-                    GoogleAuthProvider.credentialFromError(error);
-                // ...
+                console.error(error);
             });
-    }
-    if (isLoading) {
-        return <div>loading...</div>;
     }
 
     return (
