@@ -8,7 +8,7 @@ import registerIcon from "../public/icons/register.svg";
 import directoriesIcon from "../public/icons/directories.svg";
 import newLinkIcon from "../public/icons/new_link.svg";
 import userImg from "../public/images/user.png";
-import { useRegister } from "@/hooks/useRegister";
+import { useRegister } from "@/hooks";
 import Link from "next/link";
 
 type NavbarProps = {

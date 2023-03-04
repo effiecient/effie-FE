@@ -41,7 +41,7 @@ export default function SideModal({
             />
             {/* Side Modal */}
             <div
-                className={`${className} fixed right-0 ease-in-out duration-300 w-1/2 h-full bg-white p-6 ${
+                className={`${className} fixed right-0 ease-in-out duration-300 w-1/4 h-full bg-white p-6 ${
                     isOpen ? "translate-x-0" : "translate-x-[100%]"
                 }`}
             >

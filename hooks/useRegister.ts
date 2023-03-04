@@ -1,21 +1,24 @@
 import { create } from "zustand";
-import {devtools, persist} from "zustand/middleware"
+import { devtools, persist } from "zustand/middleware";
 
 interface RegisterState {
-    isRegisterOpen: boolean,
-    setIsRegisterOpen: (by: boolean) => void
+    isRegisterOpen: boolean;
+    setIsRegisterOpen: (by: boolean) => void;
 }
 
-export const useRegister = create<RegisterState>()(
+const useRegister = create<RegisterState>()(
     devtools(
         persist(
             (set) => ({
                 isRegisterOpen: false,
-                setIsRegisterOpen: (by) => set((state) => ({isRegisterOpen: by})),
+                setIsRegisterOpen: (by) =>
+                    set((state) => ({ isRegisterOpen: by })),
             }),
             {
-                name: 'register-storage',
+                name: "register-storage",
             }
         )
     )
-)
+);
+
+export default useRegister;

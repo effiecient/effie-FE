@@ -8,7 +8,7 @@ import Image from "next/image";
 import LP1 from "../public/images/lp1.png";
 import LP2 from "../public/images/lp2.png";
 import LP3 from "../public/images/lp3.png";
-import { useRegister } from "@/hooks/useRegister";
+import { useRegister } from "@/hooks";
 
 export default function Home() {
     const [isModalOpen, setIsModalOpen] = useState(false);
