@@ -1,8 +1,6 @@
 import Head from "next/head";
-import Input from "@/components/input";
 import Button from "@/components/button";
 import { useState } from "react";
-import Modal from "@/components/modal";
 import Footer from "@/components/footer";
 import Image from "next/image";
 import LP1 from "../public/images/lp1.png";
@@ -11,7 +9,6 @@ import LP3 from "../public/images/lp3.png";
 import { useRegister } from "@/hooks";
 
 export default function Landing() {
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const isRegisterOpen = useRegister((state) => state.isRegisterOpen);
     const setIsRegisterOpen = useRegister((state) => state.setIsRegisterOpen);
     return (
