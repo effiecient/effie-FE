@@ -46,7 +46,11 @@ const useFetchEffieBE = (
                 };
             }
             if (auth) {
-                options.headers.Authorization = auth;
+                // add Authorization key
+                if (!options.headers) {
+                    options.headers = {};
+                }
+                options.headers["Authorization"] = auth;
             }
 
             fetch(url, options)
