@@ -30,19 +30,20 @@ export default function Login({ isOpen, onClose }: LoginProps) {
 
     const [isLoading, setIsLoading] = useState(true);
     const [isLoggedInWithGoogle, setIsLoggedInWithGoogle] = useState(false);
-    let [userData, setUserData] = useState<any>(null);
 
     const isLoggedIn = useUserStore((state: any) => state.isLoggedIn);
+    const username = useUserStore((state: any) => state.username);
 
     const router = useRouter();
 
     useEffect(() => {
         if (isLoggedInWithGoogle === true) {
+            onClose();
             router.push("/logging-in");
         }
     }, [isLoggedInWithGoogle]);
-    // handle when user log out suddenly
 
+    // handle when user log out suddenly
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -70,7 +71,6 @@ export default function Login({ isOpen, onClose }: LoginProps) {
                         // Handle error
                         console.log(error);
                     });
-                setUserData(user);
             } else {
                 // User is signed out
                 // ...
@@ -148,7 +148,7 @@ export default function Login({ isOpen, onClose }: LoginProps) {
 
             {isLoggedIn ? (
                 <div>
-                    <p>Logged in as {userData.displayName}</p>
+                    <p>Logged in as {username}</p>
                     <Button onClick={handleSignOut}>Sign Out</Button>
                 </div>
             ) : (

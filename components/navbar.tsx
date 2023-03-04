@@ -21,6 +21,7 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
     const [isLoginOpen, setIsLoginOpen] = useState(false);
 
     const isLoggedIn = useUserStore((state: any) => state.isLoggedIn);
+    const username = useUserStore((state: any) => state.username);
     console.log("isLoggedIn");
     console.log(isLoggedIn);
 
@@ -34,6 +35,7 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
                 <div className="space-x-1.5">
                     {isLoggedIn ? (
                         <div className="flex flex-row items-center gap-1.5">
+                            {username}
                             {isOnLanding ? (
                                 <>
                                     <Button type="default" pill={true}>

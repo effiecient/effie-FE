@@ -5,6 +5,7 @@ import { getAuth, GoogleAuthProvider, signOut } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 
 import { FIREBASE_CONFIG } from "@/config";
+import { FE_DOMAIN } from "@/config/fe-config";
 export default function Logout() {
     // Initialize Firebase
     const app = initializeApp(FIREBASE_CONFIG);
@@ -31,7 +32,7 @@ export default function Logout() {
 
     // remove EFFIE_AUTH_TOKEN from cookie
     if (typeof window !== "undefined") {
-        document.cookie = `${EFFIE_AUTH_TOKEN}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+        document.cookie = `${EFFIE_AUTH_TOKEN}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${FE_DOMAIN};`;
     }
     // remove EFFIE_AUTH_TOKEN from local storage
     if (typeof localStorage !== "undefined") {

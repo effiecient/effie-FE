@@ -64,9 +64,11 @@ const useFetchEffieBE = (
                     setIsLoading(false);
                     // clear timeout
                 });
+        } else {
+            setIsError(true);
+            setIsLoading(false);
         }
-    }, [url, method, bodyRef]);
-
+    }, [url, method, auth, bodyRef]);
     return { isLoading, isError, respond };
 };
 
