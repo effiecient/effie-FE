@@ -38,7 +38,7 @@ export default function LoggingIn() {
             </div>
         );
     }
-    if (respond.status === "error") {
+    if (respond.status === "ERROR") {
         return (
             <div>
                 <h1>Error</h1>
@@ -46,6 +46,8 @@ export default function LoggingIn() {
         );
     }
 
+    console.log("respond");
+    console.log(respond);
     // set token to local storage
     if (typeof localStorage !== "undefined") {
         localStorage.setItem(EFFIE_AUTH_TOKEN, respond.token);
@@ -54,6 +56,6 @@ export default function LoggingIn() {
     document.cookie = `${EFFIE_AUTH_TOKEN}=${respond.token}; path=/; domain=${FE_DOMAIN};`;
 
     // redirect to dashboard
-    router.push(`http://${respond.username}.${FE_BASE_URL}`);
+    // router.push(`http://${respond.username}.${FE_BASE_URL}`);
     return <>redirecting...</>;
 }
