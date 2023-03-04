@@ -38,6 +38,13 @@ export default function LoggingIn() {
             </div>
         );
     }
+    if (respond.status === "error") {
+        return (
+            <div>
+                <h1>Error</h1>
+            </div>
+        );
+    }
 
     // set token to local storage
     if (typeof localStorage !== "undefined") {
