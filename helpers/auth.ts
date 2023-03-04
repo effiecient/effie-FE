@@ -1,4 +1,10 @@
-import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
+import {
+    getAuth,
+    GoogleAuthProvider,
+    signInWithPopup,
+    onAuthStateChanged,
+    signOut,
+} from "firebase/auth";
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
@@ -21,33 +27,34 @@ export const handleLogIn = () => {
     const provider = new GoogleAuthProvider();
 
     signInWithPopup(auth, provider)
-    .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential?.accessToken;
-        // The signed-in user info.
-        const user = result.user;
-        console.log(user);
-        // ...
-        // setIsLoggedIn(true);
-        // set user to local storage
-        if (localStorage) {
-            localStorage.setItem("uid", user.uid);
-        }
-        // get id token
-        auth.currentUser?.getIdToken(true)
-        .then((idToken) => {
+        .then((result) => {
+            // This gives you a Google Access Token. You can use it to access the Google API.
+            const credential = GoogleAuthProvider.credentialFromResult(result);
+            const token = credential?.accessToken;
+            // The signed-in user info.
+            const user = result.user;
+            console.log(user);
+            // ...
+            // setIsLoggedIn(true);
+            // set user to local storage
             if (localStorage) {
-                localStorage.setItem("idToken", idToken);
+                localStorage.setItem("uid", user.uid);
             }
+            // get id token
+            auth.currentUser
+                ?.getIdToken(true)
+                .then((accessToken) => {
+                    if (localStorage) {
+                        localStorage.setItem("accessToken", accessToken);
+                    }
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
         })
         .catch((error) => {
             console.error(error);
         });
-    })
-    .catch((error) => {
-        console.error(error);
-    });
 
     // const [isLoading, setIsLoading] = useState(true);
     // const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -68,11 +75,11 @@ export const handleLogIn = () => {
     //         // get id token
     //         auth.currentUser
     //         ?.getIdToken(true)
-    //         .then(function (idToken) {
+    //         .then(function (accessToken) {
     //             // Send token to your backend via HTTPS
     //             // ...
     //             if (typeof localStorage !== "undefined") {
-    //             localStorage.setItem("idToken", idToken);
+    //             localStorage.setItem("accessToken", accessToken);
     //             }
     //         })
     //         .catch(function (error) {
@@ -95,22 +102,22 @@ export const handleLogIn = () => {
     //     setIsLoading(false);
     //     });
     // }, [auth]);
-}
+};
 
 export function handleSignOut() {
     signOut(auth)
-    .then(() => {
-        // Sign-out successful.
-        console.log("Sign out success.");
-        // remove user from local storage
-        if (typeof localStorage !== "undefined") {
-        localStorage.removeItem("uid");
-        localStorage.removeItem("idToken");
-        }
-    })
-    .catch((error) => {
-        // An error happened.
-        console.error("Sign out failed. ", error);
-    });
+        .then(() => {
+            // Sign-out successful.
+            console.log("Sign out success.");
+            // remove user from local storage
+            if (typeof localStorage !== "undefined") {
+                localStorage.removeItem("uid");
+                localStorage.removeItem("accessToken");
+            }
+        })
+        .catch((error) => {
+            // An error happened.
+            console.error("Sign out failed. ", error);
+        });
     // setIsLoggedIn(false);
 }
