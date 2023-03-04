@@ -2,7 +2,7 @@ import { Button, Input } from "@/components";
 import { useState } from "react";
 import { BASE_URL } from "@/config";
 import { EFFIE_AUTH_TOKEN } from "@/constants";
-
+import { useRouter } from "next/router";
 export default function CreateUsername() {
     function handleUsernameInput(e: any) {
         console.log(e.target.value);
@@ -10,7 +10,7 @@ export default function CreateUsername() {
     }
 
     const [username, setUsername] = useState("");
-
+    const router = useRouter();
     function handleCreateUsernameOnClick() {
         // hit register.
         const accessToken = localStorage.getItem("accessToken");
@@ -33,7 +33,7 @@ export default function CreateUsername() {
             })
                 .then((res) => res.json())
                 .then((data) => {
-                    localStorage.setItem(EFFIE_AUTH_TOKEN, data.token);
+                    router.push("/logging-in");
                 });
         }
 
