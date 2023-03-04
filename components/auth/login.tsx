@@ -80,7 +80,7 @@ export default function Login({ isOpen, onClose }: LoginProps) {
                 //    prevent localStorage not defined error
                 if (typeof localStorage !== "undefined") {
                     localStorage.removeItem("uid");
-                    localStorage.removeItem("idToken");
+                    localStorage.removeItem("accessToken");
                 }
             }
             setIsLoading(false);
