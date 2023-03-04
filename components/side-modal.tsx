@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-
 type SideModalProps = {
     isOpen: boolean;
     onClose: () => void;
@@ -13,19 +11,10 @@ export default function SideModal({
     children,
     className,
 }: SideModalProps) {
-    // disable scroll on isOpen
-    useEffect(() => {
-        if (isOpen) {
-            document.body.classList.add("no-scroll");
-        } else {
-            document.body.classList.remove("no-scroll");
-        }
-    }, [isOpen]);
-
     return (
         <div
-            className={`fixed left-0 w-full h-full ${
-                isOpen ? "z-40" : "-z-10"
+            className={`fixed left-0 w-full h-full top-[75px] ${
+                isOpen ? "z-10" : ""
             }`}
         >
             {/* Clickable Background */}
@@ -37,10 +26,9 @@ export default function SideModal({
                 } `}
                 onClick={onClose}
             />
-
             {/* Side Modal */}
             <div
-                className={`${className} fixed right-0 ease-in-out duration-300 w-1/4 h-full bg-white ${
+                className={`${className} fixed right-0 ease-in-out duration-300 w-1/4 h-full bg-white p-6 ${
                     isOpen ? "translate-x-0" : "translate-x-[100%]"
                 }`}
             >

@@ -24,7 +24,7 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
     return (
         <>
             {/* Navbar */}
-            <div className="flex flex-row justify-between w-full bg-white h-[75px] items-center px-5">
+            <div className="fixed flex flex-row justify-between w-full bg-white h-[75px] items-center px-5">
                 <Link href={"/"}>
                     <h1>Effie</h1>
                 </Link>
