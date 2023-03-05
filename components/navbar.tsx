@@ -3,11 +3,11 @@ import Login from "./auth/login";
 import Register from "./auth/register";
 import Button from "./button";
 import Image from "next/image";
-import loginIcon from "../public/icons/login.svg";
-import registerIcon from "../public/icons/register.svg";
-import directoriesIcon from "../public/icons/directories.svg";
-import newLinkIcon from "../public/icons/new_link.svg";
-import userImg from "../public/images/user.png";
+import loginIcon from "@/public/icons/login.svg";
+import registerIcon from "@/public/icons/register.svg";
+import directoriesIcon from "@/public/icons/directories-white.svg";
+import newLinkIcon from "@/public/icons/new_link.svg";
+import userImg from "@/public/images/user.png";
 import { useRegister, useUserStore } from "@/hooks";
 import Link from "next/link";
 
@@ -19,11 +19,9 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
     const isRegisterOpen = useRegister((state) => state.isRegisterOpen);
     const setIsRegisterOpen = useRegister((state) => state.setIsRegisterOpen);
     const [isLoginOpen, setIsLoginOpen] = useState(false);
-
+    const [showLogout, setShowLogout] = useState(false);
     const isLoggedIn = useUserStore((state: any) => state.isLoggedIn);
     const username = useUserStore((state: any) => state.username);
-    console.log("isLoggedIn");
-    console.log(isLoggedIn);
 
     return (
         <>
@@ -41,22 +39,18 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
                             {username}
                             {isOnLanding ? (
                                 <>
-                                    <Button type="default" pill={true}>
-                                        <div className="flex flex-row gap-1.5 items-center">
-                                            {}
-                                            <Image
-                                                src={directoriesIcon}
-                                                alt="register icon"
-                                            />
-                                            My Directories
-                                        </div>
-                                    </Button>
-                                    <Image
-                                        src={userImg}
-                                        alt="user image"
-                                        width={40}
-                                        height={40}
-                                    />
+                                    <Link href={"/browser"}>
+                                        <Button type="default" pill={true}>
+                                            <div className="flex flex-row gap-1.5 items-center">
+                                                {}
+                                                <Image
+                                                    src={directoriesIcon}
+                                                    alt="register icon"
+                                                />
+                                                My Directories
+                                            </div>
+                                        </Button>
+                                    </Link>
                                 </>
                             ) : (
                                 <>
@@ -70,18 +64,34 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
                                             New Link
                                         </div>
                                     </Button>
-                                    <Image
-                                        src={userImg}
-                                        alt="user image"
-                                        width={40}
-                                        height={40}
-                                    />
                                 </>
                             )}
+                            <div className="relative">
+                                <Image
+                                    src={userImg}
+                                    alt="user image"
+                                    width={40}
+                                    height={40}
+                                    onClick={() => setShowLogout(!showLogout)}
+                                    className={`cursor-pointer`}
+                                />
+                                {showLogout && (
+                                    <div className="absolute right-0 mt-2">
+                                        <Link href={"/logout"}>
+                                            <Button
+                                                type="default"
+                                                pill={true}
+                                                className={`bg-danger-300 hover:bg-danger-400`}
+                                            >
+                                                Logout
+                                            </Button>
+                                        </Link>
+                                    </div>
+                                )}
+                            </div>
                         </div>
-
-                    // Navbar for non-logged-in users (landing page)
                     ) : (
+                        // Navbar for non-logged-in users (landing page)
                         <>
                             {/* Login Button */}
                             <Button
@@ -126,7 +136,10 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
             </div>
 
             {/* Register */}
-            <Register isOpen={isRegisterOpen} onClose={() => setIsRegisterOpen(false)} />
+            <Register
+                isOpen={isRegisterOpen}
+                onClose={() => setIsRegisterOpen(false)}
+            />
 
             {/* Login */}
             <Login isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
