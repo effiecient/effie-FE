@@ -106,7 +106,7 @@ export default function NewLink({ isOpen, onClose } : NewLinkProps) {
     }
 
     return (
-        <Modal isOpen={isOpen} onClose={closeModal} onOutsideClick={closeModal}>
+        <Modal isOpen={isOpen} onClose={closeModal}>
             <h3 className="text-neutral-800 mb-8">New Link</h3>
             <form onSubmit={onSubmit}>
                 <div className="flex items-center mb-6">
