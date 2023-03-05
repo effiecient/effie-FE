@@ -1,20 +1,18 @@
 import { useState, useEffect, useRef } from "react";
 import Button from "../button";
-import Input from "../input";
 import LinkCard from "../link-card";
 import Modal from "../modal";
 import { BASE_URL } from "@/config/be-config";
-import { useUserStore } from "@/hooks";
 // import { unfurl } from 'unfurl.js'
 
-type NewLinkProps = {
+type NewFolderProps = {
     isOpen: boolean;
     onClose: () => void;
 };
 
-export default function NewLink({ isOpen, onClose } : NewLinkProps) {
+export default function NewFolder({ isOpen, onClose } : NewFolderProps) {
     const USER_BASE_URL = "https://effie.boo/";
-    const username = useUserStore((state: any) => state.username);
+    
     const [isMoreOptionsOpen, setIsMoreOptionsOpen] = useState(false);
 
     useEffect(() => {
@@ -46,7 +44,7 @@ export default function NewLink({ isOpen, onClose } : NewLinkProps) {
             path = "/" + linkName;
         }
         const data = {
-            "username": username,
+            "username": "christojeffrey",
             "link": linkUrl,
             "title": title,
             "isPinned": false,
@@ -108,15 +106,12 @@ export default function NewLink({ isOpen, onClose } : NewLinkProps) {
 
     return (
         <Modal isOpen={isOpen} onClose={closeModal}>
-            <h3 className="text-neutral-800 mb-8">New Link</h3>
+            <h3 className="text-neutral-800 mb-8">New Folder</h3>
             <form onSubmit={onSubmit}>
                 <div className="flex items-center mb-6">
                     <h4 className="text-neutral-600 mr-2">{USER_BASE_URL}</h4>
                     <input ref={linkNameRef} type="text" id="link-name" name="link-name" placeholder="link-name" className="input text-lg text-primary-500 font-bold flex-grow" autoFocus required />
-                </div>
-                <div className="flex w-full gap-4 mb-6">
-                    <input type="text" id="link-url" name="link-url" placeholder="Paste link here" required className="input flex-grow" onBlur={onURLblur} />
-                    <Button className="min-h-full">Save link</Button>
+                    <Button className="ml-4 h-[2.7rem] px-4">Add</Button>
                 </div>
                 <div role="button" tabIndex={0} onKeyDown={onKeyDown} className="cursor-pointer flex items-center" onClick={() => setIsMoreOptionsOpen(!isMoreOptionsOpen)}>
                     <p className="text-neutral-500 font-bold mr-2">More options</p>
