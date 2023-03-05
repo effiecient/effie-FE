@@ -89,7 +89,7 @@ export default function Browser() {
                             )}
                     </section>
                     <h5 className="text-neutral-400">Links</h5>
-                    <section className="grid grid-cols-4">
+                    <section className="flex gap-4 w-full flex-wrap">
                         <LinkCard content="new link" />
                         {data &&
                             Object.keys(data.childrens).map(

@@ -28,7 +28,7 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
     return (
         <>
             {/* Navbar */}
-            <div className="sticky top-0 left-0 border-b border-neutral-200 z-50 flex flex-row justify-between w-full bg-white items-center px-6 xl:px-[10%] py-3">
+            <div className="sticky top-0 left-0 z-50 flex flex-row justify-between w-full bg-white items-center px-6 py-3">
                 {/* Logo */}
                 <Link href={"/"}>
                     <h1 className="text-2xl">Effie</h1>

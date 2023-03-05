@@ -48,7 +48,7 @@ export default function LinkCard({ content, title, url, effieUrl, onClick, class
                     {content === "link" || content === "display link" ? (
                         <Image src="/icons/link.svg" alt="link" width={28} height={28} className="mr-2" />
                     ) : (
-                        <div className="absolute left-0 top-0 h-full w-2" style={{ backgroundColor: "#FFF" }} />
+                        <div className="absolute left-0 top-0 h-full w-2 rounded-l-xl" style={{ backgroundColor: "#FFF" }} />
                     )}
                     <div>
                         <h6 className="text-neutral-800">{title}</h6>
