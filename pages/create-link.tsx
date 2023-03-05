@@ -6,10 +6,12 @@ import Modal from "@/components/modal";
 import { BASE_URL } from "@/config/be-config";
 import Image from "next/image";
 import Head from "next/head";
+import { useUserStore } from "@/hooks";
 // import { unfurl } from 'unfurl.js'
 
 export default function CreateLink() {
     const USER_BASE_URL = "https://effie.boo/";
+    const username = useUserStore((state: any) => state.username);
 
     const [isMoreOptionsOpen, setIsMoreOptionsOpen] = useState(false);
 
@@ -35,7 +37,7 @@ export default function CreateLink() {
             path = "/" + linkName;
         }
         const data = {
-            username: "christojeffrey",
+            username: username,
             link: linkUrl,
             title: title,
             isPinned: false,

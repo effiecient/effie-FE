@@ -4,6 +4,7 @@ import Input from "../input";
 import LinkCard from "../link-card";
 import Modal from "../modal";
 import { BASE_URL } from "@/config/be-config";
+import { useUserStore } from "@/hooks";
 // import { unfurl } from 'unfurl.js'
 
 type NewLinkProps = {
@@ -13,7 +14,7 @@ type NewLinkProps = {
 
 export default function NewLink({ isOpen, onClose } : NewLinkProps) {
     const USER_BASE_URL = "https://effie.boo/";
-    
+    const username = useUserStore((state: any) => state.username);
     const [isMoreOptionsOpen, setIsMoreOptionsOpen] = useState(false);
 
     useEffect(() => {
@@ -45,7 +46,7 @@ export default function NewLink({ isOpen, onClose } : NewLinkProps) {
             path = "/" + linkName;
         }
         const data = {
-            "username": "christojeffrey",
+            "username": username,
             "link": linkUrl,
             "title": title,
             "isPinned": false,
