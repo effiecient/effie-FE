@@ -7,6 +7,7 @@ import LP1 from "../public/images/lp1.png";
 import LP2 from "../public/images/lp2.png";
 import LP3 from "../public/images/lp3.png";
 import { useRegister } from "@/hooks";
+import Navbar from "@/components/navbar";
 
 export default function Landing() {
     const isRegisterOpen = useRegister((state) => state.isRegisterOpen);
@@ -25,6 +26,8 @@ export default function Landing() {
                 />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
+
+            <Navbar />
             <main className="px-44 xl:px-[20%] py-32">
                 <div className="grid grid-cols-2 grid-rows-3 gap-y-24 gap-x-20 items-center justify-center">
                     <div className="">

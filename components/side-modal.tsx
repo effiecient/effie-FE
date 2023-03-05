@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-
 type SideModalProps = {
     isOpen: boolean;
     onClose: () => void;
@@ -13,30 +11,19 @@ export default function SideModal({
     children,
     className,
 }: SideModalProps) {
-    const [isHidden, setIsHidden] = useState(true);
-    useEffect(() => {
-        // give timer
-        if (isOpen) {
-            setIsHidden(false);
-        } else {
-            setTimeout(() => {
-                setIsHidden(true);
-            }, 300);
-        }
-    }, [isOpen]);
     return (
         <div
-            className={`fixed left-0 w-full h-full top-[75px] ${
-                isOpen ? "z-10" : isHidden ? "-z-10" : "z-10"
+            className={`fixed left-0 w-full h-full ${
+                isOpen ? "z-10" : "-z-10 duration-500"
             }`}
         >
             {/* Clickable Background */}
             <div
-                className={`absolute ${
+                className={`w-full h-full bg-black bg-opacity-50 backdrop-blur absolute duration-300 ${
                     isOpen
-                        ? "w-full h-full bg-black bg-opacity-50 backdrop-blur duration-300"
+                        ? "opacity-100"
                         : "opacity-0"
-                } `}
+                }`}
                 onClick={onClose}
             />
             {/* Side Modal */}
