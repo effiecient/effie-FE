@@ -20,8 +20,7 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
     const setIsRegisterOpen = useRegister((state) => state.setIsRegisterOpen);
     const [isLoginOpen, setIsLoginOpen] = useState(false);
     const [showLogout, setShowLogout] = useState(false);
-    // const isLoggedIn = useUserStore((state: any) => state.isLoggedIn);
-    const isLoggedIn = true;
+    const isLoggedIn = useUserStore((state: any) => state.isLoggedIn);
     const username = useUserStore((state: any) => state.username);
 
     return (
@@ -91,9 +90,8 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
                                 )}
                             </div>
                         </div>
-
-                    // Navbar for non-logged-in users (landing page)
                     ) : (
+                        // Navbar for non-logged-in users (landing page)
                         <>
                             {/* Login Button */}
                             <Button
@@ -138,7 +136,10 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
             </div>
 
             {/* Register */}
-            <Register isOpen={isRegisterOpen} onClose={() => setIsRegisterOpen(false)} />
+            <Register
+                isOpen={isRegisterOpen}
+                onClose={() => setIsRegisterOpen(false)}
+            />
 
             {/* Login */}
             <Login isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
