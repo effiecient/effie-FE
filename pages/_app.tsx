@@ -13,14 +13,8 @@ import CheckUser from "@/middlewares/checkUser";
 export default function App({ Component, pageProps }: AppProps) {
     return (
         <CheckUser>
-            <div
-                className={`${poppins.variable} selection:bg-secondary-500 accent-tertiary-500`}
-            >
-                <Navbar isOnLanding />
-                {/* add top margin, for navbar */}
-                <div className="pt-[75px]">
-                    <Component {...pageProps} />
-                </div>
+            <div className={`${poppins.variable} selection:bg-secondary-500 accent-tertiary-500`}>
+                <Component {...pageProps} />
             </div>
         </CheckUser>
     );

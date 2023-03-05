@@ -12,7 +12,7 @@ import { useRegister, useUserStore } from "@/hooks";
 import Link from "next/link";
 
 type NavbarProps = {
-    isOnLanding: boolean;
+    isOnLanding?: boolean;
 };
 
 export default function Navbar({ isOnLanding = false }: NavbarProps) {
@@ -27,11 +27,14 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
     return (
         <>
             {/* Navbar */}
-            <div className="fixed flex flex-row justify-between w-full bg-white h-[75px] items-center px-5">
+            <div className="sticky top-0 left-0 z-50 flex flex-row justify-between w-full bg-white items-center px-6 py-3">
+                {/* Logo */}
                 <Link href={"/"}>
-                    <h1>Effie</h1>
+                    <h1 className="text-2xl">Effie</h1>
                 </Link>
-                <div className="space-x-1.5">
+                {/* Login-Register */}
+                <div className="space-x-2">
+                    {/* Navbar for logged-in users */}
                     {isLoggedIn ? (
                         <div className="flex flex-row items-center gap-1.5">
                             {username}
@@ -88,8 +91,11 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
                                 )}
                             </div>
                         </div>
+
+                    // Navbar for non-logged-in users (landing page)
                     ) : (
                         <>
+                            {/* Login Button */}
                             <Button
                                 onClick={() => {
                                     setIsLoginOpen(!isLoginOpen);
@@ -98,14 +104,15 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
                                 type="custom"
                                 className={`${
                                     isLoginOpen ? "opacity-50" : ""
-                                } text-primary-500 bg-white border-primary-500 border-2`}
+                                } text-primary-500 bg-white border-primary-500 border-2 enabled:hover:bg-primary-50`}
                                 pill={true}
                             >
-                                <div className="flex flex-row gap-1.5 items-center">
+                                <div className="flex gap-2 items-center">
                                     <Image src={loginIcon} alt="login icon" />
                                     Login
                                 </div>
                             </Button>
+                            {/* Register Button */}
                             <Button
                                 onClick={() => {
                                     setIsRegisterOpen(!isRegisterOpen);
@@ -131,12 +138,7 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
             </div>
 
             {/* Register */}
-            <Register
-                isOpen={isRegisterOpen}
-                onClose={() => {
-                    setIsRegisterOpen(false);
-                }}
-            />
+            <Register isOpen={isRegisterOpen} onClose={() => setIsRegisterOpen(false)} />
 
             {/* Login */}
             <Login isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />

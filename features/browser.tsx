@@ -4,6 +4,7 @@ import Image from "next/image";
 import SideBar from "@/components/side-bar";
 import { BASE_URL } from "@/config/be-config";
 import { useFetchEffieBE } from "@/hooks";
+import Navbar from "@/components/navbar";
 
 export default function Browser() {
     const { isLoading, isError, respond } = useFetchEffieBE(
@@ -42,6 +43,8 @@ export default function Browser() {
                 />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
+
+            <Navbar isOnLanding />
             <main className="bg-white flex w-full min-h-screen relative">
                 {/* SIDEBAR */}
                 <SideBar />
@@ -86,7 +89,7 @@ export default function Browser() {
                             )}
                     </section>
                     <h5 className="text-neutral-400">Links</h5>
-                    <section className="grid grid-cols-4">
+                    <section className="flex gap-4 w-full flex-wrap">
                         <LinkCard content="new link" />
                         {data &&
                             Object.keys(data.childrens).map(
