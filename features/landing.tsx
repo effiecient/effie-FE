@@ -31,17 +31,16 @@ export default function Landing() {
             <main className="px-44 xl:px-[20%] py-32">
                 <div className="grid grid-cols-2 grid-rows-3 gap-y-24 gap-x-20 items-center justify-center">
                     <div className="">
-                        <h1>All your links,</h1>
-                        <h1>in one place</h1>
-                        <p className="text-neutral-600 text-2xl">
+                        <h1 className="mb-4">All your links,<br />in one place</h1>
+                        <p className="text-neutral-600 text-2xl mb-8">
                             Keep your links with folders and custom URLs with
                             Effie.
                         </p>
                         <Button
-                            className="px-3 py-4 mt-8"
+                            className="px-4 py-3 text-base"
                             onClick={() => setIsRegisterOpen(true)}
                         >
-                            Get Started Now
+                            Get Started Now &nbsp;&nbsp;&gt;
                         </Button>
                     </div>
                     <div className="flex justify-center">
@@ -51,16 +50,14 @@ export default function Landing() {
                         <Image src={LP2} alt="Build trust with your customer" />
                     </div>
                     <div className="text-right">
-                        <h1>Build trust with</h1>
-                        <h1>your customers</h1>
+                        <h1 className="mb-4">Build trust with<br />your customers</h1>
                         <p className="text-neutral-600 text-2xl">
                             Establish credibility by sharing cutsom links with
                             your own brand.
                         </p>
                     </div>
                     <div className="">
-                        <h1>Simplify how</h1>
-                        <h1>you share</h1>
+                        <h1 className="mb-4">Simplify how<br />you share</h1>
                         <p className="text-neutral-600 text-2xl">
                             Share shorter links with your colleagues and
                             friends.
