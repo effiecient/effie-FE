@@ -56,6 +56,6 @@ export default function LoggingIn() {
     document.cookie = `${EFFIE_AUTH_TOKEN}=${respond.token}; path=/; domain=${FE_DOMAIN};`;
 
     // redirect to dashboard
-    // router.push(`http://${respond.username}.${FE_BASE_URL}`);
+    router.push(`https://${respond.username}.${FE_BASE_URL}`);
     return <>redirecting...</>;
 }
