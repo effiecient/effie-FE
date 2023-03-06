@@ -7,10 +7,9 @@ import { useFetchEffieBE } from "@/hooks";
 import Navbar from "@/components/navbar";
 
 export default function Browser() {
-    const { isLoading, isError, respond } = useFetchEffieBE(
-        `${BASE_URL}/directory/christojeffrey/`,
-        "GET"
-    );
+    const { isLoading, isError, response } = useFetchEffieBE({
+        url: `${BASE_URL}/directory/christojeffrey/`,
+    });
 
     if (isLoading) {
         return <div>Loading...</div>;
@@ -27,7 +26,7 @@ export default function Browser() {
             type: string;
             effieUrl: string;
         }[];
-    } = respond.data;
+    } = response.data;
 
     return (
         <>

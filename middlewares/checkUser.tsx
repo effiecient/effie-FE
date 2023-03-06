@@ -3,6 +3,7 @@ import { FE_DOMAIN } from "@/config/fe-config";
 import { EFFIE_AUTH_TOKEN } from "@/constants";
 
 import { useFetchEffieBE, useUserStore } from "@/hooks";
+import { useEffect, useState } from "react";
 
 // used to set isLoggedIn, username, isSubdomain, subdomain
 export default function CheckUser({ children }: any) {
@@ -12,47 +13,24 @@ export default function CheckUser({ children }: any) {
     const setSubdomain = useUserStore((state: any) => state.setSubdomain);
 
     // if effie_auth_token exist, set user to logged in
-    let effieAuthToken = "";
+    // let effieAuthToken = "";
+    const [effieAuthToken, setEffieAuthToken] = useState<any>(null);
+    const [isAuthChecked, setIsAuthChecked] = useState<boolean>(false);
 
     // get effie_auth_token from cookie
-    if (typeof window !== "undefined") {
+    useEffect(() => {
         document.cookie.split(";").forEach((cookie) => {
             const [key, value] = cookie.split("=");
             if (key === EFFIE_AUTH_TOKEN) {
                 // set user to logged in
-                effieAuthToken = value;
+                setEffieAuthToken(value);
             }
         });
-    }
+        setIsAuthChecked(true);
 
-    console.log("effieAuthToken", effieAuthToken);
-
-    // check auth
-    const { isLoading, isError, respond } = useFetchEffieBE(
-        effieAuthToken !== "" ? `${BASE_URL}/auth` : "",
-        "POST",
-        effieAuthToken
-    );
-
-    if (isLoading) {
-        return <div>global page Loading</div>;
-    }
-
-    if (isError) {
-        setIsLoggedIn(false);
-    } else {
-        if (respond.success) {
-            console.log("respond.username", respond.username);
-            setUsername(respond.username);
-            setIsLoggedIn(true);
-        }
-    }
-
-    // set isSubdomain and subdomain
-    let isSubdomain = false;
-    if (typeof window !== "undefined") {
+        // set isSubdomain and subdomain
+        let isSubdomain = false;
         const arrayOfURL = window.location.hostname.split(".");
-        console.log("arrayOfURL", arrayOfURL);
         // check the index location of domain
         const indexOfDomain = arrayOfURL.indexOf(FE_DOMAIN);
         // if index 0, it is not a subdomain
@@ -70,8 +48,36 @@ export default function CheckUser({ children }: any) {
 
         setIsSubdomain(isSubdomain);
         setSubdomain(arrayOfURL[0]);
-    }
-    console.log("isSubdomain", isSubdomain);
+    }, [setIsSubdomain, setSubdomain]);
 
-    return children;
+    // check auth
+    const { isLoading, isError, response } = useFetchEffieBE({
+        url: effieAuthToken === null ? "" : `${BASE_URL}/auth`,
+        method: "POST",
+        auth: effieAuthToken,
+    });
+
+    if (!isAuthChecked) {
+        return <div>global page Loading</div>;
+    } else {
+        if (isLoading) {
+            return <div>global page Loading</div>;
+        } else {
+            if (effieAuthToken === null) {
+                return children;
+            } else {
+                if (isError) {
+                    setIsLoggedIn(false);
+
+                    return <>error</>;
+                } else {
+                    if (response.success) {
+                        setUsername(response.username);
+                        setIsLoggedIn(true);
+                    }
+                    return children;
+                }
+            }
+        }
+    }
 }
