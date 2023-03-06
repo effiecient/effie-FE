@@ -1,5 +1,8 @@
 import { BASE_URL } from "@/config";
+
+// TODO: update this to import from config only
 import { FE_DOMAIN } from "@/config/fe-config";
+
 import { EFFIE_AUTH_TOKEN } from "@/constants";
 
 import { useFetchEffieBE, useUserStore } from "@/hooks";

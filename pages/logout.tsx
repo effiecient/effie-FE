@@ -5,12 +5,15 @@ import { getAuth, GoogleAuthProvider, signOut } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 
 import { FIREBASE_CONFIG } from "@/config";
+
+// TODO: update this to import from config only
 import {
     FE_DOMAIN,
     FE_FULL_BASE_URL,
     FE_SUBDOMAIN,
     FE_TOP_LEVEL_DOMAIN,
 } from "@/config/fe-config";
+
 export default function Logout() {
     // Initialize Firebase
     const app = initializeApp(FIREBASE_CONFIG);

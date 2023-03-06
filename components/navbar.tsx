@@ -10,6 +10,7 @@ import newLinkIcon from "@/public/icons/new_link.svg";
 import userImg from "@/public/images/user.png";
 import { useRegister, useUserStore } from "@/hooks";
 import Link from "next/link";
+// TODO: update this to import from config only
 import {
     FE_BASE_URL,
     FE_DOMAIN,

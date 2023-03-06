@@ -1,10 +1,13 @@
 import { BASE_URL } from "@/config";
+
+// TODO: update this to import from config only
 import {
     FE_BASE_URL,
     FE_DOMAIN,
     FE_PROTOCOL,
     FE_TOP_LEVEL_DOMAIN,
 } from "@/config/fe-config";
+
 import { EFFIE_AUTH_TOKEN } from "@/constants";
 import { useFetchEffieBE } from "@/hooks";
 import { useRouter } from "next/router";
