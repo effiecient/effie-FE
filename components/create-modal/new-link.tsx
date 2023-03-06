@@ -8,6 +8,7 @@ import { useFetchEffieBE, useUserStore } from "@/hooks";
 // import { unfurl } from 'unfurl.js'
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { FE_BASE_URL } from "@/config";
 
 type NewLinkProps = {
     isOpen: boolean;
@@ -15,9 +16,10 @@ type NewLinkProps = {
 };
 
 export default function NewLink({ isOpen, onClose }: NewLinkProps) {
-    const USER_BASE_URL = "https://effie.boo/";
     const username = useUserStore((state: any) => state.username);
     const [isMoreOptionsOpen, setIsMoreOptionsOpen] = useState(false);
+
+    const USER_BASE_URL = `${username}.${FE_BASE_URL}/`;
 
     useEffect(() => {
         const input = document.getElementById("link-name");
@@ -36,6 +38,7 @@ export default function NewLink({ isOpen, onClose }: NewLinkProps) {
     const [title, setTitle] = useState<string>("");
 
     const router = useRouter();
+    const [body, setBody] = useState<any>({});
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
@@ -56,23 +59,21 @@ export default function NewLink({ isOpen, onClose }: NewLinkProps) {
             path: path,
             relativePath: linkName,
         };
-        // POST to API
-        fetch(`${BASE_URL}/directory/link`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-            },
-            body: JSON.stringify(data),
-        }).then((res) => {
-            if (res.status === 201) {
-                console.log("success");
-                onClose();
-            }
-
-            router.reload();
-        });
+        setBody(data);
+        setReadyToPost(true);
     };
+
+    const [readyToPost, setReadyToPost] = useState(false);
+
+    const { isLoading, isError, response } = useFetchEffieBE({
+        url: readyToPost ? `${BASE_URL}/directory/link` : "",
+        method: "POST",
+        body: body,
+    });
+
+    if (readyToPost && !isLoading && !isError && response) {
+        router.reload();
+    }
 
     const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.value !== "") {
@@ -82,29 +83,7 @@ export default function NewLink({ isOpen, onClose }: NewLinkProps) {
         }
     };
 
-    const onURLblur = (e: React.FocusEvent<HTMLInputElement>) => {
-        // fetch with header
-
-        const url = "https://www.zoom.us";
-
-        // unfurl(url);
-
-        // fetch(e.target.value, {
-        //     method: "GET",
-        //     headers: {
-        //         'Accept': 'text/html, application/xhtml+xml',
-        //         'User-Agent': 'facebookexternalhit'
-        //     }
-        // }).then(res => res.text()).then(html => {
-        //     console.log(html)
-        //     // const contentType = res.headers.get("content-type");
-        //     // if (contentType && contentType.indexOf("image") !== -1) {
-        //     //     const thumbnailURL = e.target.value;
-        //     //     const thumbnailURLInput = document.getElementById("thumbnail-url") as HTMLInputElement;
-        //     //     thumbnailURLInput.value = thumbnailURL;
-        //     // }
-        // });
-    };
+    const onURLblur = (e: React.FocusEvent<HTMLInputElement>) => {};
 
     const closeModal = () => {
         onClose();

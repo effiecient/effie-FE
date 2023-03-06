@@ -5,10 +5,19 @@ import SideBar from "@/components/side-bar";
 import { BASE_URL } from "@/config/be-config";
 import { useFetchEffieBE } from "@/hooks";
 import Navbar from "@/components/navbar";
+import { useRouter } from "next/router";
+type BrowserType = {
+    username?: string;
+    location?: string[];
+};
 
-export default function Browser() {
+export default function Browser({
+    username = "christojeffrey",
+    location = [],
+}: BrowserType) {
+    const router = useRouter();
     const { isLoading, isError, response } = useFetchEffieBE({
-        url: `${BASE_URL}/directory/christojeffrey/`,
+        url: `${BASE_URL}/directory/${username}/${location.join("/")}`,
     });
 
     if (isLoading) {
@@ -18,6 +27,14 @@ export default function Browser() {
         return <div>Error</div>;
     }
 
+    if (response.status === "ERROR") {
+        return <div>{response.message}</div>;
+    }
+
+    // TODO: handle this in server side so that there is no need to do this in client side
+    if (response.data.type === "link") {
+        router.push(response.data.link);
+    }
     const data: {
         childrens: {
             title: string;
@@ -81,6 +98,10 @@ export default function Browser() {
                                                     data.childrens[child]
                                                         .effieUrl
                                                 }
+                                                onClick={() => {
+                                                    console.log("clicked");
+                                                    router.push(`/${child}`);
+                                                }}
                                             />
                                         );
                                     }
