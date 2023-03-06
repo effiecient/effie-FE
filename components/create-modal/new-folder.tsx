@@ -4,15 +4,16 @@ import LinkCard from "../link-card";
 import Modal from "../modal";
 import { BASE_URL } from "@/config/be-config";
 // import { unfurl } from 'unfurl.js'
+import Image from "next/image";
 
 type NewFolderProps = {
     isOpen: boolean;
     onClose: () => void;
 };
 
-export default function NewFolder({ isOpen, onClose } : NewFolderProps) {
+export default function NewFolder({ isOpen, onClose }: NewFolderProps) {
     const USER_BASE_URL = "https://effie.boo/";
-    
+
     const [isMoreOptionsOpen, setIsMoreOptionsOpen] = useState(false);
 
     useEffect(() => {
@@ -26,7 +27,7 @@ export default function NewFolder({ isOpen, onClose } : NewFolderProps) {
         if (e.key === "Enter" || e.key === " ") {
             setIsMoreOptionsOpen(!isMoreOptionsOpen);
         }
-    }
+    };
 
     const linkNameRef = useRef<HTMLInputElement>(null);
     const [title, setTitle] = useState<string>("");
@@ -40,23 +41,23 @@ export default function NewFolder({ isOpen, onClose } : NewFolderProps) {
         const title = formData.get("title");
         const thumbnailURL = formData.get("thumbnail-url");
         // Add "/" to the start of the link name if it doesn't exist
-        if (linkName && linkName.slice(0,1) !== "/") {
+        if (linkName && linkName.slice(0, 1) !== "/") {
             path = "/" + linkName;
         }
         const data = {
-            "username": "christojeffrey",
-            "link": linkUrl,
-            "title": title,
-            "isPinned": false,
-            "path": path,
-            "relativePath": linkName,
-          };
+            username: "christojeffrey",
+            link: linkUrl,
+            title: title,
+            isPinned: false,
+            path: path,
+            relativePath: linkName,
+        };
         // POST to API
         fetch(`${BASE_URL}/directory/link`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Accept": "application/json",
+                Accept: "application/json",
             },
             body: JSON.stringify(data),
         }).then((res) => {
@@ -65,20 +66,20 @@ export default function NewFolder({ isOpen, onClose } : NewFolderProps) {
                 onClose();
             }
         });
-    }
+    };
 
     const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.value !== "") {
             setTitle(e.target.value);
         } else {
-            setTitle(linkNameRef.current?.value || "")
+            setTitle(linkNameRef.current?.value || "");
         }
-    }
+    };
 
     const onURLblur = (e: React.FocusEvent<HTMLInputElement>) => {
         // fetch with header
 
-        const url = 'https://www.zoom.us';
+        const url = "https://www.zoom.us";
 
         // unfurl(url);
 
@@ -97,12 +98,12 @@ export default function NewFolder({ isOpen, onClose } : NewFolderProps) {
         //     //     thumbnailURLInput.value = thumbnailURL;
         //     // }
         // });
-    }
+    };
 
     const closeModal = () => {
         onClose();
         setIsMoreOptionsOpen(false);
-    }
+    };
 
     return (
         <Modal isOpen={isOpen} onClose={closeModal}>
@@ -110,17 +111,60 @@ export default function NewFolder({ isOpen, onClose } : NewFolderProps) {
             <form onSubmit={onSubmit}>
                 <div className="flex items-center mb-6">
                     <h4 className="text-neutral-600 mr-2">{USER_BASE_URL}</h4>
-                    <input ref={linkNameRef} type="text" id="link-name" name="link-name" placeholder="link-name" className="input text-lg text-primary-500 font-bold flex-grow" autoFocus required />
+                    <input
+                        ref={linkNameRef}
+                        type="text"
+                        id="link-name"
+                        name="link-name"
+                        placeholder="folder-name"
+                        className="input text-lg text-primary-500 font-bold flex-grow"
+                        autoFocus
+                        required
+                    />
                     <Button className="ml-4 h-[2.7rem] px-4">Add</Button>
                 </div>
-                <div role="button" tabIndex={0} onKeyDown={onKeyDown} className="cursor-pointer flex items-center" onClick={() => setIsMoreOptionsOpen(!isMoreOptionsOpen)}>
-                    <p className="text-neutral-500 font-bold mr-2">More options</p>
-                    <img src="/icons/chevron-down.svg" className={`w-3 h-3 transform transition-transform duration-300 ${isMoreOptionsOpen ? "rotate-180" : ""}`} />
+                <div
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={onKeyDown}
+                    className="cursor-pointer flex items-center"
+                    onClick={() => setIsMoreOptionsOpen(!isMoreOptionsOpen)}
+                >
+                    <p className="text-neutral-500 font-bold mr-2">
+                        More options
+                    </p>
+                    <Image
+                        width={28}
+                        height={28}
+                        alt="arrow-down"
+                        src="/icons/chevron-down.svg"
+                        className={`w-3 h-3 transform transition-transform duration-300 ${
+                            isMoreOptionsOpen ? "rotate-180" : ""
+                        }`}
+                    />
                 </div>
-                <div className={`${isMoreOptionsOpen ? "max-h-[10rem]" : "max-h-0"} flex gap-6 overflow-clip duration-300`}>
+                <div
+                    className={`${
+                        isMoreOptionsOpen ? "max-h-[10rem]" : "max-h-0"
+                    } flex gap-6 overflow-clip duration-300`}
+                >
                     <div className="flex flex-col gap-4 flex-grow pt-4">
-                        <input type="text" id="title" name="title" placeholder="Custom Title" onChange={onTitleChange} required className='input' />
-                        <input type="url" id="thumbnail-url" name="thumbnail-url" placeholder="Thumbnail URL" className="input" />
+                        <input
+                            type="text"
+                            id="title"
+                            name="title"
+                            placeholder="Custom Title"
+                            onChange={onTitleChange}
+                            required
+                            className="input"
+                        />
+                        <input
+                            type="url"
+                            id="thumbnail-url"
+                            name="thumbnail-url"
+                            placeholder="Thumbnail URL"
+                            className="input"
+                        />
                     </div>
                     <LinkCard
                         content="display link"
