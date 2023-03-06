@@ -1,10 +1,17 @@
 import { Browser, Landing } from "@/features";
+import QuickCreate from "@/features/quick-create";
 import { useUserStore } from "@/hooks";
 export default function Index() {
     const isLoggedIn = useUserStore((state: any) => state.isLoggedIn);
-    if (isLoggedIn) {
+    const isSubdomain = useUserStore((state: any) => state.isSubdomain);
+
+    if (isSubdomain) {
         return <Browser />;
     } else {
-        return <Landing />;
+        if (isLoggedIn) {
+            return <QuickCreate />;
+        } else {
+            return <Landing />;
+        }
     }
 }

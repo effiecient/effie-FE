@@ -1,15 +1,14 @@
 import { useState, useEffect, useRef } from "react";
 import Button from "@/components/button";
-import Input from "@/components/input";
 import LinkCard from "@/components/link-card";
-import Modal from "@/components/modal";
 import { BASE_URL } from "@/config/be-config";
 import Image from "next/image";
 import Head from "next/head";
 import { useUserStore } from "@/hooks";
+import { Navbar } from "@/components";
 // import { unfurl } from 'unfurl.js'
 
-export default function CreateLink() {
+export default function QuickCreate() {
     const USER_BASE_URL = "https://effie.boo/";
     const username = useUserStore((state: any) => state.username);
 
@@ -104,6 +103,7 @@ export default function CreateLink() {
                 />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
+            <Navbar isOnLanding />
             <div className="flex flex-col px-44 xl:px-[20%] w-full">
                 <div>
                     <h3 className="text-neutral-800 mb-8">New Link</h3>
@@ -149,7 +149,10 @@ export default function CreateLink() {
                             <p className="text-neutral-500 font-bold mr-2">
                                 More options
                             </p>
-                            <img
+
+                            <Image
+                                width={12}
+                                height={12}
                                 src="/icons/chevron-down.svg"
                                 className={`w-3 h-3 transform transition-transform duration-300 ${
                                     isMoreOptionsOpen ? "rotate-180" : ""

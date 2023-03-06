@@ -1,5 +1,9 @@
 import { BASE_URL, FE_BASE_URL } from "@/config";
-import { FE_DOMAIN } from "@/config/fe-config";
+import {
+    FE_DOMAIN,
+    FE_PROTOCOL,
+    FE_TOP_LEVEL_DOMAIN,
+} from "@/config/fe-config";
 import { EFFIE_AUTH_TOKEN } from "@/constants";
 import { useFetchEffieBE } from "@/hooks";
 import { useRouter } from "next/router";
@@ -52,10 +56,14 @@ export default function LoggingIn() {
     if (typeof localStorage !== "undefined") {
         localStorage.setItem(EFFIE_AUTH_TOKEN, respond.token);
     }
-    // set to cookie to be used accross subdomains
-    document.cookie = `${EFFIE_AUTH_TOKEN}=${respond.token}; path=/; domain=${FE_DOMAIN};`;
+    // set to cookie to be used accross subdomains. expire in 1 year
+    document.cookie = `${EFFIE_AUTH_TOKEN}=${
+        respond.token
+    }; path=/; domain=${FE_DOMAIN}.${FE_TOP_LEVEL_DOMAIN};expires=${new Date(
+        new Date().getTime() + 365 * 24 * 60 * 60 * 1000
+    ).toUTCString()};`;
 
     // redirect to dashboard
-    router.push(`https://${respond.username}.${FE_BASE_URL}`);
+    router.push(`${FE_PROTOCOL}://${respond.username}.${FE_BASE_URL}`);
     return <>redirecting...</>;
 }
