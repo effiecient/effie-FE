@@ -6,7 +6,6 @@ import { BE_BASE_URL } from "@/config/be-config";
 import { useFetchEffieBE } from "@/hooks";
 import Navbar from "@/components/navbar";
 import { useRouter } from "next/router";
-import { GetServerSideProps } from "next";
 type BrowserType = {
     username?: string;
     location?: string[];
@@ -33,9 +32,9 @@ export default function Browser({
     }
 
     // TODO: handle this in server side so that there is no need to do this in client side
-    if (response.data.type === "link") {
-        router.push(response.data.link);
-    }
+    // if (response.data.type === "link") {
+    //     router.push(response.data.link);
+    // }
     const data: {
         childrens: {
             title: string;
