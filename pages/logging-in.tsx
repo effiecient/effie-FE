@@ -1,4 +1,4 @@
-import { BASE_URL } from "@/config";
+import { BE_BASE_URL } from "@/config";
 
 // TODO: update this to import from config only
 import {
@@ -30,7 +30,7 @@ export default function LoggingIn() {
             url:
                 accessToken === "" || uid === ""
                     ? ""
-                    : `${BASE_URL}/user/login`,
+                    : `${BE_BASE_URL}/user/login`,
             method: "POST",
             auth: accessToken,
             body: { uid },

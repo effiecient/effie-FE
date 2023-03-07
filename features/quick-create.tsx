@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import Button from "@/components/button";
 import LinkCard from "@/components/link-card";
-import { BASE_URL } from "@/config/be-config";
+import { BE_BASE_URL } from "@/config/be-config";
 import Image from "next/image";
 import Head from "next/head";
 import { useUserStore } from "@/hooks";
@@ -44,7 +44,7 @@ export default function QuickCreate() {
             relativePath: linkName,
         };
         // POST to API
-        fetch(`${BASE_URL}/directory/link`, {
+        fetch(`${BE_BASE_URL}/directory/link`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

@@ -2,10 +2,11 @@ import Head from "next/head";
 import LinkCard from "@/components/link-card";
 import Image from "next/image";
 import SideBar from "@/components/side-bar";
-import { BASE_URL } from "@/config/be-config";
+import { BE_BASE_URL } from "@/config/be-config";
 import { useFetchEffieBE } from "@/hooks";
 import Navbar from "@/components/navbar";
 import { useRouter } from "next/router";
+import { GetServerSideProps } from "next";
 type BrowserType = {
     username?: string;
     location?: string[];
@@ -17,7 +18,7 @@ export default function Browser({
 }: BrowserType) {
     const router = useRouter();
     const { isLoading, isError, response } = useFetchEffieBE({
-        url: `${BASE_URL}/directory/${username}/${location.join("/")}`,
+        url: `${BE_BASE_URL}/directory/${username}/${location.join("/")}`,
     });
 
     if (isLoading) {
@@ -137,4 +138,15 @@ export default function Browser({
             </main>
         </>
     );
+}
+
+// server side
+// get cookie
+export async function getServerSideProps({ req, res }: { req: any; res: any }) {
+    const { cookie } = req.headers;
+    console.log("cookie", cookie);
+
+    return {
+        props: {},
+    };
 }

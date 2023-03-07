@@ -12,7 +12,7 @@ import {
 import { initializeApp } from "firebase/app";
 import { useEffect, useState } from "react";
 
-import { BASE_URL, FIREBASE_CONFIG } from "@/config";
+import { BE_BASE_URL, FIREBASE_CONFIG } from "@/config";
 import { useFetchEffieBE, useUserStore } from "@/hooks";
 import { useRouter } from "next/router";
 

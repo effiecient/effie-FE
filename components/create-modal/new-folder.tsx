@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import Button from "../button";
 import LinkCard from "../link-card";
 import Modal from "../modal";
-import { BASE_URL } from "@/config/be-config";
+import { BE_BASE_URL } from "@/config/be-config";
 // import { unfurl } from 'unfurl.js'
 import Image from "next/image";
 
@@ -53,7 +53,7 @@ export default function NewFolder({ isOpen, onClose }: NewFolderProps) {
             relativePath: linkName,
         };
         // POST to API
-        fetch(`${BASE_URL}/directory/link`, {
+        fetch(`${BE_BASE_URL}/directory/link`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

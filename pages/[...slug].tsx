@@ -1,4 +1,5 @@
-import { Navbar } from "@/components";
+import { BE_BASE_URL, BE_STATUS_ERROR, BE_STATUS_SUCCESS } from "@/config";
+import { EFFIE_AUTH_TOKEN } from "@/constants";
 import { Browser } from "@/features";
 import { useRouter } from "next/router";
 import React from "react";
@@ -13,9 +14,5 @@ export default function Directory() {
     }
 
     // const postID = router.query... I want to get postID from url somehow.
-    return (
-        <>
-            <Browser username="christojeffrey" location={slugs} />
-        </>
-    );
+    return <Browser username="christojeffrey" location={slugs} />;
 }

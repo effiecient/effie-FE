@@ -3,7 +3,7 @@ import Button from "../button";
 import Input from "../input";
 import LinkCard from "../link-card";
 import Modal from "../modal";
-import { BASE_URL } from "@/config/be-config";
+import { BE_BASE_URL } from "@/config/be-config";
 import { useFetchEffieBE, useUserStore } from "@/hooks";
 // import { unfurl } from 'unfurl.js'
 import Image from "next/image";
@@ -66,7 +66,7 @@ export default function NewLink({ isOpen, onClose }: NewLinkProps) {
     const [readyToPost, setReadyToPost] = useState(false);
 
     const { isLoading, isError, response } = useFetchEffieBE({
-        url: readyToPost ? `${BASE_URL}/directory/link` : "",
+        url: readyToPost ? `${BE_BASE_URL}/directory/link` : "",
         method: "POST",
         body: body,
     });

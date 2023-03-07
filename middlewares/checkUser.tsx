@@ -1,4 +1,4 @@
-import { BASE_URL } from "@/config";
+import { BE_BASE_URL } from "@/config";
 
 // TODO: update this to import from config only
 import { FE_DOMAIN } from "@/config/fe-config";
@@ -55,7 +55,7 @@ export default function CheckUser({ children }: any) {
 
     // check auth
     const { isLoading, isError, response } = useFetchEffieBE({
-        url: effieAuthToken === null ? "" : `${BASE_URL}/auth`,
+        url: effieAuthToken === null ? "" : `${BE_BASE_URL}/auth`,
         method: "POST",
         auth: effieAuthToken,
     });

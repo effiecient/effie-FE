@@ -79,13 +79,6 @@ const useFetchEffieBE = ({ auth, url = "", method = "GET", body }: Props) => {
         };
     }, [url, method, auth, body]);
 
-    console.log("useFetchEffieBE", {
-        url,
-        isLoading: url === "" ? isLoading : response ? false : true,
-        isError,
-        response,
-    });
-
     return {
         isLoading: url === "" ? isLoading : response ? false : true,
         isError,

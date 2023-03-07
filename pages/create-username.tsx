@@ -1,6 +1,6 @@
 import { Button, Input } from "@/components";
 import { useState } from "react";
-import { BASE_URL } from "@/config";
+import { BE_BASE_URL } from "@/config";
 import { EFFIE_AUTH_TOKEN } from "@/constants";
 import { useRouter } from "next/router";
 export default function CreateUsername() {
@@ -19,7 +19,7 @@ export default function CreateUsername() {
         if (!accessToken || !uid || !username) {
             console.error("error");
         } else {
-            fetch(`${BASE_URL}/user/register`, {
+            fetch(`${BE_BASE_URL}/user/register`, {
                 method: "POST",
                 body: JSON.stringify({
                     uid,
