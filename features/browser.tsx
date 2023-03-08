@@ -42,7 +42,8 @@ export default function Browser({ location = [] }: BrowserType) {
     }
 
     const data: {
-        childrens: {
+        type: string;
+        childrens?: {
             title: string;
             isPinned: boolean;
             link: string;
@@ -116,6 +117,7 @@ export default function Browser({ location = [] }: BrowserType) {
                             onClick={handleNewFolderClick}
                         />
                         {data &&
+                            data.childrens &&
                             Object.keys(data.childrens).map(
                                 (child: any, index) => {
                                     if (
@@ -150,6 +152,7 @@ export default function Browser({ location = [] }: BrowserType) {
                             onClick={handleNewLinkClick}
                         />
                         {data &&
+                            data.childrens &&
                             Object.keys(data.childrens).map(
                                 (child: any, index) => {
                                     if (data.childrens[child].type === "link") {
