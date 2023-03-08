@@ -121,6 +121,7 @@ export default function Browser({ location = [] }: BrowserType) {
                             Object.keys(data.childrens).map(
                                 (child: any, index) => {
                                     if (
+                                        data.childrens &&
                                         data.childrens[child].type === "folder"
                                     ) {
                                         return (
@@ -155,7 +156,10 @@ export default function Browser({ location = [] }: BrowserType) {
                             data.childrens &&
                             Object.keys(data.childrens).map(
                                 (child: any, index) => {
-                                    if (data.childrens[child].type === "link") {
+                                    if (
+                                        data.childrens &&
+                                        data.childrens[child].type === "link"
+                                    ) {
                                         return (
                                             <LinkCard
                                                 key={index}
