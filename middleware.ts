@@ -39,10 +39,12 @@ export async function middleware(request: NextRequest) {
         console.log("out: invalid subdomain");
         return NextResponse.next();
     }
-    if (!authToken) {
-        console.log("out: no auth token");
-        return NextResponse.next();
-    }
+
+    // TODO: handle public and private link, for now let's make everylink public
+    // if (!authToken) {
+    //     console.log("out: no auth token");
+    //     return NextResponse.next();
+    // }
 
     let linkOrFolderData;
     try {
