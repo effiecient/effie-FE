@@ -52,7 +52,9 @@ export default function Modal({
                         </svg>
                     </button>
                 )}
-                <div className={className}>{isOpen && children}</div>
+                <div className={`${className} ${isOpen ? "block" : "hidden"}`}>
+                    {children}
+                </div>
             </div>
         </div>
     );
