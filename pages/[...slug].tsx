@@ -18,7 +18,7 @@ export default function Directory() {
     return (
         <>
             <Navbar />
-            <Browser username="christojeffrey" location={slugs} />
+            <Browser location={slugs} />
         </>
     );
 }
