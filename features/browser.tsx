@@ -21,7 +21,7 @@ export default function Browser({
     });
 
     if (isLoading) {
-        return <div>Loading...</div>;
+        return <div>browser Loading...</div>;
     }
     if (isError) {
         return <div>Error</div>;
@@ -31,10 +31,6 @@ export default function Browser({
         return <div>{response.message}</div>;
     }
 
-    // TODO: handle this in server side so that there is no need to do this in client side
-    // if (response.data.type === "link") {
-    //     router.push(response.data.link);
-    // }
     const data: {
         childrens: {
             title: string;
@@ -60,7 +56,7 @@ export default function Browser({
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <Navbar isOnLanding />
+            <Navbar />
             <main className="bg-white flex w-full min-h-screen relative">
                 {/* SIDEBAR */}
                 <SideBar />
