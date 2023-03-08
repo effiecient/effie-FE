@@ -5,6 +5,8 @@ import Modal from "../modal";
 import { BE_BASE_URL } from "@/config/be-config";
 // import { unfurl } from 'unfurl.js'
 import Image from "next/image";
+import { useRouter } from "next/router";
+import { useFetchEffieBE, useUserStore } from "@/hooks";
 
 type NewFolderProps = {
     isOpen: boolean;
@@ -13,11 +15,11 @@ type NewFolderProps = {
 
 export default function NewFolder({ isOpen, onClose }: NewFolderProps) {
     const USER_BASE_URL = "https://effie.boo/";
-
+    const username = useUserStore((state: any) => state.username);
     const [isMoreOptionsOpen, setIsMoreOptionsOpen] = useState(false);
 
     useEffect(() => {
-        const input = document.getElementById("link-name");
+        const input = document.getElementById("folder-name");
         if (input) {
             input.focus();
         }
@@ -32,42 +34,40 @@ export default function NewFolder({ isOpen, onClose }: NewFolderProps) {
     const linkNameRef = useRef<HTMLInputElement>(null);
     const [title, setTitle] = useState<string>("");
 
+    const router = useRouter();
+    const [body, setBody] = useState<any>({});
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
-        const linkName = formData.get("link-name");
-        let path = linkName;
-        const linkUrl = formData.get("link-url");
-        const title = formData.get("title");
+        const linkName = formData.get("folder-name");
+        let path = window.location.pathname;
+        const title = formData.get("title") || linkName;
         const thumbnailURL = formData.get("thumbnail-url");
         // Add "/" to the start of the link name if it doesn't exist
-        if (linkName && linkName.slice(0, 1) !== "/") {
-            path = "/" + linkName;
-        }
+        // if (linkName && linkName.slice(0, 1) !== "/") {
+        //     path = "/" + linkName;
+        // }
         const data = {
-            username: "christojeffrey",
-            link: linkUrl,
+            username: username,
             title: title,
             isPinned: false,
             path: path,
             relativePath: linkName,
         };
-        // POST to API
-        fetch(`${BE_BASE_URL}/directory/link`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-            },
-            body: JSON.stringify(data),
-        }).then((res) => {
-            if (res.status === 201) {
-                console.log("success");
-                onClose();
-            }
-        });
+        setBody(data);
+        setReadyToPost(true);
     };
 
+    const [readyToPost, setReadyToPost] = useState(false);
+
+    const { isLoading, isError, response } = useFetchEffieBE({
+        url: readyToPost ? `${BE_BASE_URL}/directory/folder` : "",
+        method: "POST",
+        body: body,
+    });
+    if (readyToPost && !isLoading && !isError && response) {
+        router.reload();
+    }
     const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.value !== "") {
             setTitle(e.target.value);
@@ -80,24 +80,6 @@ export default function NewFolder({ isOpen, onClose }: NewFolderProps) {
         // fetch with header
 
         const url = "https://www.zoom.us";
-
-        // unfurl(url);
-
-        // fetch(e.target.value, {
-        //     method: "GET",
-        //     headers: {
-        //         'Accept': 'text/html, application/xhtml+xml',
-        //         'User-Agent': 'facebookexternalhit'
-        //     }
-        // }).then(res => res.text()).then(html => {
-        //     console.log(html)
-        //     // const contentType = res.headers.get("content-type");
-        //     // if (contentType && contentType.indexOf("image") !== -1) {
-        //     //     const thumbnailURL = e.target.value;
-        //     //     const thumbnailURLInput = document.getElementById("thumbnail-url") as HTMLInputElement;
-        //     //     thumbnailURLInput.value = thumbnailURL;
-        //     // }
-        // });
     };
 
     const closeModal = () => {
@@ -114,8 +96,8 @@ export default function NewFolder({ isOpen, onClose }: NewFolderProps) {
                     <input
                         ref={linkNameRef}
                         type="text"
-                        id="link-name"
-                        name="link-name"
+                        id="folder-name"
+                        name="folder-name"
                         placeholder="folder-name"
                         className="input text-lg text-primary-500 font-bold flex-grow"
                         autoFocus
@@ -155,7 +137,6 @@ export default function NewFolder({ isOpen, onClose }: NewFolderProps) {
                             name="title"
                             placeholder="Custom Title"
                             onChange={onTitleChange}
-                            required
                             className="input"
                         />
                         <input
