@@ -36,7 +36,7 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
             {/* Navbar */}
             <div
                 className={`${
-                    isOnLanding ? "sticky z-10" : "relative z-1"
+                    isOnLanding ? "sticky z-10" : "relative"
                 } top-0 left-0  flex flex-row justify-between w-full bg-white items-center px-6 py-3`}
             >
                 {/* Logo */}
@@ -90,7 +90,7 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
                                     className={`cursor-pointer`}
                                 />
                                 {showLogout && (
-                                    <div className="absolute right-0 mt-2">
+                                    <div className="absolute right-0 mt-2 z-10">
                                         <Link href={"/logout"}>
                                             <Button
                                                 type="default"

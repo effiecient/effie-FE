@@ -6,6 +6,7 @@ type ModalProps = {
     onOutsideClick?: () => void;
     className?: string;
 };
+import { useEffect, useState } from "react";
 import styles from "./modal.module.css";
 
 export default function Modal({
@@ -16,7 +17,18 @@ export default function Modal({
     onOutsideClick = () => {},
     className,
 }: ModalProps) {
-    // display
+    const [isChildrenHidden, setIsChildrenHidden] = useState(true);
+    // hide children after animation
+    useEffect(() => {
+        if (isOpen) {
+            setIsChildrenHidden(false);
+        } else {
+            setTimeout(() => {
+                setIsChildrenHidden(true);
+            }, 200);
+        }
+    }, [isOpen]);
+
     return (
         <div
             className={`${styles.container} ${
@@ -52,8 +64,8 @@ export default function Modal({
                         </svg>
                     </button>
                 )}
-                <div className={`${className} ${isOpen ? "block" : "hidden"}`}>
-                    {children}
+                <div className={`${className}`}>
+                    {!isChildrenHidden && children}
                 </div>
             </div>
         </div>
