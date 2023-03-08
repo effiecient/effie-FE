@@ -1,3 +1,4 @@
+import { Navbar } from "@/components";
 import { Browser, Landing } from "@/features";
 import QuickCreate from "@/features/quick-create";
 import { useUserStore } from "@/hooks";
@@ -6,7 +7,12 @@ export default function Index() {
     const isSubdomain = useUserStore((state: any) => state.isSubdomain);
 
     if (isSubdomain) {
-        return <Browser />;
+        return (
+            <>
+                <Navbar />
+                <Browser />
+            </>
+        );
     } else {
         if (isLoggedIn) {
             return <QuickCreate />;

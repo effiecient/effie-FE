@@ -6,6 +6,9 @@ import { BE_BASE_URL } from "@/config/be-config";
 import { useFetchEffieBE } from "@/hooks";
 import Navbar from "@/components/navbar";
 import { useRouter } from "next/router";
+import { useState } from "react";
+import NewLink from "@/components/create-modal/new-link";
+import NewFolder from "@/components/create-modal/new-folder";
 type BrowserType = {
     username?: string;
     location?: string[];
@@ -16,6 +19,14 @@ export default function Browser({
     location = [],
 }: BrowserType) {
     const router = useRouter();
+    const [isNewLinkModalOpen, setIsNewLinkModalOpen] = useState(false);
+    const [isNewFolderModalOpen, setIsNewFolderModalOpen] = useState(false);
+    const handleNewLinkClick = () => {
+        setIsNewLinkModalOpen(true);
+    };
+    const handleNewFolderClick = () => {
+        setIsNewFolderModalOpen(true);
+    };
     const { isLoading, isError, response } = useFetchEffieBE({
         url: `${BE_BASE_URL}/directory/${username}/${location.join("/")}`,
     });
@@ -31,10 +42,6 @@ export default function Browser({
         return <div>{response.message}</div>;
     }
 
-    // TODO: handle this in server side so that there is no need to do this in client side
-    // if (response.data.type === "link") {
-    //     router.push(response.data.link);
-    // }
     const data: {
         childrens: {
             title: string;
@@ -60,11 +67,10 @@ export default function Browser({
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <Navbar isOnLanding />
             <main className="bg-white flex w-full min-h-screen relative">
                 {/* SIDEBAR */}
                 <SideBar />
-                {/* BROWSER */}
+                {/* BROWSER Loader*/}
                 <div className="flex flex-col gap-6 flex-grow bg-neutral-50 min-h-full w-full rounded-tl-2xl p-12">
                     <div className="fixed right-0 bottom-0 w-[50vw] h-[70vh]">
                         <Image
@@ -79,7 +85,10 @@ export default function Browser({
                     </div>
                     <h5 className="text-neutral-400">Folders</h5>
                     <section className="flex gap-4 w-full flex-wrap">
-                        <LinkCard content="new folder" />
+                        <LinkCard
+                            content="new folder"
+                            onClick={handleNewFolderClick}
+                        />
                         {data &&
                             Object.keys(data.childrens).map(
                                 (child: any, index) => {
@@ -110,7 +119,10 @@ export default function Browser({
                     </section>
                     <h5 className="text-neutral-400">Links</h5>
                     <section className="flex gap-4 w-full flex-wrap">
-                        <LinkCard content="new link" />
+                        <LinkCard
+                            content="new link"
+                            onClick={handleNewLinkClick}
+                        />
                         {data &&
                             Object.keys(data.childrens).map(
                                 (child: any, index) => {
@@ -135,17 +147,15 @@ export default function Browser({
                     </section>
                 </div>
             </main>
+            {/* modal */}
+            <NewLink
+                isOpen={isNewLinkModalOpen}
+                onClose={() => setIsNewLinkModalOpen(false)}
+            />
+            <NewFolder
+                isOpen={isNewFolderModalOpen}
+                onClose={() => setIsNewFolderModalOpen(false)}
+            />
         </>
     );
-}
-
-// server side
-// get cookie
-export async function getServerSideProps({ req, res }: { req: any; res: any }) {
-    const { cookie } = req.headers;
-    console.log("cookie", cookie);
-
-    return {
-        props: {},
-    };
 }
