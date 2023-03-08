@@ -3,7 +3,7 @@ import LinkCard from "@/components/link-card";
 import Image from "next/image";
 import SideBar from "@/components/side-bar";
 import { BE_BASE_URL } from "@/config/be-config";
-import { useFetchEffieBE } from "@/hooks";
+import { useFetchEffieBE, useUserStore } from "@/hooks";
 import Navbar from "@/components/navbar";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -14,10 +14,7 @@ type BrowserType = {
     location?: string[];
 };
 
-export default function Browser({
-    username = "christojeffrey",
-    location = [],
-}: BrowserType) {
+export default function Browser({ location = [] }: BrowserType) {
     const router = useRouter();
     const [isNewLinkModalOpen, setIsNewLinkModalOpen] = useState(false);
     const [isNewFolderModalOpen, setIsNewFolderModalOpen] = useState(false);
@@ -27,6 +24,8 @@ export default function Browser({
     const handleNewFolderClick = () => {
         setIsNewFolderModalOpen(true);
     };
+    const username = useUserStore((state: any) => state.username);
+
     const { isLoading, isError, response } = useFetchEffieBE({
         url: `${BE_BASE_URL}/directory/${username}/${location.join("/")}`,
     });
@@ -72,6 +71,33 @@ export default function Browser({
                 <SideBar />
                 {/* BROWSER Loader*/}
                 <div className="flex flex-col gap-6 flex-grow bg-neutral-50 min-h-full w-full rounded-tl-2xl p-12">
+                    {/* breadcrumbs */}
+                    <div className="flex gap-2">
+                        {[username].concat(location).map((loc, index) => {
+                            return (
+                                <div
+                                    key={index}
+                                    className="flex gap-2 items-center"
+                                >
+                                    {index !== 0 && (
+                                        <p className="text-neutral-400">/</p>
+                                    )}
+                                    <p
+                                        className="text-neutral-400 hover:cursor-pointer hover:text-neutral-500"
+                                        onClick={() => {
+                                            router.push(
+                                                `/${location
+                                                    .slice(0, index)
+                                                    .join("/")}`
+                                            );
+                                        }}
+                                    >
+                                        {loc}
+                                    </p>
+                                </div>
+                            );
+                        })}
+                    </div>
                     <div className="fixed right-0 bottom-0 w-[50vw] h-[70vh]">
                         <Image
                             src={"/images/background.png"}
