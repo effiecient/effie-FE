@@ -1,7 +1,5 @@
 # How to Clone and Setup Repo
 
-// temp. trigger vercel
-
 ## For SSH
 
 ```
