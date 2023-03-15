@@ -1,5 +1,7 @@
 # How to Clone and Setup Repo
+
 ## For SSH
+
 ```
 git clone git@github.com:effiecient/effie-FE.git
 cd effie-FE
@@ -14,6 +16,7 @@ git remote set-url origin --push --add git@github.com:effiecient/effie-BE.git
 ```
 
 ## For HTTPS
+
 ```
 git clone https://github.com/effiecient/effie-FE.git
 cd effie-FE
@@ -28,11 +31,13 @@ git remote set-url origin --push --add https://github.com/effiecient/effie-BE.gi
 ```
 
 # Conventions
-- Use `"` for strings
-- Use 2 spaces
-- Use `;`
+
+-   Use `"` for strings
+-   Use 2 spaces
+-   Use `;`
 
 # Project Description
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
@@ -53,17 +58,18 @@ The `pages/api` directory is mapped to `/api/*`. Files in this directory are tre
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-## Learn More
+## setting up
 
-To learn more about Next.js, take a look at the following resources:
+add
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+127.0.0.1 www.example.com {username}.example.com
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+to your hosts file (usually located at `/etc/hosts`)
 
-## Deploy on Vercel
+then access your app at `http://example.com:3000`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+reason: to share cookies between different subdomains, we can't use `localhost` as the domain
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+(ideally we use effie.boo, but for some reason I don't understand, it doesn't work. It's redirected to https://effie.boo:3000/ when it should be http://effie.boo:3000/)

@@ -1,79 +1,89 @@
-import { EFFIE_AUTH_TOKEN } from "@/constants";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 
 // in milliseconds
-const FETCT_TIMEOUT = 10000;
+const FETCH_TIMEOUT = 10000;
 
-const useFetchEffieBE = (
-    url: string,
-    method: string = "GET",
-    auth: any = undefined,
-    body: any = {}
-) => {
-    // return { isLoading, isError, respond }
+// prop type
+type Props = {
+    url: string;
+    method?: "GET" | "POST";
+    auth?: string;
+    body?: any;
+};
+
+const useFetchEffieBE = ({ auth, url = "", method = "GET", body }: Props) => {
+    const isMounted = useRef(true);
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
-    const [respond, setRespond] = useState<any>();
-
-    const bodyRef = useRef(body);
-    if (auth === undefined) {
-        if (typeof localStorage !== "undefined") {
-            auth = localStorage.getItem(EFFIE_AUTH_TOKEN);
-        }
-    }
+    const [response, setResponse] = useState<any>();
 
     useEffect(() => {
-        if (url) {
-            // fetch with timeout
-            const controller = new AbortController();
-            const signal = controller.signal;
-            const timeout = setTimeout(() => controller.abort(), FETCT_TIMEOUT);
-            let options: any;
-            if (method === "GET") {
-                options = {
-                    signal,
-                };
-            } else if (method === "POST") {
-                options = {
-                    method: method,
-                    headers: {
-                        Authorization: auth,
-                        "Content-Type": "application/json",
-                        Accept: "application/json",
-                    },
-                    body: JSON.stringify(bodyRef.current),
-                    signal,
-                };
-            }
-            if (auth) {
-                // add Authorization key
-                if (!options.headers) {
-                    options.headers = {};
-                }
-                options.headers["Authorization"] = auth;
-            }
+        isMounted.current = true;
+        setIsLoading(true);
+        setIsError(false);
+        setResponse(undefined);
 
-            fetch(url, options)
-                .then((res) => res.json())
-                .then((res) => {
-                    setRespond(res);
-                    setIsError(false);
-                    setIsLoading(false);
-                    // clear timeout
-                    clearTimeout(timeout);
-                })
-                .catch((err) => {
-                    setRespond(err);
-                    setIsError(true);
-                    setIsLoading(false);
-                    // clear timeout
-                });
-        } else {
+        const controller = new AbortController();
+        const signal = controller.signal;
+
+        if (url === "") {
             setIsError(true);
             setIsLoading(false);
+            return;
         }
-    }, [url, method, auth, bodyRef]);
-    return { isLoading, isError, respond };
+
+        const headers: any = {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+        };
+
+        if (auth) {
+            headers["Authorization"] = auth;
+        }
+
+        const options = {
+            method,
+            headers,
+            signal,
+            body: method === "POST" ? JSON.stringify(body) : undefined,
+        };
+
+        const timeout = setTimeout(() => {
+            controller.abort();
+        }, FETCH_TIMEOUT);
+
+        fetch(url, options)
+            .then((res) => res.json())
+            .then((data) => {
+                if (isMounted.current) {
+                    setResponse(data);
+                    setIsError(false);
+                    setIsLoading(false);
+                }
+            })
+            .catch((err) => {
+                if (isMounted.current) {
+                    setResponse(err);
+                    setIsError(true);
+                    setIsLoading(false);
+                }
+            })
+            .finally(() => {
+                clearTimeout(timeout);
+            });
+
+        return () => {
+            isMounted.current = false;
+            controller.abort();
+            clearTimeout(timeout);
+        };
+    }, [url, method, auth, body]);
+
+    return {
+        isLoading: url === "" ? isLoading : response ? false : true,
+        isError,
+        response,
+    };
 };
 
 export default useFetchEffieBE;

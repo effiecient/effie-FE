@@ -10,6 +10,14 @@ import newLinkIcon from "@/public/icons/new_link.svg";
 import userImg from "@/public/images/user.png";
 import { useRegister, useUserStore } from "@/hooks";
 import Link from "next/link";
+// TODO: update this to import from config only
+import {
+    FE_BASE_URL,
+    FE_DOMAIN,
+    FE_FULL_BASE_URL,
+    FE_PROTOCOL,
+    FE_TOP_LEVEL_DOMAIN,
+} from "@/config/fe-config";
 
 type NavbarProps = {
     isOnLanding?: boolean;
@@ -26,9 +34,13 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
     return (
         <>
             {/* Navbar */}
-            <div className="sticky top-0 left-0 z-50 flex flex-row justify-between w-full bg-white items-center px-6 py-3">
+            <div
+                className={`${
+                    isOnLanding ? "sticky z-10" : "relative"
+                } top-0 left-0  flex flex-row justify-between w-full bg-white items-center px-6 py-3`}
+            >
                 {/* Logo */}
-                <Link href={"/"}>
+                <Link href={`${FE_FULL_BASE_URL}`}>
                     <h1 className="text-2xl">Effie</h1>
                 </Link>
                 {/* Login-Register */}
@@ -39,7 +51,9 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
                             {username}
                             {isOnLanding ? (
                                 <>
-                                    <Link href={"/browser"}>
+                                    <Link
+                                        href={`${FE_PROTOCOL}://${username}.${FE_BASE_URL}`}
+                                    >
                                         <Button type="default" pill={true}>
                                             <div className="flex flex-row gap-1.5 items-center">
                                                 {}
@@ -76,7 +90,7 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
                                     className={`cursor-pointer`}
                                 />
                                 {showLogout && (
-                                    <div className="absolute right-0 mt-2">
+                                    <div className="absolute right-0 mt-2 z-10">
                                         <Link href={"/logout"}>
                                             <Button
                                                 type="default"

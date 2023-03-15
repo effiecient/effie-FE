@@ -2,15 +2,33 @@ import Head from "next/head";
 import LinkCard from "@/components/link-card";
 import Image from "next/image";
 import SideBar from "@/components/side-bar";
-import { BASE_URL } from "@/config/be-config";
-import { useFetchEffieBE } from "@/hooks";
+import { BE_BASE_URL } from "@/config/be-config";
+import { useFetchEffieBE, useUserStore } from "@/hooks";
 import Navbar from "@/components/navbar";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import NewLink from "@/components/create-modal/new-link";
+import NewFolder from "@/components/create-modal/new-folder";
+type BrowserType = {
+    username?: string;
+    location?: string[];
+};
 
-export default function Browser() {
-    const { isLoading, isError, respond } = useFetchEffieBE(
-        `${BASE_URL}/directory/christojeffrey/`,
-        "GET"
-    );
+export default function Browser({ location = [] }: BrowserType) {
+    const router = useRouter();
+    const [isNewLinkModalOpen, setIsNewLinkModalOpen] = useState(false);
+    const [isNewFolderModalOpen, setIsNewFolderModalOpen] = useState(false);
+    const handleNewLinkClick = () => {
+        setIsNewLinkModalOpen(true);
+    };
+    const handleNewFolderClick = () => {
+        setIsNewFolderModalOpen(true);
+    };
+    const username = useUserStore((state: any) => state.username);
+
+    const { isLoading, isError, response } = useFetchEffieBE({
+        url: `${BE_BASE_URL}/directory/${username}/${location.join("/")}`,
+    });
 
     if (isLoading) {
         return <div>Loading...</div>;
@@ -19,15 +37,20 @@ export default function Browser() {
         return <div>Error</div>;
     }
 
+    if (response.status === "ERROR") {
+        return <div>{response.message}</div>;
+    }
+
     const data: {
-        childrens: {
+        type: string;
+        childrens?: {
             title: string;
             isPinned: boolean;
             link: string;
             type: string;
             effieUrl: string;
         }[];
-    } = respond.data;
+    } = response.data;
 
     return (
         <>
@@ -44,12 +67,38 @@ export default function Browser() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <Navbar isOnLanding />
             <main className="bg-white flex w-full min-h-screen relative">
                 {/* SIDEBAR */}
                 <SideBar />
-                {/* BROWSER */}
+                {/* BROWSER Loader*/}
                 <div className="flex flex-col gap-6 flex-grow bg-neutral-50 min-h-full w-full rounded-tl-2xl p-12">
+                    {/* breadcrumbs */}
+                    <div className="flex gap-2">
+                        {[username].concat(location).map((loc, index) => {
+                            return (
+                                <div
+                                    key={index}
+                                    className="flex gap-2 items-center"
+                                >
+                                    {index !== 0 && (
+                                        <p className="text-neutral-400">/</p>
+                                    )}
+                                    <p
+                                        className="text-neutral-400 hover:cursor-pointer hover:text-neutral-500"
+                                        onClick={() => {
+                                            router.push(
+                                                `/${location
+                                                    .slice(0, index)
+                                                    .join("/")}`
+                                            );
+                                        }}
+                                    >
+                                        {loc}
+                                    </p>
+                                </div>
+                            );
+                        })}
+                    </div>
                     <div className="fixed right-0 bottom-0 w-[50vw] h-[70vh]">
                         <Image
                             src={"/images/background.png"}
@@ -63,11 +112,16 @@ export default function Browser() {
                     </div>
                     <h5 className="text-neutral-400">Folders</h5>
                     <section className="flex gap-4 w-full flex-wrap">
-                        <LinkCard content="new folder" />
+                        <LinkCard
+                            content="new folder"
+                            onClick={handleNewFolderClick}
+                        />
                         {data &&
+                            data.childrens &&
                             Object.keys(data.childrens).map(
                                 (child: any, index) => {
                                     if (
+                                        data.childrens &&
                                         data.childrens[child].type === "folder"
                                     ) {
                                         return (
@@ -82,6 +136,10 @@ export default function Browser() {
                                                     data.childrens[child]
                                                         .effieUrl
                                                 }
+                                                onClick={() => {
+                                                    console.log("clicked");
+                                                    router.push(`/${child}`);
+                                                }}
                                             />
                                         );
                                     }
@@ -90,11 +148,18 @@ export default function Browser() {
                     </section>
                     <h5 className="text-neutral-400">Links</h5>
                     <section className="flex gap-4 w-full flex-wrap">
-                        <LinkCard content="new link" />
+                        <LinkCard
+                            content="new link"
+                            onClick={handleNewLinkClick}
+                        />
                         {data &&
+                            data.childrens &&
                             Object.keys(data.childrens).map(
                                 (child: any, index) => {
-                                    if (data.childrens[child].type === "link") {
+                                    if (
+                                        data.childrens &&
+                                        data.childrens[child].type === "link"
+                                    ) {
                                         return (
                                             <LinkCard
                                                 key={index}
@@ -115,6 +180,15 @@ export default function Browser() {
                     </section>
                 </div>
             </main>
+            {/* modal */}
+            <NewLink
+                isOpen={isNewLinkModalOpen}
+                onClose={() => setIsNewLinkModalOpen(false)}
+            />
+            <NewFolder
+                isOpen={isNewFolderModalOpen}
+                onClose={() => setIsNewFolderModalOpen(false)}
+            />
         </>
     );
 }

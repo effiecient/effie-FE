@@ -6,7 +6,7 @@ import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 import { initializeApp } from "firebase/app";
 
-import { FIREBASE_CONFIG, BASE_URL } from "@/config";
+import { FIREBASE_CONFIG, BE_BASE_URL } from "@/config";
 import { useRouter } from "next/router";
 
 type RegisterProps = {
@@ -45,7 +45,7 @@ export default function Register({ isOpen, onClose }: RegisterProps) {
                         const body = {
                             uid: user.uid,
                         };
-                        const res = await fetch(`${BASE_URL}/user/check`, {
+                        const res = await fetch(`${BE_BASE_URL}/user/check`, {
                             method: "POST",
                             body: JSON.stringify(body),
                             headers: {
