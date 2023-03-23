@@ -57,6 +57,7 @@ export default function Register({ isOpen, onClose }: RegisterProps) {
                         const data = await res.json();
                         console.log("coba hit");
                         console.log(data);
+                        // TODO: Handle klik login belom regis
                         if (!data.data.isRegistered) {
                             // navigate to /createUsername
                             onClose();
