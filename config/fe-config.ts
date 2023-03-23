@@ -13,7 +13,8 @@
 export const FE_PROTOCOL = "https";
 
 export const FE_SUBDOMAIN = "www";
-export const FE_DOMAIN = "effie";
+export const FE_DOMAIN =
+    process.env.VERCEL_ENV === "production" ? "effie" : "dev.effie";
 export const FE_TOP_LEVEL_DOMAIN = "boo";
 
 export const FE_BASE_URL = `${FE_DOMAIN}.${FE_TOP_LEVEL_DOMAIN}`;
