@@ -1,4 +1,4 @@
-// export const BE_BASE_URL = "http://localhost:8080/api";
+// export const BE_BASE_URL = "http://localhost:3001/api";
 export const BE_BASE_URL =
     process.env.NODE_ENV === "production"
         ? "https://api.effie.boo/api"

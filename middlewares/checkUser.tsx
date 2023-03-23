@@ -1,7 +1,7 @@
 import { BE_BASE_URL } from "@/config";
 
 // TODO: update this to import from config only
-import { FE_DOMAIN } from "@/config/fe-config";
+import { FE_DOMAIN, FE_FULL_BASE_URL } from "@/config/fe-config";
 
 import { EFFIE_AUTH_TOKEN } from "@/constants";
 
@@ -72,11 +72,23 @@ export default function CheckUser({ children }: any) {
                 if (isError) {
                     setIsLoggedIn(false);
 
+                    // if token exist but invalid, redirect to logout
+                    if (effieAuthToken !== null) {
+                        // TODO: change to use next router
+                        window.location.href = `${FE_FULL_BASE_URL}/logout`;
+                    }
+
                     return <>error</>;
                 } else {
                     if (response.success) {
                         setUsername(response.username);
                         setIsLoggedIn(true);
+                    } else {
+                        // if token exist but invalid, redirect to logout
+                        if (effieAuthToken !== null) {
+                            // TODO: change to use next router
+                            window.location.href = `${FE_FULL_BASE_URL}/logout`;
+                        }
                     }
                     return children;
                 }
