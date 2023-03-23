@@ -1,4 +1,5 @@
 import { BE_BASE_URL } from "@/config";
+import { NODE_ENV } from "@/config/env-config";
 
 // TODO: update this to import from config only
 import { FE_DOMAIN, FE_FULL_BASE_URL } from "@/config/fe-config";
@@ -35,7 +36,12 @@ export default function CheckUser({ children }: any) {
         let isSubdomain = false;
         const arrayOfURL = window.location.hostname.split(".");
         // check the index location of domain
-        const indexOfDomain = arrayOfURL.indexOf(FE_DOMAIN);
+        let indexOfDomain;
+        if (NODE_ENV === "development") {
+            indexOfDomain = arrayOfURL.indexOf("dev");
+        } else {
+            indexOfDomain = arrayOfURL.indexOf(FE_DOMAIN);
+        }
         // if index 0, it is not a subdomain
         if (indexOfDomain === 0) {
             isSubdomain = false;
