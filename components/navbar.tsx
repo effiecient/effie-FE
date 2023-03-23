@@ -48,6 +48,7 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
                     {/* Navbar for logged-in users */}
                     {isLoggedIn ? (
                         <div className="flex flex-row items-center gap-1.5">
+                            env:
                             {process.env.VERCEL_ENV}
                             {username}
                             {isOnLanding ? (
