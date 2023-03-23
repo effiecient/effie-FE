@@ -9,15 +9,23 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import NewLink from "@/components/create-modal/new-link";
 import NewFolder from "@/components/create-modal/new-folder";
+import SideBarProperties from "@/components/side-bar-properties";
 type BrowserType = {
     username?: string;
     location?: string[];
 };
 
+type SelectedLink = {
+    title: string;
+    url: string;
+}
+
 export default function Browser({ location = [] }: BrowserType) {
     const router = useRouter();
     const [isNewLinkModalOpen, setIsNewLinkModalOpen] = useState(false);
     const [isNewFolderModalOpen, setIsNewFolderModalOpen] = useState(false);
+    const [isSideBarPropertiesOpen, setIsSideBarPropertiesOpen] = useState(false);
+    const [selectedLink, setSelectedLink] = useState({} as SelectedLink)
     const handleNewLinkClick = () => {
         setIsNewLinkModalOpen(true);
     };
@@ -136,9 +144,18 @@ export default function Browser({ location = [] }: BrowserType) {
                                                     data.childrens[child]
                                                         .effieUrl
                                                 }
-                                                onClick={() => {
+                                                onDoubleClick={() => {
                                                     console.log("clicked");
                                                     router.push(`/${child}`);
+                                                }}
+                                                onClick={() => {
+                                                    let title = data.childrens?.[child]?.title || ""
+                                                    let url = data.childrens?.[child]?.link || ""
+                                                    setIsSideBarPropertiesOpen(!isSideBarPropertiesOpen)
+                                                    setSelectedLink({
+                                                        title,
+                                                        url
+                                                    })
                                                 }}
                                             />
                                         );
@@ -179,6 +196,8 @@ export default function Browser({ location = [] }: BrowserType) {
                             )}
                     </section>
                 </div>
+                {/* SIDEBAR PROPERTIES */}
+                <SideBarProperties isOpen={isSideBarPropertiesOpen} linkData={selectedLink} onClose={() => setIsSideBarPropertiesOpen(false)}/>
             </main>
             {/* modal */}
             <NewLink

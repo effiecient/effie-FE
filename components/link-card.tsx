@@ -16,6 +16,7 @@ type LinkCardProps = {
     url?: string;
     effieUrl?: string;
     onClick?: () => void;
+    onDoubleClick?: () => void;
     className?: string;
 };
 
@@ -25,6 +26,7 @@ export default function LinkCard({
     url,
     effieUrl,
     onClick,
+    onDoubleClick,
     className,
 }: LinkCardProps) {
     const copySuccessRef = useRef<HTMLDivElement>(null);
@@ -44,6 +46,7 @@ export default function LinkCard({
         <>
             <div
                 onClick={onClick}
+                onDoubleClick={onDoubleClick}
                 className={`
                 ${className} 
                 ${
