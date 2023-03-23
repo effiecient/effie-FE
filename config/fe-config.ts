@@ -19,4 +19,4 @@ export const FE_FULL_BASE_URL = `${FE_PROTOCOL}://${FE_WWW_BASE_URL}`;
 // export const FE_BASE_URL = `${FE_DOMAIN}.${FE_TOP_LEVEL_DOMAIN}`;
 // export const FE_WWW_BASE_URL = `${FE_SUBDOMAIN}.${FE_DOMAIN}.${FE_TOP_LEVEL_DOMAIN}`;
 
-// export const FE_FULL_BASE_URL = `${FE_PROTOCOL}://${FE_BASE_URL}`;
+// export const FE_FULL_BASE_URL = `${FE_PROTOCOL}://${FE_WWW_BASE_URL}`;
