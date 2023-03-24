@@ -35,7 +35,7 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
         <>
             {/* Navbar */}
             <div
-                className={`sticky z-50 top-0 left-0  flex flex-row justify-between w-full bg-white items-center px-6 py-3`}
+                className={`sticky z-50 top-0 left-0 flex flex-row justify-between w-full bg-white items-center px-6 py-3`}
             >
                 {/* Logo */}
                 <Link href={`${FE_FULL_BASE_URL}`}>
