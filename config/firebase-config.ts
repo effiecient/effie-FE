@@ -1,4 +1,4 @@
-import { NODE_ENV } from "./env-config";
+import { NODE_ENV } from "./_env-config";
 
 export const FIREBASE_CONFIG =
     NODE_ENV === "production"

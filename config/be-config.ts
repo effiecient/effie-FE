@@ -1,4 +1,4 @@
-import { NODE_ENV, ENV_TYPE } from "./env-config";
+import { NODE_ENV, ENV_TYPE } from "./_env-config";
 
 let BE_BASE_URL: string;
 

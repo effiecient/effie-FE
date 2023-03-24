@@ -1,4 +1,4 @@
-import { NODE_ENV, ENV_TYPE } from "./env-config";
+import { NODE_ENV, ENV_TYPE } from "./_env-config";
 
 let FE_PROTOCOL: string;
 let FE_SUBDOMAIN: string;
