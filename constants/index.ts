@@ -1,3 +1,4 @@
-import { NODE_ENV } from "@/config/_env-config";
 export const EFFIE_AUTH_TOKEN =
-    NODE_ENV === "production" ? "authToken" : "devAuthToken";
+    process.env.NEXT_PUBLIC_VERCEL_ENV === "production"
+        ? "authToken"
+        : "devAuthToken";

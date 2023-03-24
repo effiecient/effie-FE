@@ -1,7 +1,5 @@
-import { NODE_ENV } from "./_env-config";
-
 export const FIREBASE_CONFIG =
-    NODE_ENV === "production"
+    process.env.NEXT_PUBLIC_VERCEL_ENV === "production"
         ? {
               apiKey: "AIzaSyBIlSbwlKUovrLptRCcByKoesYU8rZXMlw",
               authDomain: "effie-be.firebaseapp.com",

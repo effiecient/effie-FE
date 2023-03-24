@@ -1,12 +1,10 @@
-import { NODE_ENV, ENV_TYPE } from "./_env-config";
-
 let BE_BASE_URL: string;
 
-if (ENV_TYPE === "local") {
+if (process.env.NEXT_PUBLIC_ENV_TYPE === "local") {
     BE_BASE_URL = "http://localhost:3001/api";
 } else {
     BE_BASE_URL =
-        NODE_ENV === "production"
+        process.env.NEXT_PUBLIC_VERCEL_ENV === "production"
             ? "https://api.effie.boo/api"
             : "https://dev.api.effie.boo/api";
 }

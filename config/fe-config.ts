@@ -1,5 +1,3 @@
-import { NODE_ENV, ENV_TYPE } from "./_env-config";
-
 let FE_PROTOCOL: string;
 let FE_SUBDOMAIN: string;
 let FE_DOMAIN: string;
@@ -9,7 +7,7 @@ let FE_BASE_URL: string;
 let FE_WWW_BASE_URL: string;
 let FE_FULL_BASE_URL: string;
 
-if (ENV_TYPE === "local") {
+if (process.env.NEXT_PUBLIC_ENV_TYPE === "local") {
     FE_PROTOCOL = "http";
     FE_SUBDOMAIN = "www";
     FE_DOMAIN = "localhost";
@@ -21,7 +19,10 @@ if (ENV_TYPE === "local") {
 } else {
     FE_PROTOCOL = "https";
     FE_SUBDOMAIN = "www";
-    FE_DOMAIN = NODE_ENV == "production" ? "effie" : "dev.effie";
+    FE_DOMAIN =
+        process.env.NEXT_PUBLIC_VERCEL_ENV == "production"
+            ? "effie"
+            : "dev.effie";
     FE_TOP_LEVEL_DOMAIN = "boo";
     FE_BASE_URL = `${FE_DOMAIN}.${FE_TOP_LEVEL_DOMAIN}`;
     FE_WWW_BASE_URL = `${FE_SUBDOMAIN}.${FE_DOMAIN}.${FE_TOP_LEVEL_DOMAIN}`;
