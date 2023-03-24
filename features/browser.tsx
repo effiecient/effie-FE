@@ -110,9 +110,9 @@ export default function Browser({ location = [] }: BrowserType) {
                 />
 
                 {/* BROWSER */}
-                <div className="flex flex-col gap-6 flex-grow min-h-full w-full rounded-tl-2xl lg:ml-20 p-12 relative">
+                <div className="flex flex-col gap-6 flex-grow min-h-full w-full rounded-tl-2xl lg:ml-20 p-12 relative pb-28 lg:pb-12">
                     {/* BACKGROUND */}
-                    <div className="w-full min-h-full fixed top-16 left-20 bg-neutral-50 rounded-tl-2xl z-0" />
+                    <div className="w-full min-h-full fixed top-16 left-0 lg:left-20 bg-neutral-50 rounded-tl-2xl z-0" />
                     <div className="fixed right-0 bottom-0 w-[50vw] h-[70vh]">
                         <Image
                             src={"/images/background.png"}

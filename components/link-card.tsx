@@ -81,7 +81,7 @@ export default function LinkCard({
                                 alt="link"
                                 width={28}
                                 height={28}
-                                className="mr-2"
+                                className="hidden md:block mr-2"
                             />
                         ) : (
                             <div
