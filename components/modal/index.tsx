@@ -46,7 +46,7 @@ export default function Modal({
         <div
             className={`${styles.container} ${
                 isOpen ? "z-50" : "-z-10 opacity-0"
-            } duration-200`}
+            } transition-opacity duration-200`}
             onClick={onOutsideClick}
         >
             <div

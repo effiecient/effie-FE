@@ -23,7 +23,7 @@ export default function NewLink({ isOpen, onClose }: NewLinkProps) {
     // USER CONSTANTS
     const username = useUserStore((state: any) => state.username);
     const USER_BASE_URL = `${username}.${FE_BASE_URL}/`;
-    const currPathArray = window.location.pathname.split("/").slice(1);
+    const currPathArray = window.location.pathname.split("/").slice(1).filter((item) => item !== "");
 
 
 

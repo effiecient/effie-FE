@@ -10,6 +10,7 @@ import { useState, useEffect } from "react";
 import NewLink from "@/components/create-modal/new-link";
 import NewFolder from "@/components/create-modal/new-folder";
 import KeyboardShortcuts from "@/components/accessibilities/keyboard-shortcuts";
+import Breadcrumb from "@/components/breadcrumb";
 type BrowserType = {
     username?: string;
     location?: string[];
@@ -22,28 +23,30 @@ export default function Browser({ location = [] }: BrowserType) {
     // f - new folder
     // u - go up one folder in the path
     // listeners
-    useEffect(() => {
-        const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === "?") {
-                setIsKeyboardShortcutsModalOpen(true);
-            }
-            if (e.key === "l") {
-                handleNewLinkClick();
-            }
-            if (e.key === "f") {
-                handleNewFolderClick();
-            }
-            if (e.key === "u") {
-                router.push(
-                    `/${location.slice(0, location.length - 1).join("/")}`
-                );
-            }
-        };
-        window.addEventListener("keydown", handleKeyDown);
-        return () => {
-            window.removeEventListener("keydown", handleKeyDown);
-        };
-    }, [location]);
+    // useEffect(() => {
+    //     const handleKeyDown = (e: KeyboardEvent) => {
+    //         if (!isNewFolderModalOpen && !isNewLinkModalOpen && !isKeyboardShortcutsModalOpen) {
+    //             if (e.key === "?") {
+    //                 setIsKeyboardShortcutsModalOpen(true);
+    //             }
+    //             if (e.key === "l") {
+    //                 handleNewLinkClick();
+    //             }
+    //             if (e.key === "f") {
+    //                 handleNewFolderClick();
+    //             }
+    //             if (e.key === "u") {
+    //                 router.push(
+    //                     `/${location.slice(0, location.length - 1).join("/")}`
+    //                 );
+    //             }
+    //         }
+    //     };
+    //     window.addEventListener("keydown", handleKeyDown);
+    //     return () => {
+    //         window.removeEventListener("keydown", handleKeyDown);
+    //     };
+    // }, [location]);
 
     const router = useRouter();
     const [isNewLinkModalOpen, setIsNewLinkModalOpen] = useState(false);
@@ -120,29 +123,41 @@ export default function Browser({ location = [] }: BrowserType) {
                         />
                     </div>
                     {/* breadcrumbs */}
-                    <div className="flex gap-2 relative z-10">
-                        {[username].concat(location).map((loc, index) => {
+                    <div className="flex items-center relative z-10 -ml-4">
+                        <Breadcrumb 
+                            path={username} 
+                            onClick={() => {
+                                router.push(`/`);
+                            }}
+                        />
+                        { ((window.innerWidth < 768 && location.length > 1) || 
+                            (window.innerWidth >= 768 && location.length > 3)) && 
+                            (<>
+                                <p className="text-neutral-300">/</p>
+                                <Breadcrumb path="..." onClick={() => {
+                                    router.push(
+                                        `/${location
+                                            .slice(0, window.innerWidth < 768 ? -1 : -3)
+                                            .join("/")}`
+                                    );
+                                }} />
+                            </>)
+                        }
+                        { location.slice(window.innerWidth < 768 ? -1 : -3).map((loc, index) => {
                             return (
-                                <div
-                                    key={index}
-                                    className="flex gap-2 items-center"
-                                >
-                                    {index !== 0 && (
-                                        <p className="text-neutral-400">/</p>
-                                    )}
-                                    <p
-                                        className="text-neutral-400 hover:cursor-pointer hover:text-neutral-500"
+                                <>
+                                    <p className="text-neutral-300">/</p>
+                                    <Breadcrumb
+                                        path={loc}
                                         onClick={() => {
                                             router.push(
                                                 `/${location
-                                                    .slice(0, index)
+                                                    .slice(0, index+1)
                                                     .join("/")}`
                                             );
                                         }}
-                                    >
-                                        {loc}
-                                    </p>
-                                </div>
+                                    />
+                                </>
                             );
                         })}
                     </div>
