@@ -98,9 +98,12 @@ export default function Browser({ location = [] }: BrowserType) {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <main className="bg-white flex w-full min-h-screen relative">
+            <main className="bg-white flex w-full flex-grow relative">
                 {/* SIDEBAR */}
-                <SideBar />
+                <SideBar 
+                    handleNewLinkClick={handleNewLinkClick}
+                    handleNewFolderClick={handleNewFolderClick}
+                />
                 {/* BROWSER Loader*/}
                 <div className="flex flex-col gap-6 flex-grow bg-neutral-50 min-h-full w-full rounded-tl-2xl p-12">
                     {/* breadcrumbs */}
