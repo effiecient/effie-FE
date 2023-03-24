@@ -138,7 +138,12 @@ export default function Browser({ location = [] }: BrowserType) {
                                                 }
                                                 onClick={() => {
                                                     console.log("clicked");
-                                                    router.push(`/${child}`);
+                                                    // push append to current location
+                                                    router.push(
+                                                        `/${location
+                                                            .concat(child)
+                                                            .join("/")}`
+                                                    );
                                                 }}
                                             />
                                         );
