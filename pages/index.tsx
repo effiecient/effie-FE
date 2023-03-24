@@ -9,6 +9,8 @@ export default function Index() {
     console.log(process.env.VERCEL_ENV);
     console.log("process.env.NODE_ENV");
     console.log(process.env.NODE_ENV);
+    console.log("NEXT_PUBLIC_VERCEL_ENV");
+    console.log(process.env.NEXT_PUBLIC_VERCEL_ENV);
     if (isSubdomain) {
         return (
             <>
