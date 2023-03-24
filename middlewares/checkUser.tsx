@@ -38,7 +38,7 @@ export default function CheckUser({ children }: any) {
         // check the index location of domain
         let indexOfDomain;
         // handle if FE_SUBDOMAIN contain dot
-        if (FE_DOMAIN.indexOf(".") !== -1) {
+        if (FE_DOMAIN.indexOf(".") === -1) {
             indexOfDomain = arrayOfURL.indexOf(FE_DOMAIN);
         } else {
             // get the first index of FE_DOMAIN splited using dot
