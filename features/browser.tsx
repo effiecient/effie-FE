@@ -105,9 +105,22 @@ export default function Browser({ location = [] }: BrowserType) {
                     handleNewFolderClick={handleNewFolderClick}
                 />
                 {/* BROWSER Loader*/}
-                <div className="flex flex-col gap-6 flex-grow bg-neutral-50 min-h-full w-full rounded-tl-2xl p-12">
+                <div className="flex flex-col gap-6 flex-grow min-h-full w-full rounded-tl-2xl p-12 relative">
+                    {/* BACKGROUND */}
+                    <div className="w-full min-h-full fixed top-16 left-20 bg-neutral-50 rounded-tl-2xl z-0" />
+                    <div className="fixed right-0 bottom-0 w-[50vw] h-[70vh]">
+                        <Image
+                            src={"/images/background.png"}
+                            alt=""
+                            fill
+                            style={{
+                                objectFit: "contain",
+                                objectPosition: "right",
+                            }}
+                        />
+                    </div>
                     {/* breadcrumbs */}
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 relative z-10">
                         {[username].concat(location).map((loc, index) => {
                             return (
                                 <div
@@ -133,18 +146,7 @@ export default function Browser({ location = [] }: BrowserType) {
                             );
                         })}
                     </div>
-                    <div className="fixed right-0 bottom-0 w-[50vw] h-[70vh]">
-                        <Image
-                            src={"/images/background.png"}
-                            alt=""
-                            fill
-                            style={{
-                                objectFit: "contain",
-                                objectPosition: "right",
-                            }}
-                        />
-                    </div>
-                    <h5 className="text-neutral-400">Folders</h5>
+                    <h5 className="text-neutral-400 relative z-10">Folders</h5>
                     <section className="flex gap-4 w-full flex-wrap">
                         <LinkCard
                             content="new folder"
@@ -179,7 +181,7 @@ export default function Browser({ location = [] }: BrowserType) {
                                 }
                             )}
                     </section>
-                    <h5 className="text-neutral-400">Links</h5>
+                    <h5 className="text-neutral-400 relative z-10">Links</h5>
                     <section className="flex gap-4 w-full flex-wrap">
                         <LinkCard
                             content="new link"
