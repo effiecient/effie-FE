@@ -69,14 +69,8 @@ export default function LoggingIn() {
         );
     }
 
-    if (isError) {
-        return (
-            <div>
-                <h1>Error</h1>
-            </div>
-        );
-    }
-    if (response.status === "ERROR") {
+    if (isError || response.status === "ERROR") {
+        console.error(response);
         return (
             <div>
                 <h1>Error</h1>
