@@ -1,1 +1,3 @@
-export const EFFIE_AUTH_TOKEN = "authToken";
+import { NODE_ENV } from "@/config/env-config";
+export const EFFIE_AUTH_TOKEN =
+    NODE_ENV === "production" ? "authToken" : "devAuthToken";

@@ -1,24 +1,40 @@
-import { NODE_ENV } from "./env-config";
+import { NODE_ENV, ENV_TYPE } from "./env-config";
 
-export const FE_PROTOCOL = "http";
+let FE_PROTOCOL: string;
+let FE_SUBDOMAIN: string;
+let FE_DOMAIN: string;
+let FE_TOP_LEVEL_DOMAIN: string;
+let FE_PORT: string;
+let FE_BASE_URL: string;
+let FE_WWW_BASE_URL: string;
+let FE_FULL_BASE_URL: string;
 
-export const FE_SUBDOMAIN = "www";
-export const FE_DOMAIN = "example";
-export const FE_TOP_LEVEL_DOMAIN = "com";
-export const FE_PORT = "3000";
+if (ENV_TYPE === "local") {
+    FE_PROTOCOL = "http";
+    FE_SUBDOMAIN = "www";
+    FE_DOMAIN = "localhost";
+    FE_TOP_LEVEL_DOMAIN = "com";
+    FE_PORT = "3000";
+    FE_BASE_URL = `${FE_DOMAIN}.${FE_TOP_LEVEL_DOMAIN}:${FE_PORT}`;
+    FE_WWW_BASE_URL = `${FE_SUBDOMAIN}.${FE_DOMAIN}.${FE_TOP_LEVEL_DOMAIN}:${FE_PORT}`;
+    FE_FULL_BASE_URL = `${FE_PROTOCOL}://${FE_WWW_BASE_URL}`;
+} else {
+    FE_PROTOCOL = "https";
+    FE_SUBDOMAIN = "www";
+    FE_DOMAIN = NODE_ENV == "production" ? "effie" : "dev.effie";
+    FE_TOP_LEVEL_DOMAIN = "boo";
+    FE_BASE_URL = `${FE_DOMAIN}.${FE_TOP_LEVEL_DOMAIN}`;
+    FE_WWW_BASE_URL = `${FE_SUBDOMAIN}.${FE_DOMAIN}.${FE_TOP_LEVEL_DOMAIN}`;
+    FE_FULL_BASE_URL = `${FE_PROTOCOL}://${FE_WWW_BASE_URL}`;
+}
 
-export const FE_BASE_URL = `${FE_DOMAIN}.${FE_TOP_LEVEL_DOMAIN}:${FE_PORT}`;
-export const FE_WWW_BASE_URL = `${FE_SUBDOMAIN}.${FE_DOMAIN}.${FE_TOP_LEVEL_DOMAIN}:${FE_PORT}`;
-
-export const FE_FULL_BASE_URL = `${FE_PROTOCOL}://${FE_WWW_BASE_URL}`;
-
-// export const FE_PROTOCOL = "https";
-
-// export const FE_SUBDOMAIN = "www";
-// export const FE_DOMAIN = NODE_ENV == "production" ? "effie" : "dev.effie";
-// export const FE_TOP_LEVEL_DOMAIN = "boo";
-
-// export const FE_BASE_URL = `${FE_DOMAIN}.${FE_TOP_LEVEL_DOMAIN}`;
-// export const FE_WWW_BASE_URL = `${FE_SUBDOMAIN}.${FE_DOMAIN}.${FE_TOP_LEVEL_DOMAIN}`;
-
-// export const FE_FULL_BASE_URL = `${FE_PROTOCOL}://${FE_WWW_BASE_URL}`;
+export {
+    FE_PROTOCOL,
+    FE_SUBDOMAIN,
+    FE_DOMAIN,
+    FE_TOP_LEVEL_DOMAIN,
+    FE_PORT,
+    FE_BASE_URL,
+    FE_WWW_BASE_URL,
+    FE_FULL_BASE_URL,
+};
