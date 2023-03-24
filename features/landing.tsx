@@ -12,7 +12,6 @@ import Navbar from "@/components/navbar";
 export default function Landing() {
     const isRegisterOpen = useRegister((state) => state.isRegisterOpen);
     const setIsRegisterOpen = useRegister((state) => state.setIsRegisterOpen);
-    console.log(process.env.NODE_ENV);
     return (
         <>
             <Head>
@@ -32,7 +31,6 @@ export default function Landing() {
             <main className="px-44 xl:px-[20%] py-32">
                 <div className="grid grid-cols-2 grid-rows-3 gap-y-24 gap-x-20 items-center justify-center">
                     <div className="">
-                        {process.env.NODE_ENV}
                         <h1 className="mb-4">
                             All your links,
                             <br />
