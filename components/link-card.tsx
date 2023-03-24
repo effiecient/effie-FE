@@ -1,8 +1,6 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import CopyIcon from "@/public/icons/copy";
 import Image from "next/image";
-import NewLink from "./create-modal/new-link";
-import NewFolder from "./create-modal/new-folder";
 
 type LinkCardProps = {
     content:

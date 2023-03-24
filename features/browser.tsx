@@ -6,18 +6,49 @@ import { BE_BASE_URL } from "@/config/be-config";
 import { useFetchEffieBE, useUserStore } from "@/hooks";
 import Navbar from "@/components/navbar";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import NewLink from "@/components/create-modal/new-link";
 import NewFolder from "@/components/create-modal/new-folder";
+import KeyboardShortcuts from "@/components/accessibilities/keyboard-shortcuts";
 type BrowserType = {
     username?: string;
     location?: string[];
 };
 
 export default function Browser({ location = [] }: BrowserType) {
+    // KEYBOARD SHORTCUTS
+    // ? - help
+    // l - new link
+    // f - new folder
+    // u - go up one folder in the path
+    // listeners
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "?") {
+                setIsKeyboardShortcutsModalOpen(true);
+            }
+            if (e.key === "l") {
+                handleNewLinkClick();
+            }
+            if (e.key === "f") {
+                handleNewFolderClick();
+            }
+            if (e.key === "u") {
+                router.push(
+                    `/${location.slice(0, location.length - 1).join("/")}`
+                );
+            }
+        };
+        window.addEventListener("keydown", handleKeyDown);
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [location]);
+
     const router = useRouter();
     const [isNewLinkModalOpen, setIsNewLinkModalOpen] = useState(false);
     const [isNewFolderModalOpen, setIsNewFolderModalOpen] = useState(false);
+    const [isKeyboardShortcutsModalOpen, setIsKeyboardShortcutsModalOpen] = useState(false);
     const handleNewLinkClick = () => {
         setIsNewLinkModalOpen(true);
     };
@@ -137,8 +168,7 @@ export default function Browser({ location = [] }: BrowserType) {
                                                         .effieUrl
                                                 }
                                                 onClick={() => {
-                                                    console.log("clicked");
-                                                    router.push(`/${child}`);
+                                                    router.push(`/${location.join("/")}/${child}`);
                                                 }}
                                             />
                                         );
@@ -188,6 +218,10 @@ export default function Browser({ location = [] }: BrowserType) {
             <NewFolder
                 isOpen={isNewFolderModalOpen}
                 onClose={() => setIsNewFolderModalOpen(false)}
+            />
+            <KeyboardShortcuts
+                isOpen={isKeyboardShortcutsModalOpen}
+                onClose={() => setIsKeyboardShortcutsModalOpen(false)}
             />
         </>
     );
