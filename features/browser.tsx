@@ -18,6 +18,7 @@ type BrowserType = {
 
 export default function Browser({ location = [] }: BrowserType) {
     // KEYBOARD SHORTCUTS
+    // CURRENTLY DEACTIVATED BECAUSE IT INTERFERES WITH INPUT
     // ? - help
     // l - new link
     // f - new folder
@@ -107,8 +108,9 @@ export default function Browser({ location = [] }: BrowserType) {
                     handleNewLinkClick={handleNewLinkClick}
                     handleNewFolderClick={handleNewFolderClick}
                 />
-                {/* BROWSER Loader*/}
-                <div className="flex flex-col gap-6 flex-grow min-h-full w-full rounded-tl-2xl p-12 relative">
+
+                {/* BROWSER */}
+                <div className="flex flex-col gap-6 flex-grow min-h-full w-full rounded-tl-2xl lg:ml-20 p-12 relative">
                     {/* BACKGROUND */}
                     <div className="w-full min-h-full fixed top-16 left-20 bg-neutral-50 rounded-tl-2xl z-0" />
                     <div className="fixed right-0 bottom-0 w-[50vw] h-[70vh]">
@@ -122,7 +124,8 @@ export default function Browser({ location = [] }: BrowserType) {
                             }}
                         />
                     </div>
-                    {/* breadcrumbs */}
+
+                    {/* BREADCRUMBS */}
                     <div className="sticky top-16 w-full bg-neutral-50 flex items-center z-20 -ml-4 -mt-4">
                         <Breadcrumb 
                             path={username} 
@@ -161,6 +164,8 @@ export default function Browser({ location = [] }: BrowserType) {
                             );
                         })}
                     </div>
+
+                    {/* CONTENT */}
                     <h5 className="text-neutral-400 relative z-10">Folders</h5>
                     <section className="flex gap-4 w-full flex-wrap">
                         <LinkCard
@@ -230,7 +235,8 @@ export default function Browser({ location = [] }: BrowserType) {
                     </section>
                 </div>
             </main>
-            {/* modal */}
+
+            {/* MODALS */}
             <NewLink
                 isOpen={isNewLinkModalOpen}
                 onClose={() => setIsNewLinkModalOpen(false)}

@@ -38,7 +38,7 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
                 className={`sticky z-50 top-0 left-0 flex flex-row justify-between w-full bg-white items-center px-6 py-3`}
             >
                 {/* Logo */}
-                <Link href={`${FE_FULL_BASE_URL}`}>
+                <Link href={`${FE_FULL_BASE_URL}`} target="_self">
                     <h1 className="text-2xl">Effie</h1>
                 </Link>
                 {/* Login-Register */}
@@ -53,6 +53,7 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
                                 <>
                                     <Link
                                         href={`${FE_PROTOCOL}://${username}.${FE_BASE_URL}`}
+                                        target="_self"
                                     >
                                         <Button type="default" pill={true}>
                                             <div className="flex flex-row gap-1.5 items-center">
