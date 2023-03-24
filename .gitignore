@@ -38,4 +38,4 @@ next-env.d.ts
 .env
 
 # config
-config/_env-config.ts
+/config/_env-config.ts
