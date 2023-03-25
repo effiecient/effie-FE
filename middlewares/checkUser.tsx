@@ -39,6 +39,10 @@ export default function CheckUser({ children }: any) {
         let indexOfDomain;
         if (NODE_ENV === "development") {
             indexOfDomain = arrayOfURL.indexOf("dev");
+            // If it's example
+            if (indexOfDomain === -1) {
+                indexOfDomain = arrayOfURL.indexOf("example");
+            }
         } else {
             indexOfDomain = arrayOfURL.indexOf(FE_DOMAIN);
         }
