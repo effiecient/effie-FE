@@ -37,14 +37,12 @@ export default function CheckUser({ children }: any) {
         const arrayOfURL = window.location.hostname.split(".");
         // check the index location of domain
         let indexOfDomain;
-        if (NODE_ENV === "development") {
-            indexOfDomain = arrayOfURL.indexOf("dev");
-            // If it's example
-            if (indexOfDomain === -1) {
-                indexOfDomain = arrayOfURL.indexOf("example");
-            }
-        } else {
+        // handle if FE_SUBDOMAIN contain dot
+        if (FE_DOMAIN.indexOf(".") === -1) {
             indexOfDomain = arrayOfURL.indexOf(FE_DOMAIN);
+        } else {
+            // get the first index of FE_DOMAIN splited using dot
+            indexOfDomain = arrayOfURL.indexOf(FE_DOMAIN.split(".")[0]);
         }
         // if index 0, it is not a subdomain
         if (indexOfDomain === 0) {

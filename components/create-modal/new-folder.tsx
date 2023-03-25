@@ -39,14 +39,18 @@ export default function NewFolder({ isOpen, onClose }: NewFolderProps) {
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
-        const linkName = formData.get("folder-name");
+        const linkName: any = formData.get("folder-name");
         let path = window.location.pathname;
         const title = formData.get("title") || linkName;
         const thumbnailURL = formData.get("thumbnail-url");
         // Add "/" to the start of the link name if it doesn't exist
-        // if (linkName && linkName.slice(0, 1) !== "/") {
-        //     path = "/" + linkName;
-        // }
+
+        // validate
+        // check if linkName has space
+        if (linkName && linkName.includes(" ")) {
+            alert("Link name cannot have space");
+            return;
+        }
         const data = {
             username: username,
             title: title,

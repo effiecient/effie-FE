@@ -146,7 +146,12 @@ export default function Browser({ location = [] }: BrowserType) {
                                                 }
                                                 onDoubleClick={() => {
                                                     console.log("clicked");
-                                                    router.push(`/${child}`);
+                                                    // push append to current location
+                                                    router.push(
+                                                        `/${location
+                                                            .concat(child)
+                                                            .join("/")}`
+                                                    );
                                                 }}
                                                 onClick={() => {
                                                     let title = data.childrens?.[child]?.title || ""
