@@ -10,7 +10,7 @@ let FE_FULL_BASE_URL: string;
 if (process.env.NEXT_PUBLIC_ENV_TYPE === "local") {
     FE_PROTOCOL = "http";
     FE_SUBDOMAIN = "www";
-    FE_DOMAIN = "localhost";
+    FE_DOMAIN = "example";
     FE_TOP_LEVEL_DOMAIN = "com";
     FE_PORT = "3000";
     FE_BASE_URL = `${FE_DOMAIN}.${FE_TOP_LEVEL_DOMAIN}:${FE_PORT}`;
