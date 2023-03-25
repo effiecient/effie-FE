@@ -10,22 +10,30 @@ import { useState } from "react";
 import NewLink from "@/components/create-modal/new-link";
 import NewFolder from "@/components/create-modal/new-folder";
 import SideBarProperties from "@/components/side-bar-properties";
+import { FE_FULL_BASE_URL } from "@/config/fe-config";
+import { FolderLinkData, FolderLinkDataArray } from "@/type";
 type BrowserType = {
     username?: string;
     location?: string[];
 };
 
-type SelectedLink = {
-    title: string;
-    url: string;
+function compareSelectedItem(a: FolderLinkData, b: FolderLinkData): boolean {
+    if (a.type !== b.type) {
+        return false;
+    }
+    return a.title === b.title && a.effieUrl === b.effieUrl;
 }
 
 export default function Browser({ location = [] }: BrowserType) {
     const router = useRouter();
     const [isNewLinkModalOpen, setIsNewLinkModalOpen] = useState(false);
     const [isNewFolderModalOpen, setIsNewFolderModalOpen] = useState(false);
-    const [isSideBarPropertiesOpen, setIsSideBarPropertiesOpen] = useState(false);
-    const [selectedLink, setSelectedLink] = useState({} as SelectedLink)
+    const [isSideBarPropertiesOpen, setIsSideBarPropertiesOpen] =
+        useState(false);
+    const [isEdit, setIsEdit] = useState(false);
+    const [isEditAccess, setIsEditAccess] = useState(false);
+    const [link, setLink] = useState("");
+    const [selectedItem, setSelectedItem] = useState({} as FolderLinkData);
     const handleNewLinkClick = () => {
         setIsNewLinkModalOpen(true);
     };
@@ -49,16 +57,7 @@ export default function Browser({ location = [] }: BrowserType) {
         return <div>{response.message}</div>;
     }
 
-    const data: {
-        type: string;
-        childrens?: {
-            title: string;
-            isPinned: boolean;
-            link: string;
-            type: string;
-            effieUrl: string;
-        }[];
-    } = response.data;
+    const data: FolderLinkDataArray = response.data;
 
     return (
         <>
@@ -145,7 +144,6 @@ export default function Browser({ location = [] }: BrowserType) {
                                                         .effieUrl
                                                 }
                                                 onDoubleClick={() => {
-                                                    console.log("clicked");
                                                     // push append to current location
                                                     router.push(
                                                         `/${location
@@ -154,13 +152,55 @@ export default function Browser({ location = [] }: BrowserType) {
                                                     );
                                                 }}
                                                 onClick={() => {
-                                                    let title = data.childrens?.[child]?.title || ""
-                                                    let url = data.childrens?.[child]?.link || ""
-                                                    setIsSideBarPropertiesOpen(!isSideBarPropertiesOpen)
-                                                    setSelectedLink({
-                                                        title,
-                                                        url
-                                                    })
+                                                    let url = `${FE_FULL_BASE_URL}/${location
+                                                        .concat(child)
+                                                        .join("/")}`;
+                                                    setLink(url);
+                                                    // Close only if clicked on same item
+                                                    if (
+                                                        compareSelectedItem(
+                                                            selectedItem,
+                                                            data.childrens?.[
+                                                                child
+                                                            ] ?? {
+                                                                title: "",
+                                                                isPinned: false,
+                                                                link: "",
+                                                                type: "folder",
+                                                                effieUrl: "",
+                                                            }
+                                                        ) &&
+                                                        isSideBarPropertiesOpen
+                                                    ) {
+                                                        setIsSideBarPropertiesOpen(
+                                                            !isSideBarPropertiesOpen
+                                                        );
+                                                        setIsEdit(false);
+                                                        setIsEditAccess(false);
+                                                        // dummy data
+                                                        setSelectedItem({
+                                                            title: "",
+                                                            isPinned: false,
+                                                            link: "",
+                                                            type: "folder",
+                                                            effieUrl: "",
+                                                        });
+                                                    } else {
+                                                        setIsSideBarPropertiesOpen(
+                                                            true
+                                                        );
+                                                        setSelectedItem(
+                                                            data.childrens?.[
+                                                                child
+                                                            ] ?? {
+                                                                title: "",
+                                                                isPinned: false,
+                                                                link: "",
+                                                                type: "folder",
+                                                                effieUrl: "",
+                                                            }
+                                                        );
+                                                    }
                                                 }}
                                             />
                                         );
@@ -202,7 +242,16 @@ export default function Browser({ location = [] }: BrowserType) {
                     </section>
                 </div>
                 {/* SIDEBAR PROPERTIES */}
-                <SideBarProperties isOpen={isSideBarPropertiesOpen} linkData={selectedLink} onClose={() => setIsSideBarPropertiesOpen(false)}/>
+                <SideBarProperties
+                    isOpen={isSideBarPropertiesOpen}
+                    itemData={selectedItem}
+                    isEdit={isEdit}
+                    isEditAccess={isEditAccess}
+                    setIsEdit={setIsEdit}
+                    setIsEditAccess={setIsEditAccess}
+                    link={link}
+                    onClose={() => {setIsSideBarPropertiesOpen(false)}}
+                />
             </main>
             {/* modal */}
             <NewLink

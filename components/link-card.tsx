@@ -3,6 +3,7 @@ import CopyIcon from "@/public/icons/copy";
 import Image from "next/image";
 import NewLink from "./create-modal/new-link";
 import NewFolder from "./create-modal/new-folder";
+import { copyToClipboard } from "@/utils";
 
 type LinkCardProps = {
     content:
@@ -33,7 +34,11 @@ export default function LinkCard({
 
     const copyEffieUrl = () => {
         copySuccessRef.current?.classList.remove("opacity-0", "-translate-y-1");
-        navigator.clipboard.writeText(effieUrl ? effieUrl : "");
+        if (!navigator.clipboard) { // Fallback to unsupported browsers
+            copyToClipboard(effieUrl ?? "");
+        } else {
+            navigator.clipboard.writeText(effieUrl ?? "");
+        }
         setTimeout(() => {
             copySuccessRef.current?.classList.add(
                 "opacity-0",
