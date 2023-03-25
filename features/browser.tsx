@@ -10,7 +10,7 @@ import { useState } from "react";
 import NewLink from "@/components/create-modal/new-link";
 import NewFolder from "@/components/create-modal/new-folder";
 import SideBarProperties from "@/components/side-bar-properties";
-import { FE_FULL_BASE_URL } from "@/config/fe-config";
+import { FE_BASE_URL, FE_FULL_BASE_URL } from "@/config/fe-config";
 import { FolderLinkData, FolderLinkDataArray } from "@/type";
 type BrowserType = {
     username?: string;
@@ -152,7 +152,7 @@ export default function Browser({ location = [] }: BrowserType) {
                                                     );
                                                 }}
                                                 onClick={() => {
-                                                    let url = `${FE_FULL_BASE_URL}/${location
+                                                    let url = `${username}.${FE_BASE_URL}/${location
                                                         .concat(child)
                                                         .join("/")}`;
                                                     setLink(url);
@@ -234,6 +234,58 @@ export default function Browser({ location = [] }: BrowserType) {
                                                     data.childrens[child]
                                                         .effieUrl
                                                 }
+                                                onClick={() => {
+                                                    let url = `${username}.${FE_BASE_URL}/${location
+                                                        .concat(child)
+                                                        .join("/")}`;
+                                                    setLink(url);
+                                                    console.log(data?.childrens)
+                                                    // Close only if clicked on same item
+                                                    if (
+                                                        compareSelectedItem(
+                                                            selectedItem,
+                                                            data.childrens?.[
+                                                                child
+                                                            ] ?? {
+                                                                title: "",
+                                                                isPinned: false,
+                                                                link: "",
+                                                                type: "link",
+                                                                effieUrl: "",
+                                                            }
+                                                        ) &&
+                                                        isSideBarPropertiesOpen
+                                                    ) {
+                                                        setIsSideBarPropertiesOpen(
+                                                            !isSideBarPropertiesOpen
+                                                        );
+                                                        setIsEdit(false);
+                                                        setIsEditAccess(false);
+                                                        // dummy data
+                                                        setSelectedItem({
+                                                            title: "",
+                                                            isPinned: false,
+                                                            link: "",
+                                                            type: "link",
+                                                            effieUrl: "",
+                                                        });
+                                                    } else {
+                                                        setIsSideBarPropertiesOpen(
+                                                            true
+                                                        );
+                                                        setSelectedItem(
+                                                            data.childrens?.[
+                                                                child
+                                                            ] ?? {
+                                                                title: "",
+                                                                isPinned: false,
+                                                                link: "",
+                                                                type: "link",
+                                                                effieUrl: "",
+                                                            }
+                                                        );
+                                                    }
+                                                }}
                                             />
                                         );
                                     }

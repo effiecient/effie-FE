@@ -33,6 +33,10 @@ export default function SideBarProperties({
     onClose,
     link,
 }: SideBarPropertiesProps) {
+    const [newTitle, setNewTitle] = useState(itemData?.title ?? "");
+    const [newLink, setNewLink] = useState(itemData?.link ?? "");
+    const [newAccess, setNewAccess] = useState(itemData?.isShared ?? false);
+
     const copySuccessRef = useRef<HTMLDivElement>(null);
     const copyEffieUrl = () => {
         copySuccessRef.current?.classList.remove("opacity-0", "-translate-y-1");
@@ -81,22 +85,61 @@ export default function SideBarProperties({
                         </button>
                     </div>
                 </div>
-                {isEdit ? (<Input type="text" id="title-input" name="title-input" placeholder={itemData?.title}></Input>) : (<h3>{itemData?.title}</h3>)}
-                
+                {isEdit ? (
+                    <Input
+                        type="text"
+                        className="flex w-full flex-wrap text-lg font-bold"
+                        id="title-input"
+                        name="title-input"
+                        placeholder={itemData?.title}
+                        onChange={(e) => setNewTitle(e.target.value)}
+                    ></Input>
+                ) : (
+                    <h3>{itemData?.title}</h3>
+                )}
             </div>
+            {itemData.type === "link" && !isEdit && (
+                <div className="mb-7">
+                    <h5>Link</h5>
+                    <Link href={itemData.link} className="underline">{itemData.link}</Link>
+                </div>
+            )}
+            {itemData.type === "link" && isEdit && (
+                <div className="mb-7">
+                    <h5>Link</h5>
+                    <Input
+                        type="text"
+                        className="flex w-full flex-wrap"
+                        id="link-input"
+                        name="link-input"
+                        placeholder={itemData?.link}
+                        onChange={(e) => setNewTitle(e.target.value)}
+                    ></Input>
+                </div>
+            )}
             <div>
                 <h5>Access</h5>
                 <div className="flex flex-row justify-between items-center">
                     {isEditAccess || isEdit ? (
                         <div className="w-full">
                             <select
-                                className="bg-transparent w-full border-0 before:border-0 after:border-0 font-sans"
+                                className="bg-transparent mt-1 py-2 px-1 w-full border-primary-300 border-2 rounded-lg font-sans"
                                 defaultValue={
                                     itemData.isShared ? "public" : "private"
                                 }
                             >
-                                <option value="public" className="hover:bg-primary-400">Public</option>
-                                <option value="private" className="hover:bg-primary-400">Private</option>
+                                <option
+                                    value="public"
+                                    className="hover:bg-primary-400"
+                                >
+                                    Public
+                                </option>
+                                <option
+                                    value="private"
+                                    className="hover:bg-primary-400"
+                                >
+                                    Private
+                                </option>
                             </select>
                         </div>
                     ) : (
