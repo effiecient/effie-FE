@@ -54,8 +54,8 @@ export default function Browser({ location = [] }: BrowserType) {
         effieUrl: "",
         shareConfiguration: {
             isShared: false,
-            sharedPrivilege: "read"
-        }
+            sharedPrivilege: "read",
+        },
     };
 
     const { isLoading, isError, response } = useFetchEffieBE({
@@ -299,19 +299,21 @@ export default function Browser({ location = [] }: BrowserType) {
                     </section>
                 </div>
                 {/* SIDEBAR PROPERTIES */}
-                <SideBarProperties
-                    isOpen={isSideBarPropertiesOpen}
-                    itemData={selectedItem}
-                    isEdit={isEdit}
-                    isEditAccess={isEditAccess}
-                    setIsEdit={setIsEdit}
-                    setIsEditAccess={setIsEditAccess}
-                    link={link}
-                    relativePath={selectedItemRelativePath}
-                    onClose={() => {
-                        setIsSideBarPropertiesOpen(false);
-                    }}
-                />
+                {isSideBarPropertiesOpen && (
+                    <SideBarProperties
+                        isOpen={isSideBarPropertiesOpen}
+                        itemData={selectedItem}
+                        isEdit={isEdit}
+                        isEditAccess={isEditAccess}
+                        setIsEdit={setIsEdit}
+                        setIsEditAccess={setIsEditAccess}
+                        link={link}
+                        relativePath={selectedItemRelativePath}
+                        onClose={() => {
+                            setIsSideBarPropertiesOpen(false);
+                        }}
+                    />
+                )}
             </main>
             {/* modal */}
             <NewLink
