@@ -121,7 +121,6 @@ export default function SideBarProperties({
         }
         setReadyToUpdate(true);
     };
-    console.log(body);
     let {
         isLoading: isLoadingUpdate,
         isError: isErrorUpdate,

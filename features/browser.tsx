@@ -47,7 +47,7 @@ export default function Browser({ location = [] }: BrowserType) {
     };
     const username = useUserStore((state: any) => state.username);
 
-    let showSideBar = useDelayUnmount(isSideBarPropertiesOpen, 1000)
+    let showSideBar = useDelayUnmount(isSideBarPropertiesOpen, 1000);
 
     const dummyFolderLinkData: FolderLinkData = {
         title: "",
@@ -184,9 +184,7 @@ export default function Browser({ location = [] }: BrowserType) {
                                                         .join("/")}`;
                                                     setLink(url);
                                                     setSelectedItemRelativePath(
-                                                        location
-                                                            .concat(child)
-                                                            .join("/")
+                                                        child
                                                     );
                                                     // Close only if clicked on same item
                                                     if (
@@ -258,9 +256,7 @@ export default function Browser({ location = [] }: BrowserType) {
                                                         .join("/")}`;
                                                     setLink(url);
                                                     setSelectedItemRelativePath(
-                                                        location
-                                                            .concat(child)
-                                                            .join("/")
+                                                        child
                                                     );
                                                     // Close only if clicked on same item
                                                     if (
