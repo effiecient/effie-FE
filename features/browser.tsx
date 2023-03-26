@@ -12,6 +12,7 @@ import NewFolder from "@/components/create-modal/new-folder";
 import SideBarProperties from "@/components/side-bar-properties";
 import { FE_BASE_URL, FE_FULL_BASE_URL } from "@/config/fe-config";
 import { FolderLinkData, FolderLinkDataArray } from "@/type";
+import useDelayUnmount from "@/hooks/useDelayUnmount";
 type BrowserType = {
     username?: string;
     location?: string[];
@@ -45,6 +46,8 @@ export default function Browser({ location = [] }: BrowserType) {
         setIsNewFolderModalOpen(true);
     };
     const username = useUserStore((state: any) => state.username);
+
+    let showSideBar = useDelayUnmount(isSideBarPropertiesOpen, 300)
 
     const dummyFolderLinkData: FolderLinkData = {
         title: "",
@@ -299,7 +302,7 @@ export default function Browser({ location = [] }: BrowserType) {
                     </section>
                 </div>
                 {/* SIDEBAR PROPERTIES */}
-                {isSideBarPropertiesOpen && (
+                {showSideBar && (
                     <SideBarProperties
                         isOpen={isSideBarPropertiesOpen}
                         itemData={selectedItem}
