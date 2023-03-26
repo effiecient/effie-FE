@@ -42,4 +42,8 @@ export type UpdateLinkReq = {
     link? :string;
     isPinned?: boolean;
     newRelativePath?: string;
+    shareConfiguration?: {
+        isShared: boolean;
+        sharedPrivilege: "read" | "write";
+    };
 };

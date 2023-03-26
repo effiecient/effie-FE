@@ -98,6 +98,10 @@ export default function SideBarProperties({
                 relativePath: relativePath,
                 newRelativePath:
                     newRelativePath === "" ? undefined : newRelativePath,
+                shareConfiguration: {
+                    isShared: newIsShared,
+                    sharedPrivilege: "read",
+                },
             };
             setBody(data);
         } else {
