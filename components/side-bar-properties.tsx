@@ -19,6 +19,7 @@ type SideBarPropertiesProps = {
     isEdit: boolean;
     isEditAccess: boolean;
     relativePath: string;
+    fullRelativePath: string;
     setIsEdit: (isEdit: boolean) => void;
     setIsEditAccess: (isEditAccess: boolean) => void;
     onClose: () => void;
@@ -33,6 +34,7 @@ export default function SideBarProperties({
     isEdit,
     isEditAccess,
     relativePath,
+    fullRelativePath,
     setIsEdit,
     setIsEditAccess,
     onClose,
@@ -41,7 +43,8 @@ export default function SideBarProperties({
     const [newTitle, setNewTitle] = useState("");
     const [newLink, setNewLink] = useState("");
     const [newRelativePath, setNewRelativePath] = useState("");
-    const [newIsShared, setNewIsShared] = useState<boolean>();
+    const [newIsShared, setNewIsShared] = useState<boolean>(false);
+    const [sharingUpdated, setSharingUpdated] = useState(false);
     const [body, setBody] = useState<any>({});
     const [readyToDelete, setReadyToDelete] = useState(false);
     const [readyToUpdate, setReadyToUpdate] = useState(false);
@@ -73,7 +76,7 @@ export default function SideBarProperties({
     };
     let { isLoading, isError, response } = useFetchEffieBE({
         url: readyToDelete
-            ? `${BE_BASE_URL}/directory/${username}/${relativePath}`
+            ? `${BE_BASE_URL}/directory/${username}/${fullRelativePath}`
             : "",
         method: "DELETE",
     });
@@ -94,12 +97,14 @@ export default function SideBarProperties({
                 username: username,
                 path: path,
                 title: newTitle === "" ? undefined : newTitle,
-                link: newLink,
+                link: newLink === "" ? undefined : newLink,
                 relativePath: relativePath,
                 newRelativePath:
                     newRelativePath === "" ? undefined : newRelativePath,
                 shareConfiguration: {
-                    isShared: newIsShared || itemData.shareConfiguration.isShared,
+                    isShared: sharingUpdated
+                        ? newIsShared
+                        : itemData.shareConfiguration.isShared,
                     sharedPrivilege: "read",
                 },
             };
@@ -113,7 +118,9 @@ export default function SideBarProperties({
                 newRelativePath:
                     newRelativePath === "" ? undefined : newRelativePath,
                 shareConfiguration: {
-                    isShared: newIsShared || itemData.shareConfiguration.isShared,
+                    isShared: sharingUpdated
+                        ? newIsShared
+                        : itemData.shareConfiguration.isShared,
                     sharedPrivilege: "read",
                 },
             };
@@ -134,6 +141,8 @@ export default function SideBarProperties({
         method: "PATCH",
         body: body,
     });
+    console.log(responseUpdate)
+    console.log(body)
     if (readyToUpdate && responseUpdate && !isErrorUpdate && !isLoadingUpdate) {
         router.reload();
     }
@@ -229,10 +238,13 @@ export default function SideBarProperties({
                             <select
                                 className="bg-transparent mt-1 py-2 px-1 w-full border-primary-300 border-2 rounded-lg font-sans"
                                 defaultValue={
-                                    itemData.shareConfiguration.isShared ? "public" : "private"
+                                    itemData.shareConfiguration.isShared
+                                        ? "public"
+                                        : "private"
                                 }
                                 onChange={(e) => {
                                     setNewIsShared(e.target.value === "public");
+                                    setSharingUpdated(true);
                                 }}
                             >
                                 <option

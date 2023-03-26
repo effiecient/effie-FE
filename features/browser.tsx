@@ -39,6 +39,7 @@ export default function Browser({ location = [] }: BrowserType) {
     const [selectedItem, setSelectedItem] = useState({} as FolderLinkData);
     const [selectedItemRelativePath, setSelectedItemRelativePath] =
         useState("");
+    const [selectedItemFullRelativePath, setSelectedItemFullRelativePath] = useState("");
     const handleNewLinkClick = () => {
         setIsNewLinkModalOpen(true);
     };
@@ -186,6 +187,9 @@ export default function Browser({ location = [] }: BrowserType) {
                                                     setSelectedItemRelativePath(
                                                         child
                                                     );
+                                                    setSelectedItemFullRelativePath(location
+                                                        .concat(child)
+                                                        .join("/"))
                                                     // Close only if clicked on same item
                                                     if (
                                                         compareSelectedItem(
@@ -258,6 +262,9 @@ export default function Browser({ location = [] }: BrowserType) {
                                                     setSelectedItemRelativePath(
                                                         child
                                                     );
+                                                    setSelectedItemFullRelativePath(location
+                                                        .concat(child)
+                                                        .join("/"))
                                                     // Close only if clicked on same item
                                                     if (
                                                         compareSelectedItem(
@@ -308,6 +315,7 @@ export default function Browser({ location = [] }: BrowserType) {
                         setIsEditAccess={setIsEditAccess}
                         link={link}
                         relativePath={selectedItemRelativePath}
+                        fullRelativePath={selectedItemFullRelativePath}
                         onClose={() => {
                             setIsSideBarPropertiesOpen(false);
                         }}
