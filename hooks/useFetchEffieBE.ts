@@ -1,3 +1,4 @@
+import { EFFIE_AUTH_TOKEN } from "@/constants";
 import { useEffect, useState, useRef, useMemo } from "react";
 
 // in milliseconds
@@ -39,6 +40,17 @@ const useFetchEffieBE = ({ auth, url = "", method = "GET", body }: Props) => {
 
         if (auth) {
             headers["Authorization"] = auth;
+        } else {
+            // get from cookie
+            const cookie = document.cookie;
+            const cookieArr = cookie.split(";");
+            const token = cookieArr.find((item) =>
+                item.includes(EFFIE_AUTH_TOKEN)
+            );
+            if (token) {
+                console.log("token fro useFetch", token.split("=")[1]);
+                headers["Authorization"] = token.split("=")[1];
+            }
         }
 
         const options = {
