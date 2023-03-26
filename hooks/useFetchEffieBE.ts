@@ -6,7 +6,7 @@ const FETCH_TIMEOUT = 10000;
 // prop type
 type Props = {
     url: string;
-    method?: "GET" | "POST";
+    method?: "GET" | "POST" | "DELETE" | "PUT" | "PATCH";
     auth?: string;
     body?: any;
 };

@@ -1,4 +1,4 @@
-import { FolderLinkData } from "@/type";
+import { FolderLinkData, UpdateFolderReq, UpdateLinkReq } from "@/type";
 import CopyIcon from "@/public/icons/copy";
 import Link from "next/link";
 import { useRef, useState } from "react";
@@ -7,15 +7,20 @@ import Button from "./button";
 import editIcon from "@/public/icons/edit.svg";
 import Image from "next/image";
 import Input from "./input";
+import Modal from "./modal";
+import ConfirmationModal from "./create-modal/confirmation-modal";
+import { BE_BASE_URL } from "@/config";
+import { useFetchEffieBE, useUserStore } from "@/hooks";
+import { useRouter } from "next/router";
 
 type SideBarPropertiesProps = {
     isOpen: boolean;
     itemData: FolderLinkData;
     isEdit: boolean;
     isEditAccess: boolean;
+    relativePath: string;
     setIsEdit: (isEdit: boolean) => void;
     setIsEditAccess: (isEditAccess: boolean) => void;
-    onSaveClick?: () => void;
     onClose: () => void;
     className?: string;
     link?: string;
@@ -27,16 +32,22 @@ export default function SideBarProperties({
     className,
     isEdit,
     isEditAccess,
+    relativePath,
     setIsEdit,
     setIsEditAccess,
-    onSaveClick,
     onClose,
     link,
 }: SideBarPropertiesProps) {
     const [newTitle, setNewTitle] = useState(itemData?.title ?? "");
     const [newLink, setNewLink] = useState(itemData?.link ?? "");
-    const [newAccess, setNewAccess] = useState(itemData?.isShared ?? false);
+    const [newRelativePath, setNewRelativePath] = useState(relativePath ?? "");
+    const [newIsShared, setNewIsShared] = useState(itemData?.isShared ?? false);
+    const [body, setBody] = useState<any>({});
+    const [readyToDelete, setReadyToDelete] = useState(false);
+    const [readyToUpdate, setReadyToUpdate] = useState(false);
 
+    // Extract path without last path
+    const pathWithoutLastPath = link?.split("/").slice(0, -1).join("/");
     const copySuccessRef = useRef<HTMLDivElement>(null);
     const copyEffieUrl = () => {
         copySuccessRef.current?.classList.remove("opacity-0", "-translate-y-1");
@@ -53,6 +64,66 @@ export default function SideBarProperties({
             );
         }, 1500);
     };
+
+    const username = useUserStore((state: any) => state.username);
+    const router = useRouter();
+    // Handle delete click
+    const handleDeleteClick = () => {
+        setReadyToDelete(true);
+    }
+    let { isLoading, isError, response } = useFetchEffieBE({
+        url: readyToDelete ? `${BE_BASE_URL}/directory/${username}/${relativePath}` : "",
+        method: "DELETE",
+    });
+    
+    if (readyToDelete && response && !isError && !isLoading) {
+        router.reload()
+    }
+
+    // Handle save click
+    const handleSaveClick = () => {
+        let path = window.location.pathname
+        if (newRelativePath && newRelativePath.includes(" ") ) {
+            alert("Relative path cannot contain space");
+            return;
+        }
+        if (itemData.type === "link") {
+            const data: UpdateLinkReq ={
+                username: username,
+                path: path,
+                title: newTitle,
+                link: newLink,
+                relativePath: relativePath,
+                newRelativePath: newRelativePath === "" ? relativePath : newRelativePath,
+            };
+            setBody(data);
+        } else {
+            const data: UpdateFolderReq = {
+                username: username,
+                path: path,
+                title: newTitle,
+                relativePath: relativePath,
+                newRelativePath: newRelativePath === "" ? relativePath : newRelativePath,
+                shareConfiguration: {
+                    isShared: newIsShared,
+                    sharedPrivilege: "read"
+                }
+            }
+            setBody(data);
+        }
+        setReadyToUpdate(true);
+    };
+    console.log(body)
+    let { isLoading: isLoadingUpdate, isError: isErrorUpdate, response: responseUpdate } = useFetchEffieBE({
+        url: readyToUpdate ? `${BE_BASE_URL}/directory/${itemData.type === "folder" ? "folder" : "link"}` : "",
+        method: "PATCH",
+        body: body,
+    })
+    console.log("responseUpdate", responseUpdate)
+    if (readyToUpdate && responseUpdate && !isErrorUpdate && !isLoadingUpdate) {
+        router.reload()
+    }
+
     return (
         <div
             className={`${className} justify-items-center fixed right-0 ease-in-out duration-300 w-1/4 h-full bg-white px-9 py-6 ${
@@ -60,31 +131,48 @@ export default function SideBarProperties({
             }`}
         >
             <div className="mb-7">
-                <div className="flex flex-row justify-between items-center lg:gap-1 mb-3">
-                    <div>
-                        <Link
-                            href={link ?? ""}
-                            className="text-primary-400 underline"
-                        >
-                            {link}
-                        </Link>
+                {isEdit ? (
+                    <div className="mb-4">
+                        <p className="text-md font-semibold mb-2">
+                            {pathWithoutLastPath + "/"}
+                        </p>
+                        <Input
+                            type="text"
+                            className="flex w-full flex-wrap text-md font-semibold"
+                            id="relative-path-input"
+                            name="relative-path-input"
+                            placeholder={relativePath}
+                            onChange={(e) => setNewRelativePath(e.target.value)}
+                        ></Input>
                     </div>
-                    <div>
-                        <button
-                            className="opacity-100 h-full p-2 z-10 bg-white duration-100 rounded-r-xl"
-                            onClick={copyEffieUrl}
-                        >
-                            <CopyIcon className="duration-100 h-7 w-7" />
-                            {/* Copy success notif */}
-                            <div
-                                ref={copySuccessRef}
-                                className="opacity-0 -translate-y-1 absolute top-14 bg-neutral-900/50 text-white rounded-md py-1 px-2 shadow-lg text-left duration-300 max-w-[12rem]"
+                ) : (
+                    <div className="flex flex-row justify-between items-center lg:gap-1 mb-3">
+                        <div>
+                            <Link
+                                href={link ?? ""}
+                                className="text-primary-400 underline"
                             >
-                                <p className="text-xs">Link copied!</p>
-                            </div>
-                        </button>
+                                {link}
+                            </Link>
+                        </div>
+                        <div>
+                            <button
+                                className="opacity-100 h-full p-2 z-10 bg-white duration-100 rounded-r-xl"
+                                onClick={copyEffieUrl}
+                            >
+                                <CopyIcon className="duration-100 h-7 w-7" />
+                                {/* Copy success notif */}
+                                <div
+                                    ref={copySuccessRef}
+                                    className="opacity-0 -translate-y-1 absolute top-14 bg-neutral-900/50 text-white rounded-md py-1 px-2 shadow-lg text-left duration-300 max-w-[12rem]"
+                                >
+                                    <p className="text-xs">Link copied!</p>
+                                </div>
+                            </button>
+                        </div>
                     </div>
-                </div>
+                )}
+
                 {isEdit ? (
                     <Input
                         type="text"
@@ -101,7 +189,9 @@ export default function SideBarProperties({
             {itemData.type === "link" && !isEdit && (
                 <div className="mb-7">
                     <h5>Link</h5>
-                    <Link href={itemData.link} className="underline">{itemData.link}</Link>
+                    <Link href={itemData.link} className="underline">
+                        {itemData.link}
+                    </Link>
                 </div>
             )}
             {itemData.type === "link" && isEdit && (
@@ -113,7 +203,7 @@ export default function SideBarProperties({
                         id="link-input"
                         name="link-input"
                         placeholder={itemData?.link}
-                        onChange={(e) => setNewTitle(e.target.value)}
+                        onChange={(e) => setNewLink(e.target.value)}
                     ></Input>
                 </div>
             )}
@@ -127,6 +217,9 @@ export default function SideBarProperties({
                                 defaultValue={
                                     itemData.isShared ? "public" : "private"
                                 }
+                                onChange={(e) => {
+                                    setNewIsShared(e.target.value === "public");
+                                }}
                             >
                                 <option
                                     value="public"
@@ -166,7 +259,7 @@ export default function SideBarProperties({
                     )}
                 </div>
             </div>
-            <div className="mt-7 flex justify-center flex-col">
+            <div className="mt-7 flex justify-center flex-col gap-4">
                 {isEdit || isEditAccess ? (
                     <div className="flex flex-col gap-4 w-full justify-between">
                         <Button
@@ -183,8 +276,8 @@ export default function SideBarProperties({
                         </Button>
                         <Button
                             type="custom"
-                            onClick={onSaveClick}
                             className="hover:bg-success-300 border-success-300 border-2"
+                            onClick={handleSaveClick}
                         >
                             <div className="flex flex-row gap-1.5 items-center justify-center">
                                 Save
@@ -192,16 +285,27 @@ export default function SideBarProperties({
                         </Button>
                     </div>
                 ) : (
-                    <Button
-                        type="custom"
-                        className="bg-none text-primary-500 border-primary-500 border-2"
-                        onClick={() => setIsEdit(true)}
-                    >
-                        <div className="flex flex-row gap-1.5 items-center justify-center">
-                            <Image src={editIcon} alt="Edit Icon" />
-                            Edit Properties
-                        </div>
-                    </Button>
+                    <>
+                        <Button
+                            type="custom"
+                            className="bg-none text-primary-500 border-primary-500 border-2"
+                            onClick={() => setIsEdit(true)}
+                        >
+                            <div className="flex flex-row gap-1.5 items-center justify-center">
+                                <Image src={editIcon} alt="Edit Icon" />
+                                Edit Properties
+                            </div>
+                        </Button>
+                        <Button
+                            type="custom"
+                            className="bg-none hover:bg-danger-300 border-danger-300 border-2 text-danger-300 hover:text-black"
+                            onClick={handleDeleteClick}
+                        >
+                            <div className="flex flex-row gap-1.5 items-center justify-center">
+                                Delete
+                            </div>
+                        </Button>
+                    </>
                 )}
             </div>
         </div>

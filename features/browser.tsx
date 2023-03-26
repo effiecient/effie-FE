@@ -34,6 +34,8 @@ export default function Browser({ location = [] }: BrowserType) {
     const [isEditAccess, setIsEditAccess] = useState(false);
     const [link, setLink] = useState("");
     const [selectedItem, setSelectedItem] = useState({} as FolderLinkData);
+    const [selectedItemRelativePath, setSelectedItemRelativePath] =
+        useState("");
     const handleNewLinkClick = () => {
         setIsNewLinkModalOpen(true);
     };
@@ -78,7 +80,13 @@ export default function Browser({ location = [] }: BrowserType) {
                 {/* SIDEBAR */}
                 <SideBar />
                 {/* BROWSER Loader*/}
-                <div className="flex flex-col gap-6 flex-grow bg-neutral-50 min-h-full w-full rounded-tl-2xl p-12">
+                <div
+                    className={`flex flex-col gap-6 flex-grow bg-neutral-50 min-h-full ${
+                        isSideBarPropertiesOpen
+                            ? "flex-wrap pr-48 lg:pr-72"
+                            : "pr-12"
+                    } py-12 pl-12 w-full rounded-tl-2xl`}
+                >
                     {/* breadcrumbs */}
                     <div className="flex gap-2">
                         {[username].concat(location).map((loc, index) => {
@@ -156,6 +164,11 @@ export default function Browser({ location = [] }: BrowserType) {
                                                         .concat(child)
                                                         .join("/")}`;
                                                     setLink(url);
+                                                    setSelectedItemRelativePath(
+                                                        location
+                                                            .concat(child)
+                                                            .join("/")
+                                                    );
                                                     // Close only if clicked on same item
                                                     if (
                                                         compareSelectedItem(
@@ -239,7 +252,11 @@ export default function Browser({ location = [] }: BrowserType) {
                                                         .concat(child)
                                                         .join("/")}`;
                                                     setLink(url);
-                                                    console.log(data?.childrens)
+                                                    setSelectedItemRelativePath(
+                                                        location
+                                                            .concat(child)
+                                                            .join("/")
+                                                    );
                                                     // Close only if clicked on same item
                                                     if (
                                                         compareSelectedItem(
@@ -302,7 +319,10 @@ export default function Browser({ location = [] }: BrowserType) {
                     setIsEdit={setIsEdit}
                     setIsEditAccess={setIsEditAccess}
                     link={link}
-                    onClose={() => {setIsSideBarPropertiesOpen(false)}}
+                    relativePath={selectedItemRelativePath}
+                    onClose={() => {
+                        setIsSideBarPropertiesOpen(false);
+                    }}
                 />
             </main>
             {/* modal */}
