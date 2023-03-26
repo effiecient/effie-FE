@@ -89,10 +89,7 @@ export default function Browser({ location = [] }: BrowserType) {
 
             <main className="bg-white flex w-full min-h-screen relative">
                 {/* SIDEBAR */}
-                <SideBar
-                    handleNewLinkClick={handleNewLinkClick}
-                    handleNewFolderClick={handleNewFolderClick}
-                />
+                <SideBar />
                 {/* BROWSER */}
                 <div
                     className={`flex flex-col gap-6 flex-grow bg-neutral-50 min-h-full ${
@@ -138,57 +135,6 @@ export default function Browser({ location = [] }: BrowserType) {
                                 objectPosition: "right",
                             }}
                         />
-                    </div>
-
-                    {/* BREADCRUMBS */}
-                    <div className="sticky top-16 w-full bg-neutral-50 flex items-center z-20 -ml-4 -mt-4">
-                        <Breadcrumb
-                            path={username}
-                            onClick={() => {
-                                router.push(`/`);
-                            }}
-                        />
-                        {((window.innerWidth < 768 && location.length > 1) ||
-                            (window.innerWidth >= 768 &&
-                                location.length > 3)) && (
-                            <>
-                                <p className="text-neutral-300">/</p>
-                                <Breadcrumb
-                                    path="..."
-                                    onClick={() => {
-                                        router.push(
-                                            `/${location
-                                                .slice(
-                                                    0,
-                                                    window.innerWidth < 768
-                                                        ? -1
-                                                        : -3
-                                                )
-                                                .join("/")}`
-                                        );
-                                    }}
-                                />
-                            </>
-                        )}
-                        {location
-                            .slice(window.innerWidth < 768 ? -1 : -3)
-                            .map((loc, index) => {
-                                return (
-                                    <>
-                                        <p className="text-neutral-300">/</p>
-                                        <Breadcrumb
-                                            path={loc}
-                                            onClick={() => {
-                                                router.push(
-                                                    `/${location
-                                                        .slice(0, index + 1)
-                                                        .join("/")}`
-                                                );
-                                            }}
-                                        />
-                                    </>
-                                );
-                            })}
                     </div>
 
                     {/* CONTENT */}
@@ -242,7 +188,8 @@ export default function Browser({ location = [] }: BrowserType) {
                                                             selectedItem,
                                                             data.childrens?.[
                                                                 child
-                                                            ] ?? dummyFolderLinkData
+                                                            ] ??
+                                                                dummyFolderLinkData
                                                         ) &&
                                                         isSideBarPropertiesOpen
                                                     ) {
@@ -252,7 +199,9 @@ export default function Browser({ location = [] }: BrowserType) {
                                                         setIsEdit(false);
                                                         setIsEditAccess(false);
                                                         // dummy data
-                                                        setSelectedItem(dummyFolderLinkData);
+                                                        setSelectedItem(
+                                                            dummyFolderLinkData
+                                                        );
                                                     } else {
                                                         setIsSideBarPropertiesOpen(
                                                             true
@@ -260,7 +209,8 @@ export default function Browser({ location = [] }: BrowserType) {
                                                         setSelectedItem(
                                                             data.childrens?.[
                                                                 child
-                                                            ] ?? dummyFolderLinkData
+                                                            ] ??
+                                                                dummyFolderLinkData
                                                         );
                                                     }
                                                 }}
@@ -312,7 +262,8 @@ export default function Browser({ location = [] }: BrowserType) {
                                                             selectedItem,
                                                             data.childrens?.[
                                                                 child
-                                                            ] ?? dummyFolderLinkData
+                                                            ] ??
+                                                                dummyFolderLinkData
                                                         ) &&
                                                         isSideBarPropertiesOpen
                                                     ) {
@@ -322,7 +273,9 @@ export default function Browser({ location = [] }: BrowserType) {
                                                         setIsEdit(false);
                                                         setIsEditAccess(false);
                                                         // dummy data
-                                                        setSelectedItem(dummyFolderLinkData);
+                                                        setSelectedItem(
+                                                            dummyFolderLinkData
+                                                        );
                                                     } else {
                                                         setIsSideBarPropertiesOpen(
                                                             true
@@ -330,7 +283,8 @@ export default function Browser({ location = [] }: BrowserType) {
                                                         setSelectedItem(
                                                             data.childrens?.[
                                                                 child
-                                                            ] ?? dummyFolderLinkData
+                                                            ] ??
+                                                                dummyFolderLinkData
                                                         );
                                                     }
                                                 }}
