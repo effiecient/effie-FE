@@ -40,7 +40,7 @@ export default function SideBarProperties({
 }: SideBarPropertiesProps) {
     const [newTitle, setNewTitle] = useState(itemData?.title ?? "");
     const [newLink, setNewLink] = useState(itemData?.link ?? "");
-    const [newRelativePath, setNewRelativePath] = useState(relativePath ?? "");
+    const [newRelativePath, setNewRelativePath] = useState("");
     const [newIsShared, setNewIsShared] = useState(itemData?.isShared ?? false);
     const [body, setBody] = useState<any>({});
     const [readyToDelete, setReadyToDelete] = useState(false);
@@ -70,31 +70,34 @@ export default function SideBarProperties({
     // Handle delete click
     const handleDeleteClick = () => {
         setReadyToDelete(true);
-    }
+    };
     let { isLoading, isError, response } = useFetchEffieBE({
-        url: readyToDelete ? `${BE_BASE_URL}/directory/${username}/${relativePath}` : "",
+        url: readyToDelete
+            ? `${BE_BASE_URL}/directory/${username}/${relativePath}`
+            : "",
         method: "DELETE",
     });
-    
+
     if (readyToDelete && response && !isError && !isLoading) {
-        router.reload()
+        router.reload();
     }
 
     // Handle save click
     const handleSaveClick = () => {
-        let path = window.location.pathname
-        if (newRelativePath && newRelativePath.includes(" ") ) {
+        let path = window.location.pathname;
+        if (newRelativePath && newRelativePath.includes(" ")) {
             alert("Relative path cannot contain space");
             return;
         }
         if (itemData.type === "link") {
-            const data: UpdateLinkReq ={
+            const data: UpdateLinkReq = {
                 username: username,
                 path: path,
                 title: newTitle,
                 link: newLink,
                 relativePath: relativePath,
-                newRelativePath: newRelativePath === "" ? relativePath : newRelativePath,
+                newRelativePath:
+                    newRelativePath === "" ? undefined : newRelativePath,
             };
             setBody(data);
         } else {
@@ -103,25 +106,33 @@ export default function SideBarProperties({
                 path: path,
                 title: newTitle,
                 relativePath: relativePath,
-                newRelativePath: newRelativePath === "" ? relativePath : newRelativePath,
+                newRelativePath:
+                    newRelativePath === "" ? undefined : newRelativePath,
                 shareConfiguration: {
                     isShared: newIsShared,
-                    sharedPrivilege: "read"
-                }
-            }
+                    sharedPrivilege: "read",
+                },
+            };
             setBody(data);
         }
         setReadyToUpdate(true);
     };
-    console.log(body)
-    let { isLoading: isLoadingUpdate, isError: isErrorUpdate, response: responseUpdate } = useFetchEffieBE({
-        url: readyToUpdate ? `${BE_BASE_URL}/directory/${itemData.type === "folder" ? "folder" : "link"}` : "",
+    console.log(body);
+    let {
+        isLoading: isLoadingUpdate,
+        isError: isErrorUpdate,
+        response: responseUpdate,
+    } = useFetchEffieBE({
+        url: readyToUpdate
+            ? `${BE_BASE_URL}/directory/${
+                  itemData.type === "folder" ? "folder" : "link"
+              }`
+            : "",
         method: "PATCH",
         body: body,
-    })
-    console.log("responseUpdate", responseUpdate)
+    });
     if (readyToUpdate && responseUpdate && !isErrorUpdate && !isLoadingUpdate) {
-        router.reload()
+        router.reload();
     }
 
     return (
