@@ -47,7 +47,7 @@ export default function Browser({ location = [] }: BrowserType) {
     };
     const username = useUserStore((state: any) => state.username);
 
-    let showSideBar = useDelayUnmount(isSideBarPropertiesOpen, 300)
+    let showSideBar = useDelayUnmount(isSideBarPropertiesOpen, 1000)
 
     const dummyFolderLinkData: FolderLinkData = {
         title: "",
