@@ -52,7 +52,10 @@ export default function Browser({ location = [] }: BrowserType) {
         link: "",
         type: "folder",
         effieUrl: "",
-        isShared: false,
+        shareConfiguration: {
+            isShared: false,
+            sharedPrivilege: "read"
+        }
     };
 
     const { isLoading, isError, response } = useFetchEffieBE({

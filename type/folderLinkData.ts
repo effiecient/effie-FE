@@ -1,5 +1,10 @@
 type dataType = "folder" | "link";
 
+export type ShareConfiguration = {
+    isShared: boolean;
+    sharedPrivilege: "read" | "write";
+}
+
 export type FolderLinkDataArray = {
     type: string;
     childrens?: FolderLinkData[];
@@ -11,7 +16,7 @@ export type FolderLinkData = {
     link: string;
     type: dataType;
     effieUrl: string;
-    isShared: boolean;
+    shareConfiguration: ShareConfiguration;
 };
 
 export type UpdateFolderReq = {
@@ -21,10 +26,7 @@ export type UpdateFolderReq = {
     title?: string;
     isPinned?: boolean;
     newRelativePath?: string;
-    shareConfiguration?: {
-        isShared: boolean;
-        sharedPrivilege: "read" | "write";
-    };
+    shareConfiguration?: ShareConfiguration;
 };
 
 export type UpdateLinkReq = {
@@ -35,8 +37,5 @@ export type UpdateLinkReq = {
     link? :string;
     isPinned?: boolean;
     newRelativePath?: string;
-    shareConfiguration?: {
-        isShared: boolean;
-        sharedPrivilege: "read" | "write";
-    };
+    shareConfiguration?: ShareConfiguration;
 };

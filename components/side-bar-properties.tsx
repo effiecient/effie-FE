@@ -99,7 +99,7 @@ export default function SideBarProperties({
                 newRelativePath:
                     newRelativePath === "" ? undefined : newRelativePath,
                 shareConfiguration: {
-                    isShared: newIsShared || itemData.isShared,
+                    isShared: newIsShared || itemData.shareConfiguration.isShared,
                     sharedPrivilege: "read",
                 },
             };
@@ -113,7 +113,7 @@ export default function SideBarProperties({
                 newRelativePath:
                     newRelativePath === "" ? undefined : newRelativePath,
                 shareConfiguration: {
-                    isShared: newIsShared || itemData.isShared,
+                    isShared: newIsShared || itemData.shareConfiguration.isShared,
                     sharedPrivilege: "read",
                 },
             };
@@ -230,7 +230,7 @@ export default function SideBarProperties({
                             <select
                                 className="bg-transparent mt-1 py-2 px-1 w-full border-primary-300 border-2 rounded-lg font-sans"
                                 defaultValue={
-                                    itemData.isShared ? "public" : "private"
+                                    itemData.shareConfiguration.isShared ? "public" : "private"
                                 }
                                 onChange={(e) => {
                                     setNewIsShared(e.target.value === "public");
@@ -253,7 +253,7 @@ export default function SideBarProperties({
                     ) : (
                         <>
                             <div>
-                                {itemData.isShared ? (
+                                {itemData.shareConfiguration.isShared ? (
                                     <p>Public</p>
                                 ) : (
                                     <p>Private</p>
