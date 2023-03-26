@@ -2,14 +2,7 @@ type dataType = "folder" | "link";
 
 export type FolderLinkDataArray = {
     type: string;
-    childrens?: {
-        title: string;
-        isPinned: boolean;
-        link: string;
-        type: dataType;
-        effieUrl: string;
-        isShared?: boolean;
-    }[];
+    childrens?: FolderLinkData[];
 };
 
 export type FolderLinkData = {
@@ -18,7 +11,7 @@ export type FolderLinkData = {
     link: string;
     type: dataType;
     effieUrl: string;
-    isShared?: boolean;
+    isShared: boolean;
 };
 
 export type UpdateFolderReq = {

@@ -38,10 +38,10 @@ export default function SideBarProperties({
     onClose,
     link,
 }: SideBarPropertiesProps) {
-    const [newTitle, setNewTitle] = useState(itemData?.title ?? "");
-    const [newLink, setNewLink] = useState(itemData?.link ?? "");
+    const [newTitle, setNewTitle] = useState("");
+    const [newLink, setNewLink] = useState("");
     const [newRelativePath, setNewRelativePath] = useState("");
-    const [newIsShared, setNewIsShared] = useState(itemData?.isShared ?? false);
+    const [newIsShared, setNewIsShared] = useState<boolean>();
     const [body, setBody] = useState<any>({});
     const [readyToDelete, setReadyToDelete] = useState(false);
     const [readyToUpdate, setReadyToUpdate] = useState(false);
@@ -93,13 +93,13 @@ export default function SideBarProperties({
             const data: UpdateLinkReq = {
                 username: username,
                 path: path,
-                title: newTitle,
+                title: newTitle === "" ? undefined : newTitle,
                 link: newLink,
                 relativePath: relativePath,
                 newRelativePath:
                     newRelativePath === "" ? undefined : newRelativePath,
                 shareConfiguration: {
-                    isShared: newIsShared,
+                    isShared: newIsShared || itemData.isShared,
                     sharedPrivilege: "read",
                 },
             };
@@ -108,12 +108,12 @@ export default function SideBarProperties({
             const data: UpdateFolderReq = {
                 username: username,
                 path: path,
-                title: newTitle,
+                title: newTitle === "" ? undefined : newTitle,
                 relativePath: relativePath,
                 newRelativePath:
                     newRelativePath === "" ? undefined : newRelativePath,
                 shareConfiguration: {
-                    isShared: newIsShared,
+                    isShared: newIsShared || itemData.isShared,
                     sharedPrivilege: "read",
                 },
             };
