@@ -300,6 +300,49 @@ export default function Browser({ location = [] }: BrowserType) {
                                                         );
                                                     }
                                                 }}
+                                                onClick={() => {
+                                                    let url = `${username}.${FE_BASE_URL}/${location
+                                                        .concat(child)
+                                                        .join("/")}`;
+                                                    setLink(url);
+                                                    setSelectedItemRelativePath(
+                                                        child
+                                                    );
+                                                    setSelectedItemFullRelativePath(location
+                                                        .concat(child)
+                                                        .join("/"))
+                                                    // Close only if clicked on same item
+                                                    if (
+                                                        compareSelectedItem(
+                                                            selectedItem,
+                                                            data.childrens?.[
+                                                                child
+                                                            ] ??
+                                                                dummyFolderLinkData
+                                                        ) &&
+                                                        isSideBarPropertiesOpen
+                                                    ) {
+                                                        setIsSideBarPropertiesOpen(
+                                                            !isSideBarPropertiesOpen
+                                                        );
+                                                        setIsEdit(false);
+                                                        setIsEditAccess(false);
+                                                        // dummy data
+                                                        setSelectedItem(
+                                                            dummyFolderLinkData
+                                                        );
+                                                    } else {
+                                                        setIsSideBarPropertiesOpen(
+                                                            true
+                                                        );
+                                                        setSelectedItem(
+                                                            data.childrens?.[
+                                                                child
+                                                            ] ??
+                                                                dummyFolderLinkData
+                                                        );
+                                                    }
+                                                }}
                                             />
                                         );
                                     }
