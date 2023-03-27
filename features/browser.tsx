@@ -190,7 +190,7 @@ export default function Browser({ location = [] }: BrowserType) {
                     {/* BREADCRUMBS */}
                     <div className="sticky top-16 w-full bg-neutral-50 flex items-center z-20 -ml-4 -mt-4">
                         <Breadcrumb 
-                            path={username} 
+                            path={subdomain} 
                             onClick={() => {
                                 router.push(`/`);
                             }}
