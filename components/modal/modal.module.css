@@ -18,6 +18,8 @@
   /* bg white, min width and height 10% */
   background-color: white;
   min-width: 40%;
+  width: fit-content;
+  max-width: calc(100% - 48px);
   min-height: fit-content;
   /* borderround */
   border-radius: 16px;

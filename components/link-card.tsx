@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import CopyIcon from "@/public/icons/copy";
 import Image from "next/image";
 import NewLink from "./create-modal/new-link";
@@ -61,7 +61,7 @@ export default function LinkCard({
                         ? "flex-col gap-1 border-neutral-200"
                         : "flex-col gap-1 hover:border-neutral-200 cursor-pointer border-white"
                 } 
-                group relative flex pt-3 pb-2 px-5 bg-white rounded-xl border focus:border-primary-500 w-[32vw] md:w-[44vw] lg:w-[20vw] max-w-[16rem] min-w-[8rem] min-h-[4rem]`}
+                group relative flex pt-3 pb-2 px-5 bg-white rounded-xl border focus:border-primary-500 w-[32vw] md:w-[44vw] lg:w-[20vw] max-w-[16rem] min-w-[8rem] min-h-[4rem] overflow-hidden`}
             >
                 {content === "new folder" ? (
                     <>
@@ -91,7 +91,7 @@ export default function LinkCard({
                                 alt="link"
                                 width={28}
                                 height={28}
-                                className="mr-2"
+                                className="hidden md:block mr-2"
                             />
                         ) : (
                             <div

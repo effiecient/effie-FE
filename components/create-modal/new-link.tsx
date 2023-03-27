@@ -1,6 +1,6 @@
+// IMPORTS
 import { useState, useEffect, useRef } from "react";
 import Button from "../button";
-import Input from "../input";
 import LinkCard from "../link-card";
 import Modal from "../modal";
 import { BE_BASE_URL } from "@/config/be-config";
@@ -10,16 +10,28 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { FE_BASE_URL } from "@/config";
 
+
+
 type NewLinkProps = {
     isOpen: boolean;
     onClose: () => void;
 };
 
-export default function NewLink({ isOpen, onClose }: NewLinkProps) {
-    const username = useUserStore((state: any) => state.username);
-    const [isMoreOptionsOpen, setIsMoreOptionsOpen] = useState(false);
 
+
+export default function NewLink({ isOpen, onClose }: NewLinkProps) {
+    // USER CONSTANTS
+    const username = useUserStore((state: any) => state.username);
     const USER_BASE_URL = `${username}.${FE_BASE_URL}/`;
+    const currPathArray = window.location.pathname.split("/").slice(1).filter((item) => item !== "");
+
+
+
+    // USER INTERFACE CONFIGURATIONS
+    const linkNameRef = useRef<HTMLInputElement>(null);
+    const [isMoreOptionsOpen, setIsMoreOptionsOpen] = useState(false);
+    const [title, setTitle] = useState<string>("");
+    const [body, setBody] = useState<any>({});
 
     useEffect(() => {
         const input = document.getElementById("link-name");
@@ -34,11 +46,27 @@ export default function NewLink({ isOpen, onClose }: NewLinkProps) {
         }
     };
 
-    const linkNameRef = useRef<HTMLInputElement>(null);
-    const [title, setTitle] = useState<string>("");
+    const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.value !== "") {
+            setTitle(e.target.value);
+        } else {
+            setTitle(linkNameRef.current?.value || "");
+        }
+    };
 
+    const onURLblur = (e: React.FocusEvent<HTMLInputElement>) => {};
+
+    const closeModal = () => {
+        onClose();
+        setIsMoreOptionsOpen(false);
+    };
+
+    
+
+    // FORM SUBMISSION
     const router = useRouter();
-    const [body, setBody] = useState<any>({});
+    const [readyToPost, setReadyToPost] = useState(false);
+
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
@@ -66,7 +94,7 @@ export default function NewLink({ isOpen, onClose }: NewLinkProps) {
         setReadyToPost(true);
     };
 
-    const [readyToPost, setReadyToPost] = useState(false);
+    
 
     const { isLoading, isError, response } = useFetchEffieBE({
         url: readyToPost ? `${BE_BASE_URL}/directory/link` : "",
@@ -74,31 +102,19 @@ export default function NewLink({ isOpen, onClose }: NewLinkProps) {
         body: body,
     });
 
+
+
+    // REFRESH UI AFTER NEW LINK ADDED
     if (readyToPost && !isLoading && !isError && response) {
         router.reload();
     }
-
-    const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.value !== "") {
-            setTitle(e.target.value);
-        } else {
-            setTitle(linkNameRef.current?.value || "");
-        }
-    };
-
-    const onURLblur = (e: React.FocusEvent<HTMLInputElement>) => {};
-
-    const closeModal = () => {
-        onClose();
-        setIsMoreOptionsOpen(false);
-    };
 
     return (
         <Modal isOpen={isOpen} onClose={closeModal}>
             <h3 className="text-neutral-800 mb-8">New Link</h3>
             <form onSubmit={onSubmit}>
                 <div className="flex items-center mb-6">
-                    <h4 className="text-neutral-600 mr-2">{USER_BASE_URL}</h4>
+                    <h4 className="text-neutral-600 mr-2">{USER_BASE_URL}{currPathArray.length === 1 ? currPathArray[0] + "/" : currPathArray.length > 1 ? ".../" + currPathArray[currPathArray.length-1] + "/" : ""}</h4>
                     <input
                         ref={linkNameRef}
                         type="text"

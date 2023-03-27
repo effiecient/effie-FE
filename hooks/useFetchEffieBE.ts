@@ -48,7 +48,6 @@ const useFetchEffieBE = ({ auth, url = "", method = "GET", body }: Props) => {
                 item.includes(EFFIE_AUTH_TOKEN)
             );
             if (token) {
-                console.log("token fro useFetch", token.split("=")[1]);
                 headers["Authorization"] = token.split("=")[1];
             }
         }

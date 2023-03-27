@@ -29,11 +29,24 @@ export default function Modal({
         }
     }, [isOpen]);
 
+    // KEYBOARD SHORTCUTS
+    useEffect(() => {
+        const handleKeyDown = (event: any) => {
+            if (event.key === "Escape") {
+                onClose();
+            }
+        };
+        window.addEventListener("keydown", handleKeyDown);
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [onClose]);
+
     return (
         <div
             className={`${styles.container} ${
                 isOpen ? "z-50" : "-z-10 opacity-0"
-            } duration-200`}
+            } transition-opacity duration-200`}
             onClick={onOutsideClick}
         >
             <div

@@ -3,6 +3,7 @@ import Button from "../button";
 import LinkCard from "../link-card";
 import Modal from "../modal";
 import { BE_BASE_URL } from "@/config/be-config";
+import { FE_BASE_URL } from "@/config";
 // import { unfurl } from 'unfurl.js'
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -14,8 +15,11 @@ type NewFolderProps = {
 };
 
 export default function NewFolder({ isOpen, onClose }: NewFolderProps) {
-    const USER_BASE_URL = "https://effie.boo/";
+    // USER CONSTANTS
     const username = useUserStore((state: any) => state.username);
+    const USER_BASE_URL = `${username}.${FE_BASE_URL}/`;
+    const currPathArray = window.location.pathname.split("/").slice(1).filter((item) => item !== "");
+
     const [isMoreOptionsOpen, setIsMoreOptionsOpen] = useState(false);
 
     useEffect(() => {
@@ -95,8 +99,8 @@ export default function NewFolder({ isOpen, onClose }: NewFolderProps) {
         <Modal isOpen={isOpen} onClose={closeModal}>
             <h3 className="text-neutral-800 mb-8">New Folder</h3>
             <form onSubmit={onSubmit}>
-                <div className="flex items-center mb-6">
-                    <h4 className="text-neutral-600 mr-2">{USER_BASE_URL}</h4>
+                <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-0 mb-6">
+                    <h4 className="text-neutral-600 mr-2">{USER_BASE_URL}{currPathArray.length === 1 ? currPathArray[0] + "/" : currPathArray.length > 1 ? ".../" + currPathArray[currPathArray.length-1] + "/" : ""}</h4>
                     <input
                         ref={linkNameRef}
                         type="text"
@@ -107,7 +111,7 @@ export default function NewFolder({ isOpen, onClose }: NewFolderProps) {
                         autoFocus
                         required
                     />
-                    <Button className="ml-4 h-[2.7rem] px-4">Add</Button>
+                    <Button className="md:ml-4 h-[2.7rem] px-4">Add</Button>
                 </div>
                 <div
                     role="button"
