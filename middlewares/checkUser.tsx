@@ -35,7 +35,14 @@ export default function CheckUser({ children }: any) {
         let isSubdomain = false;
         const arrayOfURL = window.location.hostname.split(".");
         // check the index location of domain
-        const indexOfDomain = arrayOfURL.indexOf(FE_DOMAIN);
+        let indexOfDomain;
+        // handle if FE_SUBDOMAIN contain dot
+        if (FE_DOMAIN.indexOf(".") === -1) {
+            indexOfDomain = arrayOfURL.indexOf(FE_DOMAIN);
+        } else {
+            // get the first index of FE_DOMAIN splited using dot
+            indexOfDomain = arrayOfURL.indexOf(FE_DOMAIN.split(".")[0]);
+        }
         // if index 0, it is not a subdomain
         if (indexOfDomain === 0) {
             isSubdomain = false;

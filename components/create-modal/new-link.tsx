@@ -70,15 +70,18 @@ export default function NewLink({ isOpen, onClose }: NewLinkProps) {
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
-        const linkName = formData.get("link-name");
+        const linkName: any = formData.get("link-name");
         let path = window.location.pathname;
         const linkUrl = formData.get("link-url");
         const title = formData.get("title") || linkName;
         const thumbnailURL = formData.get("thumbnail-url");
-        // Add "/" to the start of the link name if it doesn't exist
-        // if (linkName && linkName.slice(0, 1) !== "/") {
-        //     path = "/" + linkName;
-        // }
+
+        // validate
+        // check if linkName has space
+        if (linkName && linkName.includes(" ")) {
+            alert("Link name cannot have space");
+            return;
+        }
         const data = {
             username: username,
             link: linkUrl,
