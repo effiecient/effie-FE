@@ -1,6 +1,9 @@
 import { useRef } from "react";
 import CopyIcon from "@/public/icons/copy";
 import Image from "next/image";
+import NewLink from "./create-modal/new-link";
+import NewFolder from "./create-modal/new-folder";
+import { copyToClipboard } from "@/utils";
 
 type LinkCardProps = {
     content:
@@ -14,6 +17,7 @@ type LinkCardProps = {
     url?: string;
     effieUrl?: string;
     onClick?: () => void;
+    onDoubleClick?: () => void;
     className?: string;
 };
 
@@ -23,13 +27,18 @@ export default function LinkCard({
     url,
     effieUrl,
     onClick,
+    onDoubleClick,
     className,
 }: LinkCardProps) {
     const copySuccessRef = useRef<HTMLDivElement>(null);
 
     const copyEffieUrl = () => {
         copySuccessRef.current?.classList.remove("opacity-0", "-translate-y-1");
-        navigator.clipboard.writeText(effieUrl ? effieUrl : "");
+        if (!navigator.clipboard) { // Fallback to unsupported browsers
+            copyToClipboard(effieUrl ?? "");
+        } else {
+            navigator.clipboard.writeText(effieUrl ?? "");
+        }
         setTimeout(() => {
             copySuccessRef.current?.classList.add(
                 "opacity-0",
@@ -42,6 +51,7 @@ export default function LinkCard({
         <>
             <div
                 onClick={onClick}
+                onDoubleClick={onDoubleClick}
                 className={`
                 ${className} 
                 ${

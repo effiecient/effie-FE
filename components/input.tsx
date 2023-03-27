@@ -8,6 +8,7 @@ type InputProps = {
   autoFocus?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
+  value?: string;
 };
 
 export default function Input({ref, type, id, name, placeholder, autoFocus, onChange, required, className}: InputProps) {

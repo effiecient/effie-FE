@@ -1,6 +1,6 @@
 let BE_BASE_URL: string;
 
-if (process.env.NEXT_PUBLIC_ENV_TYPE === "local") {
+if (process.env.NEXT_PUBLIC_ENV_TYPE_BE === "local") {
     BE_BASE_URL = "http://localhost:3001/api";
 } else {
     BE_BASE_URL =

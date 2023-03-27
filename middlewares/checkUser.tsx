@@ -1,4 +1,5 @@
 import { BE_BASE_URL } from "@/config";
+import { NODE_ENV } from "@/config/env-config";
 
 // TODO: update this to import from config only
 import { FE_DOMAIN, FE_FULL_BASE_URL } from "@/config/fe-config";
@@ -23,7 +24,11 @@ export default function CheckUser({ children }: any) {
     // get effie_auth_token from cookie
     useEffect(() => {
         document.cookie.split(";").forEach((cookie) => {
-            const [key, value] = cookie.split("=");
+            let [key, value] = cookie.split("=");
+            // remove redundant space in key
+            if (key[0] === " ") {
+                key = key.slice(1);
+            }
             if (key === EFFIE_AUTH_TOKEN) {
                 // set user to logged in
                 setEffieAuthToken(value);

@@ -1,3 +1,4 @@
+import { EFFIE_AUTH_TOKEN } from "@/constants";
 import { useEffect, useState, useRef, useMemo } from "react";
 
 // in milliseconds
@@ -6,7 +7,7 @@ const FETCH_TIMEOUT = 10000;
 // prop type
 type Props = {
     url: string;
-    method?: "GET" | "POST";
+    method?: "GET" | "POST" | "DELETE" | "PUT" | "PATCH";
     auth?: string;
     body?: any;
 };
@@ -39,13 +40,23 @@ const useFetchEffieBE = ({ auth, url = "", method = "GET", body }: Props) => {
 
         if (auth) {
             headers["Authorization"] = auth;
+        } else {
+            // get from cookie
+            const cookie = document.cookie;
+            const cookieArr = cookie.split(";");
+            const token = cookieArr.find((item) =>
+                item.includes(EFFIE_AUTH_TOKEN)
+            );
+            if (token) {
+                headers["Authorization"] = token.split("=")[1];
+            }
         }
 
         const options = {
             method,
             headers,
             signal,
-            body: method === "POST" ? JSON.stringify(body) : undefined,
+            body: method === "POST" || method === "PUT" || method === "PATCH" ? JSON.stringify(body) : undefined,
         };
 
         const timeout = setTimeout(() => {

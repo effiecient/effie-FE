@@ -44,8 +44,6 @@ export default function LoggingIn() {
 
     useEffect(() => {
         if (response && response.status !== "ERROR") {
-            console.log("response");
-            console.log(response);
             // set token to local storage
             if (typeof localStorage !== "undefined") {
                 localStorage.setItem(EFFIE_AUTH_TOKEN, response.token);
