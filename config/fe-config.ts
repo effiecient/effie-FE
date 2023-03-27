@@ -7,7 +7,7 @@ let FE_BASE_URL: string;
 let FE_WWW_BASE_URL: string;
 let FE_FULL_BASE_URL: string;
 
-if (process.env.NEXT_PUBLIC_ENV_TYPE === "local") {
+if (process.env.NEXT_PUBLIC_ENV_TYPE_FE === "local") {
     FE_PROTOCOL = "http";
     FE_SUBDOMAIN = "www";
     FE_DOMAIN = "example";
