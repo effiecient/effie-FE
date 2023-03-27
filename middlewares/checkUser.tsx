@@ -1,4 +1,5 @@
 import { BE_BASE_URL } from "@/config";
+import { NODE_ENV } from "@/config/env-config";
 
 // TODO: update this to import from config only
 import { FE_DOMAIN, FE_FULL_BASE_URL } from "@/config/fe-config";

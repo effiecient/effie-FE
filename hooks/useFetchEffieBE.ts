@@ -6,7 +6,7 @@ const FETCH_TIMEOUT = 10000;
 // prop type
 type Props = {
     url: string;
-    method?: "GET" | "POST";
+    method?: "GET" | "POST" | "DELETE" | "PUT" | "PATCH";
     auth?: string;
     body?: any;
 };
@@ -45,7 +45,7 @@ const useFetchEffieBE = ({ auth, url = "", method = "GET", body }: Props) => {
             method,
             headers,
             signal,
-            body: method === "POST" ? JSON.stringify(body) : undefined,
+            body: method === "POST" || method === "PUT" || method === "PATCH" ? JSON.stringify(body) : undefined,
         };
 
         const timeout = setTimeout(() => {

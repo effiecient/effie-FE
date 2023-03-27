@@ -9,15 +9,37 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import NewLink from "@/components/create-modal/new-link";
 import NewFolder from "@/components/create-modal/new-folder";
+import SideBarProperties from "@/components/side-bar-properties";
+import { FE_BASE_URL, FE_FULL_BASE_URL } from "@/config/fe-config";
+import { FolderLinkData, FolderLinkDataArray } from "@/type";
+import useDelayUnmount from "@/hooks/useDelayUnmount";
 type BrowserType = {
     username?: string;
     location?: string[];
 };
 
+function compareSelectedItem(a: FolderLinkData, b: FolderLinkData): boolean {
+    if (a.type !== b.type) {
+        return false;
+    }
+    return a.title === b.title && a.effieUrl === b.effieUrl;
+}
+
 export default function Browser({ location = [] }: BrowserType) {
     const router = useRouter();
     const [isNewLinkModalOpen, setIsNewLinkModalOpen] = useState(false);
     const [isNewFolderModalOpen, setIsNewFolderModalOpen] = useState(false);
+    const [isKeyboardShortcutsModalOpen, setIsKeyboardShortcutsModalOpen] =
+        useState(false);
+    const [isSideBarPropertiesOpen, setIsSideBarPropertiesOpen] =
+        useState(false);
+    const [isEdit, setIsEdit] = useState(false);
+    const [isEditAccess, setIsEditAccess] = useState(false);
+    const [link, setLink] = useState("");
+    const [selectedItem, setSelectedItem] = useState({} as FolderLinkData);
+    const [selectedItemRelativePath, setSelectedItemRelativePath] =
+        useState("");
+    const [selectedItemFullRelativePath, setSelectedItemFullRelativePath] = useState("");
     const handleNewLinkClick = () => {
         setIsNewLinkModalOpen(true);
     };
@@ -25,6 +47,20 @@ export default function Browser({ location = [] }: BrowserType) {
         setIsNewFolderModalOpen(true);
     };
     const username = useUserStore((state: any) => state.username);
+
+    let showSideBar = useDelayUnmount(isSideBarPropertiesOpen, 1000);
+
+    const dummyFolderLinkData: FolderLinkData = {
+        title: "",
+        isPinned: false,
+        link: "",
+        type: "folder",
+        effieUrl: "",
+        shareConfiguration: {
+            isShared: false,
+            sharedPrivilege: "read",
+        },
+    };
 
     const { isLoading, isError, response } = useFetchEffieBE({
         url: `${BE_BASE_URL}/directory/${username}/${location.join("/")}`,
@@ -41,16 +77,7 @@ export default function Browser({ location = [] }: BrowserType) {
         return <div>{response.message}</div>;
     }
 
-    const data: {
-        type: string;
-        childrens?: {
-            title: string;
-            isPinned: boolean;
-            link: string;
-            type: string;
-            effieUrl: string;
-        }[];
-    } = response.data;
+    const data: FolderLinkDataArray = response.data;
 
     return (
         <>
@@ -70,8 +97,14 @@ export default function Browser({ location = [] }: BrowserType) {
             <main className="bg-white flex w-full min-h-screen relative">
                 {/* SIDEBAR */}
                 <SideBar />
-                {/* BROWSER Loader*/}
-                <div className="flex flex-col gap-6 flex-grow bg-neutral-50 min-h-full w-full rounded-tl-2xl p-12">
+                {/* BROWSER */}
+                <div
+                    className={`flex flex-col gap-6 flex-grow bg-neutral-50 min-h-full ${
+                        isSideBarPropertiesOpen
+                            ? "flex-wrap pr-48 lg:pr-72"
+                            : "pr-12"
+                    } py-12 pl-12 w-full rounded-tl-2xl`}
+                >
                     {/* breadcrumbs */}
                     <div className="flex gap-2">
                         {[username].concat(location).map((loc, index) => {
@@ -110,7 +143,9 @@ export default function Browser({ location = [] }: BrowserType) {
                             }}
                         />
                     </div>
-                    <h5 className="text-neutral-400">Folders</h5>
+
+                    {/* CONTENT */}
+                    <h5 className="text-neutral-400 relative z-10">Folders</h5>
                     <section className="flex gap-4 w-full flex-wrap">
                         <LinkCard
                             content="new folder"
@@ -136,14 +171,56 @@ export default function Browser({ location = [] }: BrowserType) {
                                                     data.childrens[child]
                                                         .effieUrl
                                                 }
-                                                onClick={() => {
-                                                    console.log("clicked");
+                                                onDoubleClick={() => {
                                                     // push append to current location
                                                     router.push(
                                                         `/${location
                                                             .concat(child)
                                                             .join("/")}`
                                                     );
+                                                }}
+                                                onClick={() => {
+                                                    let url = `${username}.${FE_BASE_URL}/${location
+                                                        .concat(child)
+                                                        .join("/")}`;
+                                                    setLink(url);
+                                                    setSelectedItemRelativePath(
+                                                        child
+                                                    );
+                                                    setSelectedItemFullRelativePath(location
+                                                        .concat(child)
+                                                        .join("/"))
+                                                    // Close only if clicked on same item
+                                                    if (
+                                                        compareSelectedItem(
+                                                            selectedItem,
+                                                            data.childrens?.[
+                                                                child
+                                                            ] ??
+                                                                dummyFolderLinkData
+                                                        ) &&
+                                                        isSideBarPropertiesOpen
+                                                    ) {
+                                                        setIsSideBarPropertiesOpen(
+                                                            !isSideBarPropertiesOpen
+                                                        );
+                                                        setIsEdit(false);
+                                                        setIsEditAccess(false);
+                                                        // dummy data
+                                                        setSelectedItem(
+                                                            dummyFolderLinkData
+                                                        );
+                                                    } else {
+                                                        setIsSideBarPropertiesOpen(
+                                                            true
+                                                        );
+                                                        setSelectedItem(
+                                                            data.childrens?.[
+                                                                child
+                                                            ] ??
+                                                                dummyFolderLinkData
+                                                        );
+                                                    }
                                                 }}
                                             />
                                         );
@@ -177,6 +254,49 @@ export default function Browser({ location = [] }: BrowserType) {
                                                     data.childrens[child]
                                                         .effieUrl
                                                 }
+                                                onClick={() => {
+                                                    let url = `${username}.${FE_BASE_URL}/${location
+                                                        .concat(child)
+                                                        .join("/")}`;
+                                                    setLink(url);
+                                                    setSelectedItemRelativePath(
+                                                        child
+                                                    );
+                                                    setSelectedItemFullRelativePath(location
+                                                        .concat(child)
+                                                        .join("/"))
+                                                    // Close only if clicked on same item
+                                                    if (
+                                                        compareSelectedItem(
+                                                            selectedItem,
+                                                            data.childrens?.[
+                                                                child
+                                                            ] ??
+                                                                dummyFolderLinkData
+                                                        ) &&
+                                                        isSideBarPropertiesOpen
+                                                    ) {
+                                                        setIsSideBarPropertiesOpen(
+                                                            !isSideBarPropertiesOpen
+                                                        );
+                                                        setIsEdit(false);
+                                                        setIsEditAccess(false);
+                                                        // dummy data
+                                                        setSelectedItem(
+                                                            dummyFolderLinkData
+                                                        );
+                                                    } else {
+                                                        setIsSideBarPropertiesOpen(
+                                                            true
+                                                        );
+                                                        setSelectedItem(
+                                                            data.childrens?.[
+                                                                child
+                                                            ] ??
+                                                                dummyFolderLinkData
+                                                        );
+                                                    }
+                                                }}
                                             />
                                         );
                                     }
@@ -184,6 +304,23 @@ export default function Browser({ location = [] }: BrowserType) {
                             )}
                     </section>
                 </div>
+                {/* SIDEBAR PROPERTIES */}
+                {showSideBar && (
+                    <SideBarProperties
+                        isOpen={isSideBarPropertiesOpen}
+                        itemData={selectedItem}
+                        isEdit={isEdit}
+                        isEditAccess={isEditAccess}
+                        setIsEdit={setIsEdit}
+                        setIsEditAccess={setIsEditAccess}
+                        link={link}
+                        relativePath={selectedItemRelativePath}
+                        fullRelativePath={selectedItemFullRelativePath}
+                        onClose={() => {
+                            setIsSideBarPropertiesOpen(false);
+                        }}
+                    />
+                )}
             </main>
             {/* modal */}
             <NewLink
