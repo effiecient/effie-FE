@@ -38,9 +38,7 @@ export default function Logout() {
     }
 
     // remove EFFIE_AUTH_TOKEN from cookie
-    if (typeof window !== "undefined") {
-        document.cookie = `${EFFIE_AUTH_TOKEN}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${FE_DOMAIN}.${FE_TOP_LEVEL_DOMAIN};`;
-    }
+    document.cookie = `${EFFIE_AUTH_TOKEN}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${FE_DOMAIN}.${FE_TOP_LEVEL_DOMAIN};`;
     // remove EFFIE_AUTH_TOKEN from local storage
     if (typeof localStorage !== "undefined") {
         localStorage.removeItem(EFFIE_AUTH_TOKEN);
