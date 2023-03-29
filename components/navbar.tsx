@@ -7,7 +7,7 @@ import loginIcon from "@/public/icons/login.svg";
 import registerIcon from "@/public/icons/register.svg";
 import directoriesIcon from "@/public/icons/directories-white.svg";
 import newLinkIcon from "@/public/icons/new_link.svg";
-import userImg from "@/public/images/user.png";
+import defaultUserImg from "@/public/images/user.png";
 import { useRegister, useUserStore } from "@/hooks";
 import Link from "next/link";
 // TODO: update this to import from config only
@@ -30,6 +30,8 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
     const [showLogout, setShowLogout] = useState(false);
     const isLoggedIn = useUserStore((state: any) => state.isLoggedIn);
     const username = useUserStore((state: any) => state.username);
+    const hasPhotoURL = useUserStore((state: any) => state.hasPhotoURL);
+    const photoURL = useUserStore((state: any) => state.photoURL);
 
     return (
         <>
@@ -81,12 +83,14 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
                             )}
                             <div className="relative">
                                 <Image
-                                    src={userImg}
+                                    src={
+                                        hasPhotoURL ? photoURL : defaultUserImg
+                                    }
                                     alt="user image"
                                     width={40}
                                     height={40}
                                     onClick={() => setShowLogout(!showLogout)}
-                                    className={`cursor-pointer`}
+                                    className={`cursor-pointer rounded-full`}
                                 />
                                 {showLogout && (
                                     <div className="absolute right-0 mt-2 z-10">

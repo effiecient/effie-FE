@@ -19,6 +19,8 @@ export default function CheckUser({ children }: any) {
     const setIsLoggedIn = useUserStore((state: any) => state.setIsLoggedIn);
     const setIsSubdomain = useUserStore((state: any) => state.setIsSubdomain);
     const setSubdomain = useUserStore((state: any) => state.setSubdomain);
+    const setPhotoURL = useUserStore((state: any) => state.setPhotoURL);
+    const setHasPhotoURL = useUserStore((state: any) => state.setHasPhotoURL);
 
     // if effie_auth_token exist, set user to logged in
     const [effieAuthToken, setEffieAuthToken] = useState("");
@@ -91,10 +93,14 @@ export default function CheckUser({ children }: any) {
         if (isLoading || !fetchStarted) {
             return <div>global page Loading</div>;
         } else {
-            console.log({ isLoading, isError, response });
-
             setUsername(response.username);
             setIsLoggedIn(true);
+            if (response.photoURL !== undefined) {
+                setPhotoURL(response.photoURL);
+                setHasPhotoURL(true);
+            } else {
+                setHasPhotoURL(false);
+            }
 
             return children;
         }
