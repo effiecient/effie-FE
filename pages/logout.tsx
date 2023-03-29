@@ -14,8 +14,10 @@ import {
     FE_TOP_LEVEL_DOMAIN,
 } from "@/config/fe-config";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 export default function Logout() {
+    const router = useRouter();
     // Initialize Firebase
     const app = initializeApp(FIREBASE_CONFIG);
     // Initialize Firebase Authentication and get a reference to the service
@@ -38,6 +40,7 @@ export default function Logout() {
             });
     }
 
+    // redirect to landing
     useEffect(() => {
         // remove EFFIE_AUTH_TOKEN from cookie
         if (typeof window !== "undefined") {
@@ -47,10 +50,8 @@ export default function Logout() {
         if (typeof localStorage !== "undefined") {
             localStorage.removeItem(EFFIE_AUTH_TOKEN);
         }
+        handleGoogleSignOut();
+        router.push(FE_FULL_BASE_URL);
     }, []);
-
-    handleGoogleSignOut();
-
-    // redirect to landing
-    window.location.href = FE_FULL_BASE_URL;
+    return <>logging out...</>;
 }
