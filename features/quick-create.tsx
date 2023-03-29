@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import Button from "@/components/button";
+import { Button } from "@/ui";
 import LinkCard from "@/components/link-card";
 import { BE_BASE_URL } from "@/config/be-config";
 import Image from "next/image";

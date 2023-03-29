@@ -1,4 +1,4 @@
-import { Button, SideModal, Modal, Input } from "@/components";
+import { Button, SideModal } from "@/ui";
 
 import { useState } from "react";
 

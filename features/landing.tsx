@@ -1,13 +1,13 @@
 import Head from "next/head";
-import Button from "@/components/button";
-import { useState } from "react";
+import { Button } from "@/ui";
+// import { useState } from "react";
 import Footer from "@/components/footer";
 import Image from "next/image";
 import LP1 from "../public/images/lp1.png";
 import LP2 from "../public/images/lp2.png";
 import LP3 from "../public/images/lp3.png";
 import { useRegister } from "@/hooks";
-import Navbar from "@/components/navbar";
+import { Navbar } from "@/components";
 
 export default function Landing() {
     const isRegisterOpen = useRegister((state) => state.isRegisterOpen);
