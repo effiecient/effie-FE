@@ -9,6 +9,7 @@ import { useUserStore } from "@/hooks";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
+import { getEffieAuthTokenFromCookie } from "@/helpers";
 
 // used to set isLoggedIn, username, isSubdomain, subdomain
 export default function CheckUser({ children }: any) {
@@ -98,17 +99,4 @@ export default function CheckUser({ children }: any) {
             return children;
         }
     }
-}
-
-function getEffieAuthTokenFromCookie() {
-    let effieAuthToken = "";
-    if (typeof window !== "undefined") {
-        const cookie = document.cookie;
-        const cookieArr = cookie.split(";");
-        const token = cookieArr.find((item) => item.includes(EFFIE_AUTH_TOKEN));
-        if (token) {
-            effieAuthToken = token.split("=")[1];
-        }
-    }
-    return effieAuthToken;
 }
