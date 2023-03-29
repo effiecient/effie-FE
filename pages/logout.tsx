@@ -10,14 +10,11 @@ import { FIREBASE_CONFIG } from "@/config";
 import {
     FE_DOMAIN,
     FE_FULL_BASE_URL,
-    FE_SUBDOMAIN,
     FE_TOP_LEVEL_DOMAIN,
 } from "@/config/fe-config";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 export default function Logout() {
-    const router = useRouter();
     // Initialize Firebase
     const app = initializeApp(FIREBASE_CONFIG);
     // Initialize Firebase Authentication and get a reference to the service
@@ -51,7 +48,7 @@ export default function Logout() {
             localStorage.removeItem(EFFIE_AUTH_TOKEN);
         }
         handleGoogleSignOut();
-        router.push(FE_FULL_BASE_URL);
+        window.location.href = FE_FULL_BASE_URL;
     }, []);
     return <>logging out...</>;
 }
