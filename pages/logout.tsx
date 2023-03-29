@@ -1,6 +1,6 @@
 import { EFFIE_AUTH_TOKEN } from "@/constants";
 
-import { getAuth, GoogleAuthProvider, signOut } from "firebase/auth";
+import { getAuth, signOut } from "firebase/auth";
 
 import { initializeApp } from "firebase/app";
 
@@ -19,7 +19,6 @@ export default function Logout() {
     const app = initializeApp(FIREBASE_CONFIG);
     // Initialize Firebase Authentication and get a reference to the service
     const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
 
     function handleGoogleSignOut() {
         signOut(auth)
