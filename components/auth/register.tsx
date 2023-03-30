@@ -9,6 +9,8 @@ import { initializeApp } from "firebase/app";
 import { FIREBASE_CONFIG, BE_BASE_URL } from "@/config";
 import { useRouter } from "next/router";
 
+import { setToLocalStorage } from "@/helpers";
+
 type RegisterProps = {
     isOpen: boolean;
     onClose: () => void;
@@ -22,60 +24,48 @@ export default function Register({ isOpen, onClose }: RegisterProps) {
     const provider = new GoogleAuthProvider();
     const router = useRouter();
 
-    const [sudahLoginGoogleBelom, setSudahLoginGoogleBelom] = useState(false);
-
     function handleOnRegisterButtonClick() {
         signInWithPopup(auth, provider)
-            .then((result) => {
+            .then(async (result: any) => {
                 // The signed-in user info.
-                const user = result.user;
                 // set user to local storage
-                if (typeof localStorage !== "undefined") {
-                    localStorage.setItem("uid", user.uid);
-                }
+                setToLocalStorage("uid", result.user.uid);
+
                 // get id token
-                auth.currentUser
-                    ?.getIdToken(true)
-                    .then(async function (accessToken) {
-                        if (typeof localStorage !== "undefined") {
-                            localStorage.setItem("accessToken", accessToken);
-                        }
-                        // now we have uid and accessToken
-                        // hit api check (check if uid is associated with username)
-                        const body = {
-                            uid: user.uid,
-                        };
-                        const res = await fetch(`${BE_BASE_URL}/user/check`, {
-                            method: "POST",
-                            body: JSON.stringify(body),
-                            headers: {
-                                Authorization: accessToken,
-                                "Content-Type": "application/json",
-                                Accept: "application/json",
-                            },
-                        });
-                        const data = await res.json();
-                        console.log("coba hit");
-                        console.log(data);
-                        // TODO: Handle klik login belom regis
-                        if (!data.data.isRegistered) {
-                            // navigate to /createUsername
-                            onClose();
-                            router.push("/create-username");
-                        } else {
-                            // if yes, then error (user already registered)
-                            // TODO: Buat toast
-                            console.error("Udah regis");
-                            alert("Udah regis");
-                        }
-                        // TODO: change this behaviour to - if registered, then just do login, while giving a little toast saying "you're already registered"
-                        // else, open modal and user can input username.
-                        // redirect to createUsername
-                    })
-                    .catch(function (error) {
-                        // Handle error
-                        console.error(error);
-                    });
+                setToLocalStorage("accessToken", result.user.accessToken);
+                setToLocalStorage("photoURL", result.user.photoURL);
+
+                // now we have uid and accessToken
+                // hit api check (check if uid is associated with username)
+                const body = {
+                    uid: result.user.uid,
+                };
+                const res = await fetch(`${BE_BASE_URL}/user/check`, {
+                    method: "POST",
+                    body: JSON.stringify(body),
+                    headers: {
+                        Authorization: result.user.accessToken,
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                    },
+                });
+                const data = await res.json();
+                console.log("coba hit");
+                console.log(data);
+                // TODO: Handle klik login belom regis
+                if (!data.data.isRegistered) {
+                    // navigate to /createUsername
+                    onClose();
+                    router.push("/create-username");
+                } else {
+                    // if yes, then error (user already registered)
+                    // TODO: Buat toast
+                    console.error("Udah regis");
+                    alert("Udah regis");
+                }
+                // TODO: change this behaviour to - if registered, then just do login, while giving a little toast saying "you're already registered"
+                // else, open modal and user can input username.
+                // redirect to createUsername
             })
             .catch((error) => {
                 console.error(error);
