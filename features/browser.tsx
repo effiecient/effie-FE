@@ -15,6 +15,7 @@ import SideBarProperties from "@/components/side-bar-properties";
 import { FE_BASE_URL } from "@/config/fe-config";
 import { FolderLinkData, FolderLinkDataArray } from "@/type";
 import useDelayUnmount from "@/hooks/useDelayUnmount";
+import LoadingPage from "@/components/loading";
 type BrowserType = {
     username?: string;
     location?: string[];
@@ -101,7 +102,7 @@ export default function Browser({ location = [] }: BrowserType) {
     });
 
     if (isLoading) {
-        return <div>Loading...</div>;
+        return <LoadingPage/>;
     }
     if (isError) {
         return <div>Error</div>;

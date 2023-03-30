@@ -10,6 +10,7 @@ const poppins = Poppins({
 });
 import "@/styles/globals.css";
 import "@/styles/text.css";
+import "@/styles/loading.css";
 import CheckUser from "@/middlewares/checkUser";
 
 export default function App({ Component, pageProps }: AppProps) {
