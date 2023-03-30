@@ -101,7 +101,7 @@ export default function QuickCreate() {
                     name="viewport"
                     content="width=device-width, initial-scale=1"
                 />
-                <link rel="icon" href="/favicon.ico" />
+                <link rel="icon" href="/favicon.svg" />
             </Head>
             <Navbar isOnLanding />
             <div className="flex flex-col px-44 xl:px-[20%] w-full">
