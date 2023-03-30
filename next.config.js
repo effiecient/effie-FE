@@ -1,20 +1,6 @@
-const withImages = require('next-images');
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+    reactStrictMode: false,
+};
 
-module.exports = withImages({
-  webpack(config, options) {
-    config.module.rules.push({
-      test: /\.svg$/,
-      use: [
-        {
-          loader: 'svg-react-loader',
-          options: {
-            jsx: true,
-          },
-        },
-      ],
-    });
-
-    return config;
-  },
-  reactStrictMode: false,
-});
+module.exports = nextConfig;

@@ -10,22 +10,20 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { FE_BASE_URL } from "@/config";
 
-
-
 type NewLinkProps = {
     isOpen: boolean;
     onClose: () => void;
 };
 
-
-
 export default function NewLink({ isOpen, onClose }: NewLinkProps) {
     // USER CONSTANTS
     const username = useUserStore((state: any) => state.username);
-    const USER_BASE_URL = `${username}.${FE_BASE_URL}/`;
-    const currPathArray = window.location.pathname.split("/").slice(1).filter((item) => item !== "");
-
-
+    const subdomain = useUserStore((state: any) => state.subdomain);
+    const USER_BASE_URL = `${subdomain}.${FE_BASE_URL}/`;
+    const currPathArray = window.location.pathname
+        .split("/")
+        .slice(1)
+        .filter((item) => item !== "");
 
     // USER INTERFACE CONFIGURATIONS
     const linkNameRef = useRef<HTMLInputElement>(null);
@@ -61,8 +59,6 @@ export default function NewLink({ isOpen, onClose }: NewLinkProps) {
         setIsMoreOptionsOpen(false);
     };
 
-    
-
     // FORM SUBMISSION
     const router = useRouter();
     const [readyToPost, setReadyToPost] = useState(false);
@@ -76,14 +72,14 @@ export default function NewLink({ isOpen, onClose }: NewLinkProps) {
         const title = formData.get("title") || linkName;
         const thumbnailURL = formData.get("thumbnail-url");
 
-        // validate
+        // TODO: change for a more robust validation
         // check if linkName has space
         if (linkName && linkName.includes(" ")) {
             alert("Link name cannot have space");
             return;
         }
         const data = {
-            username: username,
+            username: subdomain,
             link: linkUrl,
             title: title,
             isPinned: false,
@@ -94,15 +90,11 @@ export default function NewLink({ isOpen, onClose }: NewLinkProps) {
         setReadyToPost(true);
     };
 
-    
-
     const { isLoading, isError, response } = useFetchEffieBE({
         url: readyToPost ? `${BE_BASE_URL}/directory/link` : "",
         method: "POST",
         body: body,
     });
-
-
 
     // REFRESH UI AFTER NEW LINK ADDED
     if (readyToPost && !isLoading && !isError && response) {
@@ -114,7 +106,16 @@ export default function NewLink({ isOpen, onClose }: NewLinkProps) {
             <h3 className="text-neutral-800 mb-8">New Link</h3>
             <form onSubmit={onSubmit}>
                 <div className="flex items-center mb-6">
-                    <h4 className="text-neutral-600 mr-2">{USER_BASE_URL}{currPathArray.length === 1 ? currPathArray[0] + "/" : currPathArray.length > 1 ? ".../" + currPathArray[currPathArray.length-1] + "/" : ""}</h4>
+                    <h4 className="text-neutral-600 mr-2">
+                        {USER_BASE_URL}
+                        {currPathArray.length === 1
+                            ? currPathArray[0] + "/"
+                            : currPathArray.length > 1
+                            ? ".../" +
+                              currPathArray[currPathArray.length - 1] +
+                              "/"
+                            : ""}
+                    </h4>
                     <input
                         ref={linkNameRef}
                         type="text"

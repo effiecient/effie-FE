@@ -17,8 +17,12 @@ type NewFolderProps = {
 export default function NewFolder({ isOpen, onClose }: NewFolderProps) {
     // USER CONSTANTS
     const username = useUserStore((state: any) => state.username);
-    const USER_BASE_URL = `${username}.${FE_BASE_URL}/`;
-    const currPathArray = window.location.pathname.split("/").slice(1).filter((item) => item !== "");
+    const subdomain = useUserStore((state: any) => state.subdomain);
+    const USER_BASE_URL = `${subdomain}.${FE_BASE_URL}/`;
+    const currPathArray = window.location.pathname
+        .split("/")
+        .slice(1)
+        .filter((item) => item !== "");
 
     const [isMoreOptionsOpen, setIsMoreOptionsOpen] = useState(false);
 
@@ -49,14 +53,14 @@ export default function NewFolder({ isOpen, onClose }: NewFolderProps) {
         const thumbnailURL = formData.get("thumbnail-url");
         // Add "/" to the start of the link name if it doesn't exist
 
-        // validate
+        // TODO: change for a more robust validation
         // check if linkName has space
         if (linkName && linkName.includes(" ")) {
             alert("Link name cannot have space");
             return;
         }
         const data = {
-            username: username,
+            username: subdomain,
             title: title,
             isPinned: false,
             path: path,
@@ -84,12 +88,6 @@ export default function NewFolder({ isOpen, onClose }: NewFolderProps) {
         }
     };
 
-    const onURLblur = (e: React.FocusEvent<HTMLInputElement>) => {
-        // fetch with header
-
-        const url = "https://www.zoom.us";
-    };
-
     const closeModal = () => {
         onClose();
         setIsMoreOptionsOpen(false);
@@ -100,7 +98,16 @@ export default function NewFolder({ isOpen, onClose }: NewFolderProps) {
             <h3 className="text-neutral-800 mb-8">New Folder</h3>
             <form onSubmit={onSubmit}>
                 <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-0 mb-6">
-                    <h4 className="text-neutral-600 mr-2">{USER_BASE_URL}{currPathArray.length === 1 ? currPathArray[0] + "/" : currPathArray.length > 1 ? ".../" + currPathArray[currPathArray.length-1] + "/" : ""}</h4>
+                    <h4 className="text-neutral-600 mr-2">
+                        {USER_BASE_URL}
+                        {currPathArray.length === 1
+                            ? currPathArray[0] + "/"
+                            : currPathArray.length > 1
+                            ? ".../" +
+                              currPathArray[currPathArray.length - 1] +
+                              "/"
+                            : ""}
+                    </h4>
                     <input
                         ref={linkNameRef}
                         type="text"

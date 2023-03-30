@@ -1,40 +1,33 @@
 import { BE_BASE_URL } from "@/config";
-import { NODE_ENV } from "@/config/env-config";
 
 // TODO: update this to import from config only
-import { FE_DOMAIN, FE_FULL_BASE_URL } from "@/config/fe-config";
+import { FE_DOMAIN } from "@/config/fe-config";
 
 import { EFFIE_AUTH_TOKEN } from "@/constants";
 
-import { useFetchEffieBE, useUserStore } from "@/hooks";
+import { useUserStore } from "@/hooks";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
+import { getEffieAuthTokenFromCookie } from "@/helpers";
 
 // used to set isLoggedIn, username, isSubdomain, subdomain
 export default function CheckUser({ children }: any) {
+    const router = useRouter();
+
     const setUsername = useUserStore((state: any) => state.setUsername);
     const setIsLoggedIn = useUserStore((state: any) => state.setIsLoggedIn);
     const setIsSubdomain = useUserStore((state: any) => state.setIsSubdomain);
     const setSubdomain = useUserStore((state: any) => state.setSubdomain);
+    const setPhotoURL = useUserStore((state: any) => state.setPhotoURL);
+    const setHasPhotoURL = useUserStore((state: any) => state.setHasPhotoURL);
 
     // if effie_auth_token exist, set user to logged in
-    // let effieAuthToken = "";
-    const [effieAuthToken, setEffieAuthToken] = useState<any>(null);
-    const [isAuthChecked, setIsAuthChecked] = useState<boolean>(false);
+    const [effieAuthToken, setEffieAuthToken] = useState("");
 
     // get effie_auth_token from cookie
     useEffect(() => {
-        document.cookie.split(";").forEach((cookie) => {
-            let [key, value] = cookie.split("=");
-            // remove redundant space in key
-            if (key[0] === " ") {
-                key = key.slice(1);
-            }
-            if (key === EFFIE_AUTH_TOKEN) {
-                // set user to logged in
-                setEffieAuthToken(value);
-            }
-        });
-        setIsAuthChecked(true);
+        setEffieAuthToken(getEffieAuthTokenFromCookie());
 
         // set isSubdomain and subdomain
         let isSubdomain = false;
@@ -64,47 +57,52 @@ export default function CheckUser({ children }: any) {
         setIsSubdomain(isSubdomain);
         setSubdomain(arrayOfURL[0]);
     }, [setIsSubdomain, setSubdomain]);
+    const [{ isLoading, isError, response, fetchStarted }, fetcher] =
+        useFetchEffieBENew();
 
-    // check auth
-    const { isLoading, isError, response } = useFetchEffieBE({
-        url: effieAuthToken === null ? "" : `${BE_BASE_URL}/auth`,
-        method: "POST",
-        auth: effieAuthToken,
-    });
+    useEffect(() => {
+        if (effieAuthToken !== "") {
+            fetcher({
+                url: `${BE_BASE_URL}/auth`,
+                method: "POST",
+                auth: effieAuthToken,
+            });
+        }
+    }, [effieAuthToken]);
+    // short circuit
+    // if /logout, return children
+    if (router.pathname === "/logout") {
+        return children;
+    }
 
-    if (!isAuthChecked) {
-        return <div>global page Loading</div>;
+    if (effieAuthToken === "") {
+        setIsLoggedIn(false);
+        return children;
     } else {
-        if (isLoading) {
+        if (isError) {
+            setIsLoggedIn(false);
+
+            return (
+                <>
+                    <div>error: {response.message}</div>
+                    TODO: add logout button
+                </>
+            );
+        }
+
+        if (isLoading || !fetchStarted) {
             return <div>global page Loading</div>;
         } else {
-            if (effieAuthToken === null) {
-                return children;
+            setUsername(response.username);
+            setIsLoggedIn(true);
+            if (response.photoURL !== undefined) {
+                setPhotoURL(response.photoURL);
+                setHasPhotoURL(true);
             } else {
-                if (isError) {
-                    setIsLoggedIn(false);
-
-                    // if token exist but invalid, redirect to logout
-                    if (effieAuthToken !== null) {
-                        // TODO: change to use next router
-                        window.location.href = `${FE_FULL_BASE_URL}/logout`;
-                    }
-
-                    return <>error</>;
-                } else {
-                    if (response.success) {
-                        setUsername(response.username);
-                        setIsLoggedIn(true);
-                    } else {
-                        // if token exist but invalid, redirect to logout
-                        if (effieAuthToken !== null) {
-                            // TODO: change to use next router
-                            window.location.href = `${FE_FULL_BASE_URL}/logout`;
-                        }
-                    }
-                    return children;
-                }
+                setHasPhotoURL(false);
             }
+
+            return children;
         }
     }
 }

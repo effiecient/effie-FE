@@ -4,7 +4,6 @@ import Image from "next/image";
 import SideBar from "@/components/side-bar";
 import { BE_BASE_URL } from "@/config/be-config";
 import { useFetchEffieBE, useUserStore } from "@/hooks";
-import Navbar from "@/components/navbar";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import NewLink from "@/components/create-modal/new-link";
@@ -82,6 +81,7 @@ export default function Browser({ location = [] }: BrowserType) {
         setIsNewFolderModalOpen(true);
     };
     const username = useUserStore((state: any) => state.username);
+    const subdomain = useUserStore((state: any) => state.subdomain);
 
     let showSideBar = useDelayUnmount(isSideBarPropertiesOpen, 1000);
 
@@ -98,7 +98,7 @@ export default function Browser({ location = [] }: BrowserType) {
     };
 
     const { isLoading, isError, response } = useFetchEffieBE({
-        url: `${BE_BASE_URL}/directory/${username}/${location.join("/")}`,
+        url: `${BE_BASE_URL}/directory/${subdomain}/${location.join("/")}`,
     });
 
     if (isLoading) {
@@ -191,7 +191,7 @@ export default function Browser({ location = [] }: BrowserType) {
                     {/* BREADCRUMBS */}
                     <div className="sticky top-16 w-full bg-neutral-50 flex items-center z-20 -ml-4 -mt-4">
                         <Breadcrumb 
-                            path={username} 
+                            path={subdomain} 
                             onClick={() => {
                                 router.push(`/`);
                             }}

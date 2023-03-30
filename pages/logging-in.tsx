@@ -9,57 +9,45 @@ import {
 } from "@/config/fe-config";
 
 import { EFFIE_AUTH_TOKEN } from "@/constants";
-import { useFetchEffieBE } from "@/hooks";
+import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
 import { useRouter } from "next/router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect } from "react";
 
 export default function LoggingIn() {
     const router = useRouter();
-    const [accessToken, setAccessToken] = useState<string>("");
-    const [uid, setUid] = useState<string>("");
+    const [{ isLoading, isError, response, fetchStarted }, fetcher] =
+        useFetchEffieBENew();
 
     useEffect(() => {
         if (typeof localStorage !== "undefined") {
-            setAccessToken(localStorage.getItem("accessToken") || "");
-            setUid(localStorage.getItem("uid") || "");
+            const accessToken = localStorage.getItem("accessToken") || "";
+            const uid = localStorage.getItem("uid") || "";
+            const photoURL = localStorage.getItem("photoURL") || "";
+
+            if (accessToken !== "" && uid !== "" && photoURL !== "") {
+                fetcher({
+                    url: `${BE_BASE_URL}/user/login`,
+                    method: "POST",
+                    auth: accessToken,
+                    body: { uid, photoURL },
+                });
+            }
         }
     }, []);
-
-    const memoizedParams: any = useMemo(() => {
-        return {
-            url:
-                accessToken === "" || uid === ""
-                    ? ""
-                    : `${BE_BASE_URL}/user/login`,
-            method: "POST",
-            auth: accessToken,
-            body: { uid },
-        };
-    }, [accessToken, uid]);
-
-    const { isLoading, isError, response } = useFetchEffieBE(memoizedParams);
 
     console.log("isLoading", isLoading);
     console.log("isError", isError);
 
-    useEffect(() => {
-        if (response && response.status !== "ERROR") {
-            // set token to local storage
-            if (typeof localStorage !== "undefined") {
-                localStorage.setItem(EFFIE_AUTH_TOKEN, response.token);
-            }
-            // set to cookie to be used accross subdomains. expire in 1 year
-            document.cookie = `${EFFIE_AUTH_TOKEN}=${
-                response.token
-            }; path=/; domain=${FE_DOMAIN}.${FE_TOP_LEVEL_DOMAIN};expires=${new Date(
-                new Date().getTime() + 365 * 24 * 60 * 60 * 1000
-            ).toUTCString()};`;
+    // return
+    if (isError) {
+        return (
+            <div>
+                <h1>Error</h1>
+            </div>
+        );
+    }
 
-            router.push(`${FE_PROTOCOL}://${response.username}.${FE_BASE_URL}`);
-        }
-    }, [response]);
-
-    if (isLoading) {
+    if (isLoading || !fetchStarted) {
         return (
             <div>
                 <h1>Loading</h1>
@@ -67,14 +55,18 @@ export default function LoggingIn() {
         );
     }
 
-    if (isError || response.status === "ERROR") {
-        console.error(response);
-        return (
-            <div>
-                <h1>Error</h1>
-            </div>
-        );
+    // set token to local storage
+    if (typeof localStorage !== "undefined") {
+        localStorage.setItem(EFFIE_AUTH_TOKEN, response.token);
     }
+    // set to cookie to be used accross subdomains. expire in 1 year
+    document.cookie = `${EFFIE_AUTH_TOKEN}=${
+        response.token
+    }; path=/; domain=${FE_DOMAIN}.${FE_TOP_LEVEL_DOMAIN};expires=${new Date(
+        new Date().getTime() + 365 * 24 * 60 * 60 * 1000
+    ).toUTCString()};`;
+
+    router.push(`${FE_PROTOCOL}://${response.username}.${FE_BASE_URL}`);
 
     return <>redirecting...</>;
 }

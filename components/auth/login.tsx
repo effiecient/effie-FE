@@ -8,6 +8,7 @@ import {
     onAuthStateChanged,
     signOut,
 } from "firebase/auth";
+import { setToLocalStorage } from "@/helpers";
 
 import { initializeApp } from "firebase/app";
 import { useEffect, useState } from "react";
@@ -39,28 +40,14 @@ export default function Login({ isOpen, onClose }: LoginProps) {
 
     function handleLoginButton() {
         signInWithPopup(auth, provider)
-            .then((result) => {
-                // The signed-in user info.
-                const user = result.user;
+            .then((result: any) => {
+                console.log(result);
                 // set user to local storage
-                if (typeof localStorage !== "undefined") {
-                    localStorage.setItem("uid", user.uid);
-                }
-                // get id token
-                auth.currentUser
-                    ?.getIdToken(true)
-                    .then(function (accessToken) {
-                        if (typeof localStorage !== "undefined") {
-                            localStorage.setItem("accessToken", accessToken);
-                        }
-                        // Send token to your backend via HTTPS
-                        onClose();
-                        router.push("/logging-in");
-                    })
-                    .catch(function (error) {
-                        // Handle error
-                        console.log("error");
-                    });
+                setToLocalStorage("uid", result.user.uid);
+                setToLocalStorage("accessToken", result.user.accessToken);
+                setToLocalStorage("photoURL", result.user.photoURL);
+                onClose();
+                router.push("/logging-in");
             })
             .catch((error) => {
                 console.error(error);
