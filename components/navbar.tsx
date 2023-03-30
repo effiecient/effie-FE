@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Login from "./auth/login";
 import Register from "./auth/register";
-import Button from "./button";
+import { Button } from "@/ui";
 import Image from "next/image";
 import loginIcon from "@/public/icons/login.svg";
 import registerIcon from "@/public/icons/register.svg";

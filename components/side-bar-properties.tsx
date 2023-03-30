@@ -3,7 +3,7 @@ import CopyIcon from "@/public/icons/copy";
 import Link from "next/link";
 import { useRef, useState } from "react";
 import { copyToClipboard } from "@/utils";
-import Button from "./button";
+import { Button } from "@/ui";
 import editIcon from "@/public/icons/edit.svg";
 import Image from "next/image";
 import Input from "./input";

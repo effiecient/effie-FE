@@ -1,4 +1,4 @@
-import { Button, Input } from "@/components";
+import { Button } from "@/ui";
 import { useState } from "react";
 import { BE_BASE_URL } from "@/config";
 import { EFFIE_AUTH_TOKEN } from "@/constants";
@@ -44,7 +44,8 @@ export default function CreateUsername() {
         <>
             {/* <Modal isOpen={isModalOpen} onClose={handleModalClose}> */}
             <label htmlFor="usernameInput">Username :</label>
-            <Input
+            <input
+                className="input"
                 required
                 type="text"
                 id="usernameInput"

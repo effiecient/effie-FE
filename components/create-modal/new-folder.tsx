@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import Button from "../button";
+import { Button, Modal } from "@/ui";
 import LinkCard from "../link-card";
-import Modal from "../modal";
 import { BE_BASE_URL } from "@/config/be-config";
 import { FE_BASE_URL } from "@/config";
 // import { unfurl } from 'unfurl.js'

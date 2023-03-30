@@ -1,5 +1,4 @@
-import Button from "../button";
-import SideModal from "../side-modal";
+import { Button, SideModal } from "@/ui";
 
 import {
     getAuth,
