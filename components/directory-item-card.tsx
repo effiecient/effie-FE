@@ -4,8 +4,12 @@ import Image from "next/image";
 import NewLink from "./create-modal/new-link";
 import NewFolder from "./create-modal/new-folder";
 import { copyToClipboard } from "@/utils";
+import { FE_BASE_URL, FE_PROTOCOL } from "@/config";
+import { useUserStore } from "@/hooks";
+import { useRouter } from "next/router";
+import { FolderLinkData } from "@/type";
 
-type LinkCardProps = {
+type DirectoryItemCardProps = {
     content:
         | "new folder"
         | "new link"
@@ -13,31 +17,40 @@ type LinkCardProps = {
         | "folder"
         | "display link"
         | "display folder";
-    title?: string;
-    url?: string;
-    effieUrl?: string;
+    DirectoryItemData?: FolderLinkData;
     onClick?: () => void;
     onDoubleClick?: () => void;
     className?: string;
+    relativePath?: string;
+    isFocused?: boolean;
 };
 
-export default function LinkCard({
+export default function DirectoryItemCard({
     content,
-    title,
-    url,
-    effieUrl,
+    DirectoryItemData,
     onClick,
     onDoubleClick,
     className,
-}: LinkCardProps) {
+    relativePath,
+    isFocused = false,
+}: DirectoryItemCardProps) {
+    const router = useRouter();
+    let pathname = router.asPath;
+    let subdomain = useUserStore((state: any) => state.username);
+    // add / in the back if doesn't exist
+    if (pathname[pathname.length - 1] !== "/") {
+        pathname = pathname + "/";
+    }
+    const effieURL = `${FE_PROTOCOL}://${subdomain}.${FE_BASE_URL}${pathname}${relativePath}`;
     const copySuccessRef = useRef<HTMLDivElement>(null);
 
     const copyEffieUrl = () => {
         copySuccessRef.current?.classList.remove("opacity-0", "-translate-y-1");
-        if (!navigator.clipboard) { // Fallback to unsupported browsers
-            copyToClipboard(effieUrl ?? "");
+        if (!navigator.clipboard) {
+            // Fallback to unsupported browsers
+            copyToClipboard(effieURL ?? "");
         } else {
-            navigator.clipboard.writeText(effieUrl ?? "");
+            navigator.clipboard.writeText(effieURL ?? "");
         }
         setTimeout(() => {
             copySuccessRef.current?.classList.add(
@@ -59,10 +72,11 @@ export default function LinkCard({
                         ? "items-center justify-center gap-2 border-white hover:bg-primary-50 hover:border-primary-50 cursor-pointer duration-200"
                         : content.slice(0, 7) === "display"
                         ? "flex-col gap-1 border-neutral-200"
-                        : "flex-col gap-1 hover:border-neutral-200 cursor-pointer border-white"
+                        : `flex-col gap-1 hover:border-neutral-200 cursor-pointer border-white`
                 } 
                 group relative flex pt-3 pb-2 px-5 bg-white rounded-xl border focus:border-primary-500 w-[32vw] md:w-[44vw] lg:w-[20vw] max-w-[16rem] min-w-[8rem] min-h-[4rem] overflow-hidden`}
             >
+                {/* images */}
                 {content === "new folder" ? (
                     <>
                         <Image
@@ -95,19 +109,24 @@ export default function LinkCard({
                             />
                         ) : (
                             <div
-                                className="absolute left-0 top-0 h-full w-2 rounded-l-xl"
+                                className={`absolute left-0 top-0 h-full w-2 rounded-l-xl`}
                                 style={{ backgroundColor: "#FFF" }}
                             />
                         )}
+                        {/* link or folder data */}
                         <div>
-                            <h6 className="text-neutral-800">{title}</h6>
+                            <h6 className={`text-neutral-800`}>
+                                {DirectoryItemData?.title}
+                                {/* TODO: handle isFocused */}
+                                {isFocused && "focus"}
+                            </h6>
                             <a
-                                href={url}
+                                href={DirectoryItemData?.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="hover:text-primary-500 text-neutral-600 text-xs un hover:decoration-primary-500 inline-block max-w-full overflow-hidden"
+                                className={`hover:text-primary-500 text-neutral-600 text-xs un hover:decoration-primary-500 inline-block max-w-full overflow-hidden`}
                             >
-                                {url}
+                                {DirectoryItemData?.url}
                             </a>
                             {(content === "link" || content === "folder") && (
                                 <button
@@ -124,7 +143,7 @@ export default function LinkCard({
                                             Link copied!
                                             <br />
                                             <span className="text-[0.6rem] underline text-neutral-100">
-                                                {effieUrl}
+                                                {effieURL}
                                             </span>
                                         </p>
                                     </div>

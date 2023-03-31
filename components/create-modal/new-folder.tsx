@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Button, Modal } from "@/ui";
-import LinkCard from "../link-card";
+import DirectoryItemCard from "../directory-item-card";
 import { BE_BASE_URL } from "@/config/be-config";
 import { FE_BASE_URL } from "@/config";
 // import { unfurl } from 'unfurl.js'
@@ -161,7 +161,7 @@ export default function NewFolder({ isOpen, onClose }: NewFolderProps) {
                             className="input"
                         />
                     </div>
-                    <LinkCard
+                    <DirectoryItemCard
                         content="display link"
                         title={title}
                         url={linkNameRef.current?.value || ""}

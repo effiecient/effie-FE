@@ -52,10 +52,10 @@ export default function CheckUser({ children }: any) {
                 isSubdomain = true;
             }
         }
-
+        // get the URLLocation
         setIsSubdomain(isSubdomain);
         setSubdomain(arrayOfURL[0]);
-    }, [setIsSubdomain, setSubdomain]);
+    }, []);
     const [{ isLoading, isError, response, fetchStarted }, fetcher] =
         useFetchEffieBENew();
 

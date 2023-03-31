@@ -1,7 +1,7 @@
 // IMPORTS
 import { useState, useEffect, useRef } from "react";
 import { Button, Modal } from "@/ui";
-import LinkCard from "../link-card";
+import DirectoryItemCard from "../directory-item-card";
 import { BE_BASE_URL } from "@/config/be-config";
 import { useFetchEffieBE, useUserStore } from "@/hooks";
 // import { unfurl } from 'unfurl.js'
@@ -180,7 +180,7 @@ export default function NewLink({ isOpen, onClose }: NewLinkProps) {
                             className="input"
                         />
                     </div>
-                    <LinkCard
+                    <DirectoryItemCard
                         content="display link"
                         title={title}
                         url={linkNameRef.current?.value || ""}
