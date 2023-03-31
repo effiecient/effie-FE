@@ -72,7 +72,11 @@ export default function DirectoryItemCard({
                         ? "items-center justify-center gap-2 border-white hover:bg-primary-50 hover:border-primary-50 cursor-pointer duration-200"
                         : content.slice(0, 7) === "display"
                         ? "flex-col gap-1 border-neutral-200"
-                        : `flex-col gap-1 hover:border-neutral-200 cursor-pointer border-white`
+                        : `flex-col gap-1 ${
+                              isFocused
+                                  ? "border-primary-400 border-2"
+                                  : "hover:border-neutral-200"
+                          } cursor-pointer border-white`
                 } 
                 group relative flex pt-3 pb-2 px-5 bg-white rounded-xl border focus:border-primary-500 w-[32vw] md:w-[44vw] lg:w-[20vw] max-w-[16rem] min-w-[8rem] min-h-[4rem] overflow-hidden`}
             >
@@ -118,8 +122,6 @@ export default function DirectoryItemCard({
                         <div>
                             <h6 className={`text-neutral-800`}>
                                 {DirectoryItemData?.title}
-                                {/* TODO: handle isFocused */}
-                                {isFocused && "focus"}
                                 {DirectoryItemData?.isPinned && "pinned"}
                             </h6>
                             <a
@@ -139,7 +141,7 @@ export default function DirectoryItemCard({
                                     {/* Copy success notif */}
                                     <div
                                         ref={copySuccessRef}
-                                        className="opacity-0 -translate-y-1 absolute top-14 bg-neutral-900/50 text-white rounded-md py-1 px-2 shadow-lg text-left duration-300 max-w-[12rem]"
+                                        className="absolute top-14 bg-neutral-900/50 text-white rounded-md py-1 px-2 shadow-lg text-left duration-300 max-w-[12rem]"
                                     >
                                         <p className="text-xs">
                                             Link copied!
@@ -152,6 +154,17 @@ export default function DirectoryItemCard({
                                 </button>
                             )}
                         </div>
+                        {DirectoryItemData?.isPinned && (
+                            <>
+                                <Image
+                                    src="/icons/pin.svg"
+                                    alt="link"
+                                    width={28}
+                                    height={28}
+                                    className="absolute top-1 right-1 z-0"
+                                />
+                            </>
+                        )}
                     </div>
                 )}
             </div>
