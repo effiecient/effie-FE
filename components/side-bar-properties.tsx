@@ -16,29 +16,15 @@ import { useRouter } from "next/router";
 type SideBarPropertiesProps = {
     isOpen: boolean;
     itemData: FolderLinkData;
-    isEdit: boolean;
-    isEditAccess: boolean;
-    relativePath: string;
-    fullRelativePath: string;
-    setIsEdit: (isEdit: boolean) => void;
-    setIsEditAccess: (isEditAccess: boolean) => void;
-    onClose: () => void;
     className?: string;
-    link?: string;
+    relativePath: string;
 };
 
 export default function SideBarProperties({
     isOpen = false,
     itemData,
     className,
-    isEdit,
-    isEditAccess,
     relativePath,
-    fullRelativePath,
-    setIsEdit,
-    setIsEditAccess,
-    onClose,
-    link,
 }: SideBarPropertiesProps) {
     const [newTitle, setNewTitle] = useState("");
     const [newLink, setNewLink] = useState("");
@@ -49,16 +35,24 @@ export default function SideBarProperties({
     const [readyToDelete, setReadyToDelete] = useState(false);
     const [readyToUpdate, setReadyToUpdate] = useState(false);
 
+    const isEdit = false;
+    const isEditAccess = false;
+    const fullRelativePath = "fullRelativePath";
     // Extract path without last path
-    const pathWithoutLastPath = link?.split("/").slice(0, -1).join("/");
+    const pathWithoutLastPath = itemData.effieUrl
+        ?.split("/")
+        .slice(0, -1)
+        .join("/");
     const copySuccessRef = useRef<HTMLDivElement>(null);
     const copyEffieUrl = () => {
         copySuccessRef.current?.classList.remove("opacity-0", "-translate-y-1");
         if (!navigator.clipboard) {
             // Fallback to unsupported browsers
-            copyToClipboard(itemData?.effieUrl ?? link);
+            copyToClipboard(itemData?.effieUrl ?? itemData.effieUrl);
         } else {
-            navigator.clipboard.writeText(itemData?.effieUrl ?? link);
+            navigator.clipboard.writeText(
+                itemData?.effieUrl ?? itemData.effieUrl
+            );
         }
         setTimeout(() => {
             copySuccessRef.current?.classList.add(
@@ -141,16 +135,16 @@ export default function SideBarProperties({
         method: "PATCH",
         body: body,
     });
-    console.log(responseUpdate)
-    console.log(body)
+    console.log(responseUpdate);
+    console.log(body);
     if (readyToUpdate && responseUpdate && !isErrorUpdate && !isLoadingUpdate) {
         router.reload();
     }
 
     return (
         <div
-            className={`${className} justify-items-center fixed right-0 ease-in-out duration-300 w-1/4 h-full bg-white px-9 py-6 ${
-                isOpen ? "translate-x-0" : "translate-x-[100%]"
+            className={`${className} justify-items-center right-0 ease-in-out duration-300 h-full bg-white px-9 py-6 ${
+                isOpen ? "translate-x-0" : "translate-x-[100%] hidden"
             }`}
         >
             <div className="mb-7">
@@ -172,10 +166,10 @@ export default function SideBarProperties({
                     <div className="flex flex-row justify-between items-center lg:gap-1 mb-3">
                         <div>
                             <Link
-                                href={link ?? ""}
+                                href={itemData.effieUrl ?? ""}
                                 className="text-primary-400 underline"
                             >
-                                {link}
+                                {itemData.effieUrl}
                             </Link>
                         </div>
                         <div>

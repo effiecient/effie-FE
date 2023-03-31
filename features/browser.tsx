@@ -12,6 +12,7 @@ import SideBarProperties from "@/components/side-bar-properties";
 import { FE_BASE_URL } from "@/config/fe-config";
 import { FolderLinkData, FolderLinkDataArray } from "@/type";
 import useDelayUnmount from "@/hooks/useDelayUnmount";
+import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
 type BrowserType = {
     username?: string;
     location?: string[];
@@ -77,14 +78,8 @@ export default function Browser({ location = [] }: BrowserType) {
     const [isSideBarPropertiesOpen, setIsSideBarPropertiesOpen] =
         useState(false);
 
-    const [isEdit, setIsEdit] = useState(false);
-    const [isEditAccess, setIsEditAccess] = useState(false);
-    const [link, setLink] = useState("");
     const [selectedItem, setSelectedItem] = useState({} as FolderLinkData);
-    const [selectedItemRelativePath, setSelectedItemRelativePath] =
-        useState("");
-    const [selectedItemFullRelativePath, setSelectedItemFullRelativePath] =
-        useState("");
+
     const handleNewLinkClick = () => {
         setIsNewLinkModalOpen(true);
     };
@@ -96,23 +91,23 @@ export default function Browser({ location = [] }: BrowserType) {
 
     let showSideBar = useDelayUnmount(isSideBarPropertiesOpen, 1000);
 
-    const { isLoading, isError, response } = useFetchEffieBE({
-        url: `${BE_BASE_URL}/directory/${subdomain}/${location.join("/")}`,
-    });
+    const [{ isLoading, isError, response, fetchStarted }, fetcher] =
+        useFetchEffieBENew();
+    useEffect(() => {
+        fetcher({
+            url: `${BE_BASE_URL}/directory/${subdomain}/${location.join("/")}`,
+        });
+    }, [subdomain]);
 
-    if (isLoading) {
-        return <>skeleton</>;
-    }
     if (isError) {
         return <div>Error:{response.message}</div>;
     }
-
-    if (response.status === "ERROR") {
-        return <div>{response.message}</div>;
+    if (isLoading || !fetchStarted) {
+        return <>skeleton</>;
     }
 
     const data: FolderLinkDataArray = response.data;
-
+    // TODO: preproccess data
     return (
         <>
             <Head>
@@ -142,7 +137,18 @@ export default function Browser({ location = [] }: BrowserType) {
                     {/* BACKGROUND */}
                     <Background />
                     {/* BREADCRUMBS */}
-                    <BrowserBreadcrumb location={location} />
+                    <div className="flex py-4 justify-between">
+                        <BrowserBreadcrumb location={location} />
+                        <button
+                            onClick={() => {
+                                setIsSideBarPropertiesOpen(
+                                    !isSideBarPropertiesOpen
+                                );
+                            }}
+                        >
+                            open properties
+                        </button>
+                    </div>
 
                     {/* CONTENT */}
                     <div>
@@ -250,6 +256,8 @@ export default function Browser({ location = [] }: BrowserType) {
                                                 "link"
                                         ) {
                                             let link = data.childrens[child];
+                                            console.log("link.effieUrl");
+                                            console.log(link.effieUrl);
                                             return (
                                                 <LinkCard
                                                     key={index}
@@ -314,22 +322,22 @@ export default function Browser({ location = [] }: BrowserType) {
                         </section>
                     </div>
                 </div>
-                <div>
-                    testing right sidebar
+                <div className="w-1/3">
                     {/* SIDEBAR PROPERTIES */}
                     <SideBarProperties
                         isOpen={isSideBarPropertiesOpen}
-                        itemData={selectedItem}
-                        isEdit={isEdit}
-                        isEditAccess={isEditAccess}
-                        setIsEdit={setIsEdit}
-                        setIsEditAccess={setIsEditAccess}
-                        link={link}
-                        relativePath={selectedItemRelativePath}
-                        fullRelativePath={selectedItemFullRelativePath}
-                        onClose={() => {
-                            setIsSideBarPropertiesOpen(false);
+                        itemData={{
+                            isPinned: false,
+                            link: "https://bong.com",
+                            title: "bong",
+                            type: "link",
+                            effieUrl: "https://effie.boo",
+                            shareConfiguration: {
+                                isShared: true,
+                                sharedPrivilege: "read",
+                            },
                         }}
+                        relativePath="test"
                     />
                 </div>
             </main>
