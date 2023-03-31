@@ -239,7 +239,7 @@ export default function Browser() {
                                         DirectoryItemData={data}
                                         onDoubleClick={() => {
                                             // open url in new page
-                                            window.open(data.url, "_blank");
+                                            window.open(data.link, "_blank");
                                         }}
                                         onClick={() => {
                                             setFocusedItemData(data);
