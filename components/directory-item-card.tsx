@@ -119,6 +119,7 @@ export default function DirectoryItemCard({
                                 {DirectoryItemData?.title}
                                 {/* TODO: handle isFocused */}
                                 {isFocused && "focus"}
+                                {DirectoryItemData?.isPinned && "pinned"}
                             </h6>
                             <a
                                 href={DirectoryItemData?.url}

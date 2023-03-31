@@ -71,6 +71,7 @@ export default function Browser() {
 
     const [focusedItemData, setFocusedItemData] = useState<any>(undefined);
     const [focusedItemName, setFocusedItemName] = useState<string>("");
+
     const handleNewLinkClick = () => {
         setIsNewLinkModalOpen(true);
     };
@@ -80,6 +81,7 @@ export default function Browser() {
 
     const [{ isLoading, isError, response, fetchStarted }, fetcher] =
         useFetchEffieBENew();
+
     useEffect(() => {
         setFocusedItemData(undefined);
         setFocusedItemName("");
@@ -95,7 +97,49 @@ export default function Browser() {
         return <>skeleton</>;
     }
 
-    const data: FolderLinkDataArray = response.data;
+    let data: FolderLinkDataArray = response.data;
+    // setup dataChildren as array
+    let dataChildrenFolders: any = [];
+    let dataChildrenLinks: any = [];
+    data &&
+        data.childrens &&
+        Object.keys(data.childrens).forEach((child: any) => {
+            if (data?.childrens) {
+                if (data.childrens[child].type === "folder") {
+                    // key value of child and data
+                    dataChildrenFolders.push({
+                        key: child,
+                        data: data.childrens[child],
+                    });
+                }
+                if (data.childrens[child].type === "link") {
+                    dataChildrenLinks.push({
+                        key: child,
+                        data: data.childrens[child],
+                    });
+                }
+            }
+        });
+    // sort based on isPinned and then title alphabetically
+    dataChildrenFolders.sort((a: any, b: any) => {
+        if (a.data.isPinned === b.data.isPinned) {
+            return a.data.title.localeCompare(b.data.title);
+        }
+        if (a.data.isPinned) {
+            return -1;
+        }
+        return 1;
+    });
+    dataChildrenLinks.sort((a: any, b: any) => {
+        if (a.data.isPinned === b.data.isPinned) {
+            return a.data.title.localeCompare(b.data.title);
+        }
+        if (a.data.isPinned) {
+            return -1;
+        }
+        return 1;
+    });
+
     return (
         <>
             <Head>
@@ -148,43 +192,32 @@ export default function Browser() {
                                 content="new folder"
                                 onClick={handleNewFolderClick}
                             />
-                            {data?.childrens &&
-                                Object.keys(data.childrens).map(
-                                    (child: any, index) => {
-                                        if (
-                                            data.childrens &&
-                                            data.childrens[child].type ===
-                                                "folder"
-                                        ) {
-                                            let folder = data.childrens[child];
-                                            return (
-                                                <DirectoryItemCard
-                                                    key={index}
-                                                    content="folder"
-                                                    relativePath={child}
-                                                    DirectoryItemData={folder}
-                                                    onDoubleClick={() => {
-                                                        router.push(
-                                                            `${pathname}/${child}`
-                                                        );
-                                                    }}
-                                                    onClick={() => {
-                                                        setFocusedItemData(
-                                                            folder
-                                                        );
-                                                        setFocusedItemName(
-                                                            child
-                                                        );
-                                                    }}
-                                                    isFocused={
-                                                        focusedItemName ===
-                                                        child
-                                                    }
-                                                />
-                                            );
-                                        }
-                                    }
-                                )}
+                            {dataChildrenFolders.map(
+                                (folder: any, index: any) => {
+                                    let child = folder.key;
+                                    let data = folder.data;
+                                    return (
+                                        <DirectoryItemCard
+                                            key={index}
+                                            content="folder"
+                                            relativePath={child}
+                                            DirectoryItemData={data}
+                                            onDoubleClick={() => {
+                                                router.push(
+                                                    `${pathname}/${child}`
+                                                );
+                                            }}
+                                            onClick={() => {
+                                                setFocusedItemData(data);
+                                                setFocusedItemName(child);
+                                            }}
+                                            isFocused={
+                                                focusedItemName === child
+                                            }
+                                        />
+                                    );
+                                }
+                            )}
                         </section>
 
                         <h5 className="text-neutral-400 relative z-10 pt-6 pb-2">
@@ -195,43 +228,26 @@ export default function Browser() {
                                 content="new link"
                                 onClick={handleNewLinkClick}
                             />
-                            {data?.childrens &&
-                                Object.keys(data.childrens).map(
-                                    (child: any, index) => {
-                                        if (
-                                            data.childrens &&
-                                            data.childrens[child].type ===
-                                                "link"
-                                        ) {
-                                            let link = data.childrens[child];
-                                            return (
-                                                <DirectoryItemCard
-                                                    key={index}
-                                                    content="link"
-                                                    relativePath={child}
-                                                    DirectoryItemData={link}
-                                                    onDoubleClick={() => {
-                                                        router.push(
-                                                            `${pathname}/${child}`
-                                                        );
-                                                    }}
-                                                    onClick={() => {
-                                                        setFocusedItemData(
-                                                            link
-                                                        );
-                                                        setFocusedItemName(
-                                                            child
-                                                        );
-                                                    }}
-                                                    isFocused={
-                                                        focusedItemName ===
-                                                        child
-                                                    }
-                                                />
-                                            );
-                                        }
-                                    }
-                                )}
+                            {dataChildrenLinks.map((link: any, index: any) => {
+                                let child = link.key;
+                                let data = link.data;
+                                return (
+                                    <DirectoryItemCard
+                                        key={index}
+                                        content="link"
+                                        relativePath={child}
+                                        DirectoryItemData={data}
+                                        onDoubleClick={() => {
+                                            router.push(`${pathname}/${child}`);
+                                        }}
+                                        onClick={() => {
+                                            setFocusedItemData(data);
+                                            setFocusedItemName(child);
+                                        }}
+                                        isFocused={focusedItemName === child}
+                                    />
+                                );
+                            })}
                         </section>
                     </div>
                 </div>

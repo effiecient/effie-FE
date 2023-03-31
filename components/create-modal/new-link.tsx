@@ -180,13 +180,15 @@ export default function NewLink({ isOpen, onClose }: NewLinkProps) {
                             className="input"
                         />
                     </div>
-                    <DirectoryItemCard
+                    {/* TODO: adapt to the new directory item card */}
+
+                    {/* <DirectoryItemCard
                         content="display link"
                         title={title}
                         url={linkNameRef.current?.value || ""}
                         effieUrl=""
                         className="h-fit"
-                    />
+                    /> */}
                 </div>
             </form>
         </Modal>

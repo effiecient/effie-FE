@@ -183,12 +183,14 @@ export default function QuickCreate() {
                                     className="input"
                                 />
                             </div>
-                            <DirectoryItemCard
+                            {/* TODO: adapt to the new direcotory Item Card */}
+                            {/* <DirectoryItemCard
                                 content="display link"
                                 title={title}
                                 url={linkNameRef.current?.value || ""}
+                                effieUrl=""
                                 className="h-fit"
-                            />
+                            /> */}
                         </div>
                     </form>
                 </div>

@@ -1,6 +1,3 @@
-import { BE_BASE_URL, BE_STATUS_ERROR } from "@/config";
-import { EFFIE_AUTH_TOKEN } from "@/constants";
-
 import type { AppProps } from "next/app";
 import { Poppins } from "@next/font/google";
 const poppins = Poppins({
