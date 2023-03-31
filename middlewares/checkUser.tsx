@@ -22,7 +22,7 @@ export default function CheckUser({ children }: any) {
     const setHasPhotoURL = useUserStore((state: any) => state.setHasPhotoURL);
 
     // if effie_auth_token exist, set user to logged in
-    const [effieAuthToken, setEffieAuthToken] = useState("");
+    const [effieAuthToken, setEffieAuthToken] = useState<any>(null);
 
     // get effie_auth_token from cookie
     useEffect(() => {
