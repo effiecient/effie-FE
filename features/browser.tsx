@@ -238,7 +238,8 @@ export default function Browser() {
                                         relativePath={child}
                                         DirectoryItemData={data}
                                         onDoubleClick={() => {
-                                            window.location.href = data.url;
+                                            // open url in new page
+                                            window.open(data.url, "_blank");
                                         }}
                                         onClick={() => {
                                             setFocusedItemData(data);
