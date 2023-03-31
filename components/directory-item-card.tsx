@@ -100,13 +100,14 @@ export default function DirectoryItemCard({
                 ) : (
                     <div className="flex">
                         {content === "link" || content === "display link" ? (
-                            <Image
-                                src="/icons/link.svg"
-                                alt="link"
-                                width={28}
-                                height={28}
-                                className="hidden md:block mr-2"
-                            />
+                            <div className="mr-2">
+                                <Image
+                                    src={`https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${DirectoryItemData?.link}&size=64`}
+                                    alt="link"
+                                    width={28}
+                                    height={28}
+                                />
+                            </div>
                         ) : (
                             <div
                                 className={`absolute left-0 top-0 h-full w-2 rounded-l-xl`}
