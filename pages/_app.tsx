@@ -15,12 +15,12 @@ import CheckUser from "@/middlewares/checkUser";
 
 export default function App({ Component, pageProps }: AppProps) {
     return (
-        <CheckUser>
-            <div
-                className={`${poppins.variable} selection:bg-secondary-500 accent-tertiary-500`}
-            >
+        <div
+            className={`${poppins.variable} selection:bg-secondary-500 accent-tertiary-500 h-screen`}
+        >
+            <CheckUser>
                 <Component {...pageProps} />
-            </div>
-        </CheckUser>
+            </CheckUser>
+        </div>
     );
 }

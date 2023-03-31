@@ -11,10 +11,10 @@ export default function Index() {
     console.log(process.env.NEXT_PUBLIC_ENV_TYPE);
     if (isSubdomain) {
         return (
-            <>
+            <div className="flex h-full w-full flex-col">
                 <Navbar />
                 <Browser />
-            </>
+            </div>
         );
     } else {
         if (isLoggedIn) {

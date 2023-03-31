@@ -12,10 +12,20 @@ import SideBarProperties from "@/components/side-bar-properties";
 import { FE_BASE_URL } from "@/config/fe-config";
 import { FolderLinkData, FolderLinkDataArray } from "@/type";
 import useDelayUnmount from "@/hooks/useDelayUnmount";
-import LoadingPage from "@/components/loading-page";
 type BrowserType = {
     username?: string;
     location?: string[];
+};
+const dummyFolderLinkData: FolderLinkData = {
+    title: "",
+    isPinned: false,
+    link: "",
+    type: "folder",
+    effieUrl: "",
+    shareConfiguration: {
+        isShared: false,
+        sharedPrivilege: "read",
+    },
 };
 
 function compareSelectedItem(a: FolderLinkData, b: FolderLinkData): boolean {
@@ -59,12 +69,14 @@ export default function Browser({ location = [] }: BrowserType) {
     // }, [location]);
 
     const router = useRouter();
+
     const [isNewLinkModalOpen, setIsNewLinkModalOpen] = useState(false);
     const [isNewFolderModalOpen, setIsNewFolderModalOpen] = useState(false);
     const [isKeyboardShortcutsModalOpen, setIsKeyboardShortcutsModalOpen] =
         useState(false);
     const [isSideBarPropertiesOpen, setIsSideBarPropertiesOpen] =
         useState(false);
+
     const [isEdit, setIsEdit] = useState(false);
     const [isEditAccess, setIsEditAccess] = useState(false);
     const [link, setLink] = useState("");
@@ -84,18 +96,6 @@ export default function Browser({ location = [] }: BrowserType) {
 
     let showSideBar = useDelayUnmount(isSideBarPropertiesOpen, 1000);
 
-    const dummyFolderLinkData: FolderLinkData = {
-        title: "",
-        isPinned: false,
-        link: "",
-        type: "folder",
-        effieUrl: "",
-        shareConfiguration: {
-            isShared: false,
-            sharedPrivilege: "read",
-        },
-    };
-
     const { isLoading, isError, response } = useFetchEffieBE({
         url: `${BE_BASE_URL}/directory/${subdomain}/${location.join("/")}`,
     });
@@ -104,7 +104,7 @@ export default function Browser({ location = [] }: BrowserType) {
         return <>skeleton</>;
     }
     if (isError) {
-        return <div>Error</div>;
+        return <div>Error:{response.message}</div>;
     }
 
     if (response.status === "ERROR") {
@@ -128,326 +128,195 @@ export default function Browser({ location = [] }: BrowserType) {
                 <link rel="icon" href="/favicon.svg" />
             </Head>
 
-            <main className="bg-white flex w-full flex-grow relative">
-                {/* SIDEBAR */}
+            <main
+                className={` w-full h-full z-10 flex flex-col-reverse lg:flex-row`}
+            >
+                {/* LEFT SIDEBAR */}
                 <SideBar
                     handleNewLinkClick={handleNewLinkClick}
                     handleNewFolderClick={handleNewFolderClick}
                 />
 
-                {/* BROWSER */}
-                {/* <div className="flex flex-col gap-6 flex-grow min-h-full w-full rounded-tl-2xl lg:ml-20 p-12 relative pb-28 lg:pb-12"> */}
-
-                {/* {/* BROWSER */}
-                <div
-                    className={`flex flex-col gap-6 flex-grow min-h-full w-full rounded-tl-2xl lg:ml-20 ${
-                        isSideBarPropertiesOpen
-                            ? "flex-wrap pr-48 lg:pr-72"
-                            : "pr-12"
-                    } py-12 pl-12 w-full rounded-tl-2xl`}
-                >
+                {/* BROWSER CONTENT*/}
+                <div className="p-8 relative w-full h-full bg-neutral-50 z-0 flex flex-col gap-6 flex-grow lg:rounded-t-2xl">
                     {/* BACKGROUND */}
-                    <div className="w-full min-h-full fixed top-16 left-0 lg:left-20 bg-neutral-50 rounded-tl-2xl z-0" />
-                    {/* breadcrumbs */}
-                    {/* <div className="flex gap-2">
-                        {[username].concat(location).map((loc, index) => {
-                            return (
-                                <div
-                                    key={index}
-                                    className="flex gap-2 items-center"
-                                >
-                                    {index !== 0 && (
-                                        <p className="text-neutral-400">/</p>
-                                    )}
-                                    <p
-                                        className="text-neutral-400 hover:cursor-pointer hover:text-neutral-500"
-                                        onClick={() => {
-                                            router.push(
-                                                `/${location
-                                                    .slice(0, index)
-                                                    .join("/")}`
-                                            );
-                                        }}
-                                    >
-                                        {loc}
-                                    </p>
-                                </div>
-                            );
-                        })}
-                    </div> */}
-                    <div className="fixed right-0 bottom-0 w-[50vw] h-[70vh]">
-                        <Image
-                            src={"/images/background.png"}
-                            alt=""
-                            fill
-                            style={{
-                                objectFit: "contain",
-                                objectPosition: "right",
-                            }}
-                        />
-                    </div>
-
+                    <Background />
                     {/* BREADCRUMBS */}
-                    <div className="sticky top-16 w-full bg-neutral-50 flex items-center z-20 -ml-4 -mt-4">
-                        <Breadcrumb
-                            path={subdomain}
-                            onClick={() => {
-                                router.push(`/`);
-                            }}
-                        />
-                        {((window.innerWidth < 768 && location.length > 1) ||
-                            (window.innerWidth >= 768 &&
-                                location.length > 3)) && (
-                            <>
-                                <p className="text-neutral-300">/</p>
-                                <Breadcrumb
-                                    path="..."
-                                    onClick={() => {
-                                        router.push(
-                                            `/${location
-                                                .slice(
-                                                    0,
-                                                    window.innerWidth < 768
-                                                        ? -1
-                                                        : -3
-                                                )
-                                                .join("/")}`
-                                        );
-                                    }}
-                                />
-                            </>
-                        )}
-                        {location
-                            .slice(window.innerWidth < 768 ? -1 : -3)
-                            .map((loc, index) => {
-                                return (
-                                    <>
-                                        <p
-                                            key={"p" + index}
-                                            className="text-neutral-300"
-                                        >
-                                            /
-                                        </p>
-                                        <Breadcrumb
-                                            key={index}
-                                            path={loc}
-                                            onClick={() => {
-                                                router.push(
-                                                    `/${location
-                                                        .slice(0, index + 1)
-                                                        .join("/")}`
-                                                );
-                                            }}
-                                        />
-                                    </>
-                                );
-                            })}
-                    </div>
+                    <BrowserBreadcrumb location={location} />
 
                     {/* CONTENT */}
-                    <h5 className="text-neutral-400 relative z-10">Folders</h5>
-                    <section className="flex gap-4 w-full flex-wrap">
-                        <LinkCard
-                            content="new folder"
-                            onClick={handleNewFolderClick}
-                        />
-                        {data &&
-                            data.childrens &&
-                            Object.keys(data.childrens).map(
-                                (child: any, index) => {
-                                    if (
-                                        data.childrens &&
-                                        data.childrens[child].type === "folder"
-                                    ) {
-                                        return (
-                                            <LinkCard
-                                                key={index}
-                                                content="folder"
-                                                title={
-                                                    data.childrens[child].title
-                                                }
-                                                url={data.childrens[child].link}
-                                                effieUrl={
-                                                    data.childrens[child]
-                                                        .effieUrl
-                                                }
-                                                // onClick={() => {
-                                                //     router.push(`/${location.join("/")}/${child}`);
-                                                // }}
-                                                onClick={() => {
-                                                    let url = `${username}.${FE_BASE_URL}/${location
-                                                        .concat(child)
-                                                        .join("/")}`;
-                                                    setLink(url);
-                                                    setSelectedItemRelativePath(
-                                                        child
-                                                    );
-                                                    setSelectedItemFullRelativePath(
-                                                        location
+                    <div>
+                        <h5 className="text-neutral-400 relative z-10">
+                            Folders
+                        </h5>
+                        <section className="flex gap-4 w-full flex-wrap">
+                            <LinkCard
+                                content="new folder"
+                                onClick={handleNewFolderClick}
+                            />
+                            {data?.childrens &&
+                                Object.keys(data.childrens).map(
+                                    (child: any, index) => {
+                                        if (
+                                            data.childrens &&
+                                            data.childrens[child].type ===
+                                                "folder"
+                                        ) {
+                                            let folder = data.childrens[child];
+                                            return (
+                                                <LinkCard
+                                                    key={index}
+                                                    content="folder"
+                                                    title={folder.title}
+                                                    url={folder.link}
+                                                    effieUrl={folder.effieUrl}
+                                                    onDoubleClick={() => {
+                                                        router.push(
+                                                            `/${location.join(
+                                                                "/"
+                                                            )}/${child}`
+                                                        );
+                                                    }}
+                                                    onClick={() => {
+                                                        let url = `${username}.${FE_BASE_URL}/${location
                                                             .concat(child)
-                                                            .join("/")
-                                                    );
-                                                    // Close only if clicked on same item
-                                                    if (
-                                                        compareSelectedItem(
-                                                            selectedItem,
-                                                            data.childrens?.[
-                                                                child
-                                                            ] ??
+                                                            .join("/")}`;
+                                                        setLink(url);
+                                                        setSelectedItemRelativePath(
+                                                            child
+                                                        );
+                                                        setSelectedItemFullRelativePath(
+                                                            location
+                                                                .concat(child)
+                                                                .join("/")
+                                                        );
+                                                        // Close only if clicked on same item
+                                                        if (
+                                                            compareSelectedItem(
+                                                                selectedItem,
+                                                                data
+                                                                    .childrens?.[
+                                                                    child
+                                                                ] ??
+                                                                    dummyFolderLinkData
+                                                            ) &&
+                                                            isSideBarPropertiesOpen
+                                                        ) {
+                                                            setIsSideBarPropertiesOpen(
+                                                                !isSideBarPropertiesOpen
+                                                            );
+                                                            setIsEdit(false);
+                                                            setIsEditAccess(
+                                                                false
+                                                            );
+                                                            // dummy data
+                                                            setSelectedItem(
                                                                 dummyFolderLinkData
-                                                        ) &&
-                                                        isSideBarPropertiesOpen
-                                                    ) {
-                                                        setIsSideBarPropertiesOpen(
-                                                            !isSideBarPropertiesOpen
-                                                        );
-                                                        setIsEdit(false);
-                                                        setIsEditAccess(false);
-                                                        // dummy data
-                                                        setSelectedItem(
-                                                            dummyFolderLinkData
-                                                        );
-                                                    } else {
-                                                        setIsSideBarPropertiesOpen(
-                                                            true
-                                                        );
-                                                        setSelectedItem(
-                                                            data.childrens?.[
-                                                                child
-                                                            ] ??
-                                                                dummyFolderLinkData
-                                                        );
-                                                    }
-                                                }}
-                                                // onClick={() => {
-                                                //     let url = `${username}.${FE_BASE_URL}/${location
-                                                //         .concat(child)
-                                                //         .join("/")}`;
-                                                //     setLink(url);
-                                                //     setSelectedItemRelativePath(
-                                                //         child
-                                                //     );
-                                                //     setSelectedItemFullRelativePath(location
-                                                //         .concat(child)
-                                                //         .join("/"))
-                                                //     // Close only if clicked on same item
-                                                //     if (
-                                                //         compareSelectedItem(
-                                                //             selectedItem,
-                                                //             data.childrens?.[
-                                                //                 child
-                                                //             ] ??
-                                                //                 dummyFolderLinkData
-                                                //         ) &&
-                                                //         isSideBarPropertiesOpen
-                                                //     ) {
-                                                //         setIsSideBarPropertiesOpen(
-                                                //             !isSideBarPropertiesOpen
-                                                //         );
-                                                //         setIsEdit(false);
-                                                //         setIsEditAccess(false);
-                                                //         // dummy data
-                                                //         setSelectedItem(
-                                                //             dummyFolderLinkData
-                                                //         );
-                                                //     } else {
-                                                //         setIsSideBarPropertiesOpen(
-                                                //             true
-                                                //         );
-                                                //         setSelectedItem(
-                                                //             data.childrens?.[
-                                                //                 child
-                                                //             ] ??
-                                                //                 dummyFolderLinkData
-                                                //         );
-                                                //     }
-                                                // }}
-                                            />
-                                        );
+                                                            );
+                                                        } else {
+                                                            setIsSideBarPropertiesOpen(
+                                                                true
+                                                            );
+                                                            setSelectedItem(
+                                                                data
+                                                                    .childrens?.[
+                                                                    child
+                                                                ] ??
+                                                                    dummyFolderLinkData
+                                                            );
+                                                        }
+                                                    }}
+                                                />
+                                            );
+                                        }
                                     }
-                                }
-                            )}
-                    </section>
-                    <h5 className="text-neutral-400 relative z-10">Links</h5>
-                    <section className="flex gap-4 w-full flex-wrap">
-                        <LinkCard
-                            content="new link"
-                            onClick={handleNewLinkClick}
-                        />
-                        {data &&
-                            data.childrens &&
-                            Object.keys(data.childrens).map(
-                                (child: any, index) => {
-                                    if (
-                                        data.childrens &&
-                                        data.childrens[child].type === "link"
-                                    ) {
-                                        return (
-                                            <LinkCard
-                                                key={index}
-                                                content="link"
-                                                title={
-                                                    data.childrens[child].title
-                                                }
-                                                url={data.childrens[child].link}
-                                                effieUrl={
-                                                    data.childrens[child]
-                                                        .effieUrl
-                                                }
-                                                onClick={() => {
-                                                    let url = `${username}.${FE_BASE_URL}/${location
-                                                        .concat(child)
-                                                        .join("/")}`;
-                                                    setLink(url);
-                                                    setSelectedItemRelativePath(
-                                                        child
-                                                    );
-                                                    setSelectedItemFullRelativePath(
-                                                        location
+                                )}
+                        </section>
+
+                        <h5 className="text-neutral-400 relative z-10">
+                            Links
+                        </h5>
+                        <section className="flex gap-4 w-full flex-wrap">
+                            <LinkCard
+                                content="new link"
+                                onClick={handleNewLinkClick}
+                            />
+                            {data?.childrens &&
+                                Object.keys(data.childrens).map(
+                                    (child: any, index) => {
+                                        if (
+                                            data.childrens &&
+                                            data.childrens[child].type ===
+                                                "link"
+                                        ) {
+                                            let link = data.childrens[child];
+                                            return (
+                                                <LinkCard
+                                                    key={index}
+                                                    content="link"
+                                                    title={link.title}
+                                                    url={link.link}
+                                                    effieUrl={link.effieUrl}
+                                                    onClick={() => {
+                                                        let url = `${username}.${FE_BASE_URL}/${location
                                                             .concat(child)
-                                                            .join("/")
-                                                    );
-                                                    // Close only if clicked on same item
-                                                    if (
-                                                        compareSelectedItem(
-                                                            selectedItem,
-                                                            data.childrens?.[
-                                                                child
-                                                            ] ??
+                                                            .join("/")}`;
+                                                        setLink(url);
+                                                        setSelectedItemRelativePath(
+                                                            child
+                                                        );
+                                                        setSelectedItemFullRelativePath(
+                                                            location
+                                                                .concat(child)
+                                                                .join("/")
+                                                        );
+                                                        // Close only if clicked on same item
+                                                        if (
+                                                            compareSelectedItem(
+                                                                selectedItem,
+                                                                data
+                                                                    .childrens?.[
+                                                                    child
+                                                                ] ??
+                                                                    dummyFolderLinkData
+                                                            ) &&
+                                                            isSideBarPropertiesOpen
+                                                        ) {
+                                                            setIsSideBarPropertiesOpen(
+                                                                !isSideBarPropertiesOpen
+                                                            );
+                                                            setIsEdit(false);
+                                                            setIsEditAccess(
+                                                                false
+                                                            );
+                                                            // dummy data
+                                                            setSelectedItem(
                                                                 dummyFolderLinkData
-                                                        ) &&
-                                                        isSideBarPropertiesOpen
-                                                    ) {
-                                                        setIsSideBarPropertiesOpen(
-                                                            !isSideBarPropertiesOpen
-                                                        );
-                                                        setIsEdit(false);
-                                                        setIsEditAccess(false);
-                                                        // dummy data
-                                                        setSelectedItem(
-                                                            dummyFolderLinkData
-                                                        );
-                                                    } else {
-                                                        setIsSideBarPropertiesOpen(
-                                                            true
-                                                        );
-                                                        setSelectedItem(
-                                                            data.childrens?.[
-                                                                child
-                                                            ] ??
-                                                                dummyFolderLinkData
-                                                        );
-                                                    }
-                                                }}
-                                            />
-                                        );
+                                                            );
+                                                        } else {
+                                                            setIsSideBarPropertiesOpen(
+                                                                true
+                                                            );
+                                                            setSelectedItem(
+                                                                data
+                                                                    .childrens?.[
+                                                                    child
+                                                                ] ??
+                                                                    dummyFolderLinkData
+                                                            );
+                                                        }
+                                                    }}
+                                                />
+                                            );
+                                        }
                                     }
-                                }
-                            )}
-                    </section>
+                                )}
+                        </section>
+                    </div>
                 </div>
-                {/* SIDEBAR PROPERTIES */}
-                {showSideBar && (
+                <div>
+                    testing right sidebar
+                    {/* SIDEBAR PROPERTIES */}
                     <SideBarProperties
                         isOpen={isSideBarPropertiesOpen}
                         itemData={selectedItem}
@@ -462,7 +331,7 @@ export default function Browser({ location = [] }: BrowserType) {
                             setIsSideBarPropertiesOpen(false);
                         }}
                     />
-                )}
+                </div>
             </main>
 
             {/* MODALS */}
@@ -481,3 +350,73 @@ export default function Browser({ location = [] }: BrowserType) {
         </>
     );
 }
+
+const Background = () => {
+    return (
+        <div className="absolute right-0 bottom-0 w-1/2 h-1/2">
+            <Image
+                src={"/images/background.png"}
+                alt=""
+                fill
+                style={{
+                    objectFit: "contain",
+                    objectPosition: "bottom right",
+                }}
+            />
+        </div>
+    );
+};
+
+const BrowserBreadcrumb = ({ location }: { location: string[] }) => {
+    const subdomain = useUserStore((state: any) => state.subdomain);
+    const router = useRouter();
+
+    return (
+        <div className="top-16 flex items-center z-10">
+            <Breadcrumb
+                path={subdomain}
+                onClick={() => {
+                    router.push(`/`);
+                }}
+            />
+            {((window.innerWidth < 768 && location.length > 1) ||
+                (window.innerWidth >= 768 && location.length > 3)) && (
+                <>
+                    <p className="text-neutral-300">/</p>
+                    <Breadcrumb
+                        path="..."
+                        onClick={() => {
+                            router.push(
+                                `/${location
+                                    .slice(0, window.innerWidth < 768 ? -1 : -3)
+                                    .join("/")}`
+                            );
+                        }}
+                    />
+                </>
+            )}
+            {location
+                .slice(window.innerWidth < 768 ? -1 : -3)
+                .map((loc, index) => {
+                    return (
+                        <>
+                            <p key={"p" + index} className="text-neutral-300">
+                                /
+                            </p>
+                            <Breadcrumb
+                                key={index}
+                                path={loc}
+                                onClick={() => {
+                                    router.push(
+                                        `/${location
+                                            .slice(0, index + 1)
+                                            .join("/")}`
+                                    );
+                                }}
+                            />
+                        </>
+                    );
+                })}
+        </div>
+    );
+};
