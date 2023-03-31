@@ -3,13 +3,12 @@ import { BE_BASE_URL } from "@/config";
 // TODO: update this to import from config only
 import { FE_DOMAIN } from "@/config/fe-config";
 
-import { EFFIE_AUTH_TOKEN } from "@/constants";
-
 import { useUserStore } from "@/hooks";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
 import { getEffieAuthTokenFromCookie } from "@/helpers";
+import LoadingPage from "@/components/loading-page";
 
 // used to set isLoggedIn, username, isSubdomain, subdomain
 export default function CheckUser({ children }: any) {
@@ -91,7 +90,7 @@ export default function CheckUser({ children }: any) {
         }
 
         if (isLoading || !fetchStarted) {
-            return <div>global page Loading</div>;
+            return <LoadingPage />;
         } else {
             setUsername(response.username);
             setIsLoggedIn(true);

@@ -12,7 +12,7 @@ import SideBarProperties from "@/components/side-bar-properties";
 import { FE_BASE_URL } from "@/config/fe-config";
 import { FolderLinkData, FolderLinkDataArray } from "@/type";
 import useDelayUnmount from "@/hooks/useDelayUnmount";
-import LoadingPage from "@/components/loading";
+import LoadingPage from "@/components/loading-page";
 type BrowserType = {
     username?: string;
     location?: string[];
@@ -71,7 +71,8 @@ export default function Browser({ location = [] }: BrowserType) {
     const [selectedItem, setSelectedItem] = useState({} as FolderLinkData);
     const [selectedItemRelativePath, setSelectedItemRelativePath] =
         useState("");
-    const [selectedItemFullRelativePath, setSelectedItemFullRelativePath] = useState("");
+    const [selectedItemFullRelativePath, setSelectedItemFullRelativePath] =
+        useState("");
     const handleNewLinkClick = () => {
         setIsNewLinkModalOpen(true);
     };
@@ -100,7 +101,7 @@ export default function Browser({ location = [] }: BrowserType) {
     });
 
     if (isLoading) {
-        return <LoadingPage/>;
+        return <>skeleton</>;
     }
     if (isError) {
         return <div>Error</div>;
@@ -129,14 +130,14 @@ export default function Browser({ location = [] }: BrowserType) {
 
             <main className="bg-white flex w-full flex-grow relative">
                 {/* SIDEBAR */}
-                <SideBar 
+                <SideBar
                     handleNewLinkClick={handleNewLinkClick}
                     handleNewFolderClick={handleNewFolderClick}
                 />
 
                 {/* BROWSER */}
                 {/* <div className="flex flex-col gap-6 flex-grow min-h-full w-full rounded-tl-2xl lg:ml-20 p-12 relative pb-28 lg:pb-12"> */}
-                    
+
                 {/* {/* BROWSER */}
                 <div
                     className={`flex flex-col gap-6 flex-grow min-h-full w-full rounded-tl-2xl lg:ml-20 ${
@@ -146,7 +147,7 @@ export default function Browser({ location = [] }: BrowserType) {
                     } py-12 pl-12 w-full rounded-tl-2xl`}
                 >
                     {/* BACKGROUND */}
-                    <div className="w-full min-h-full fixed top-16 left-0 lg:left-20 bg-neutral-50 rounded-tl-2xl z-0" /> 
+                    <div className="w-full min-h-full fixed top-16 left-0 lg:left-20 bg-neutral-50 rounded-tl-2xl z-0" />
                     {/* breadcrumbs */}
                     {/* <div className="flex gap-2">
                         {[username].concat(location).map((loc, index) => {
@@ -188,43 +189,59 @@ export default function Browser({ location = [] }: BrowserType) {
 
                     {/* BREADCRUMBS */}
                     <div className="sticky top-16 w-full bg-neutral-50 flex items-center z-20 -ml-4 -mt-4">
-                        <Breadcrumb 
-                            path={subdomain} 
+                        <Breadcrumb
+                            path={subdomain}
                             onClick={() => {
                                 router.push(`/`);
                             }}
                         />
-                        { ((window.innerWidth < 768 && location.length > 1) || 
-                            (window.innerWidth >= 768 && location.length > 3)) && 
-                            (<>
+                        {((window.innerWidth < 768 && location.length > 1) ||
+                            (window.innerWidth >= 768 &&
+                                location.length > 3)) && (
+                            <>
                                 <p className="text-neutral-300">/</p>
-                                <Breadcrumb path="..." onClick={() => {
-                                    router.push(
-                                        `/${location
-                                            .slice(0, window.innerWidth < 768 ? -1 : -3)
-                                            .join("/")}`
-                                    );
-                                }} />
-                            </>)
-                        }
-                        { location.slice(window.innerWidth < 768 ? -1 : -3).map((loc, index) => {
-                            return (
-                                <>
-                                    <p key={"p"+index} className="text-neutral-300">/</p>
-                                    <Breadcrumb
-                                        key={index}
-                                        path={loc}
-                                        onClick={() => {
-                                            router.push(
-                                                `/${location
-                                                    .slice(0, index+1)
-                                                    .join("/")}`
-                                            );
-                                        }}
-                                    />
-                                </>
-                            );
-                        })}
+                                <Breadcrumb
+                                    path="..."
+                                    onClick={() => {
+                                        router.push(
+                                            `/${location
+                                                .slice(
+                                                    0,
+                                                    window.innerWidth < 768
+                                                        ? -1
+                                                        : -3
+                                                )
+                                                .join("/")}`
+                                        );
+                                    }}
+                                />
+                            </>
+                        )}
+                        {location
+                            .slice(window.innerWidth < 768 ? -1 : -3)
+                            .map((loc, index) => {
+                                return (
+                                    <>
+                                        <p
+                                            key={"p" + index}
+                                            className="text-neutral-300"
+                                        >
+                                            /
+                                        </p>
+                                        <Breadcrumb
+                                            key={index}
+                                            path={loc}
+                                            onClick={() => {
+                                                router.push(
+                                                    `/${location
+                                                        .slice(0, index + 1)
+                                                        .join("/")}`
+                                                );
+                                            }}
+                                        />
+                                    </>
+                                );
+                            })}
                     </div>
 
                     {/* CONTENT */}
@@ -265,9 +282,11 @@ export default function Browser({ location = [] }: BrowserType) {
                                                     setSelectedItemRelativePath(
                                                         child
                                                     );
-                                                    setSelectedItemFullRelativePath(location
-                                                        .concat(child)
-                                                        .join("/"))
+                                                    setSelectedItemFullRelativePath(
+                                                        location
+                                                            .concat(child)
+                                                            .join("/")
+                                                    );
                                                     // Close only if clicked on same item
                                                     if (
                                                         compareSelectedItem(
@@ -383,9 +402,11 @@ export default function Browser({ location = [] }: BrowserType) {
                                                     setSelectedItemRelativePath(
                                                         child
                                                     );
-                                                    setSelectedItemFullRelativePath(location
-                                                        .concat(child)
-                                                        .join("/"))
+                                                    setSelectedItemFullRelativePath(
+                                                        location
+                                                            .concat(child)
+                                                            .join("/")
+                                                    );
                                                     // Close only if clicked on same item
                                                     if (
                                                         compareSelectedItem(
