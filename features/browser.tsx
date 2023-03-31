@@ -238,7 +238,7 @@ export default function Browser() {
                                         relativePath={child}
                                         DirectoryItemData={data}
                                         onDoubleClick={() => {
-                                            router.push(`${pathname}/${child}`);
+                                            window.location.href = data.url;
                                         }}
                                         onClick={() => {
                                             setFocusedItemData(data);
