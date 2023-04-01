@@ -153,6 +153,7 @@ export default function DirectoryItemCard({
                                                 className="text-[0.6rem] underline text-neutral-100"
                                                 href={DirectoryItemData?.link}
                                                 target="_blank"
+                                                rel="noopener noreferrer"
                                             >
                                                 {/* if effieURl > 20 character, show 10 characters with ... */}
                                                 {effieURL.length > 20
