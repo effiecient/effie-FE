@@ -156,7 +156,7 @@ export default function Browser() {
             </Head>
 
             <main
-                className={` w-full h-full z-10 flex flex-col-reverse lg:flex-row`}
+                className={` w-full h-full z-10 flex flex-col-reverse lg:flex-row bg-white`}
             >
                 {/* LEFT SIDEBAR */}
                 <SideBar
@@ -252,7 +252,12 @@ export default function Browser() {
                         </section>
                     </div>
                 </div>
-                <div className="w-1/3">
+                {/* width animimation from w-3 to w-1/3 */}
+                <div
+                    className={`h-full ${
+                        isSideBarPropertiesOpen ? "w-1/3" : "w-6"
+                    }  flex flex-col transition-all duration-300`}
+                >
                     {/* SIDEBAR PROPERTIES */}
                     <SideBarProperties
                         isOpen={isSideBarPropertiesOpen}
@@ -261,7 +266,6 @@ export default function Browser() {
                     />
                 </div>
             </main>
-
             {/* MODALS */}
             <NewLink
                 isOpen={isNewLinkModalOpen}

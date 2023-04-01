@@ -93,7 +93,7 @@ export default function NewFolder({ isOpen, onClose }: NewFolderProps) {
     };
 
     return (
-        <Modal isOpen={isOpen} onClose={closeModal}>
+        <Modal isOpen={isOpen} onClose={closeModal} onOutsideClick={closeModal}>
             <h3 className="text-neutral-800 mb-8">New Folder</h3>
             <form onSubmit={onSubmit}>
                 <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-0 mb-6">

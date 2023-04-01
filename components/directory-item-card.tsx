@@ -3,7 +3,7 @@ import CopyIcon from "@/public/icons/copy";
 import Image from "next/image";
 import NewLink from "./create-modal/new-link";
 import NewFolder from "./create-modal/new-folder";
-import { copyToClipboard } from "@/utils";
+import { copyToClipboard, stopEventPropagation } from "@/utils";
 import { FE_BASE_URL, FE_PROTOCOL } from "@/config";
 import { useUserStore } from "@/hooks";
 import { useRouter } from "next/router";
@@ -44,7 +44,8 @@ export default function DirectoryItemCard({
     const effieURL = `${FE_PROTOCOL}://${subdomain}.${FE_BASE_URL}${pathname}${relativePath}`;
     const copySuccessRef = useRef<HTMLDivElement>(null);
 
-    const copyEffieUrl = () => {
+    const copyEffieUrl = (e: any) => {
+        stopEventPropagation(e);
         copySuccessRef.current?.classList.remove("opacity-0", "-translate-y-1");
         if (!navigator.clipboard) {
             // Fallback to unsupported browsers
@@ -102,7 +103,7 @@ export default function DirectoryItemCard({
                         <h6 className="text-primary-500 ml-2">New link</h6>
                     </>
                 ) : (
-                    <div className={`flex ${isFocused && ""}`}>
+                    <div className={`flex`}>
                         {content === "link" || content === "display link" ? (
                             <div className="mr-2">
                                 <Image
@@ -153,7 +154,7 @@ export default function DirectoryItemCard({
                                                 href={DirectoryItemData?.link}
                                                 target="_blank"
                                             >
-                                                {/* if effieURl > 20 character, show 15 characters with ... */}
+                                                {/* if effieURl > 20 character, show 10 characters with ... */}
                                                 {effieURL.length > 20
                                                     ? `${effieURL.slice(
                                                           0,

@@ -16,7 +16,6 @@ type NewLinkProps = {
 
 export default function NewLink({ isOpen, onClose }: NewLinkProps) {
     // USER CONSTANTS
-    const username = useUserStore((state: any) => state.username);
     const subdomain = useUserStore((state: any) => state.subdomain);
     const USER_BASE_URL = `${subdomain}.${FE_BASE_URL}/`;
     const currPathArray = window.location.pathname
@@ -101,7 +100,7 @@ export default function NewLink({ isOpen, onClose }: NewLinkProps) {
     }
 
     return (
-        <Modal isOpen={isOpen} onClose={closeModal}>
+        <Modal isOpen={isOpen} onClose={closeModal} onOutsideClick={closeModal}>
             <h3 className="text-neutral-800 mb-8">New Link</h3>
             <form onSubmit={onSubmit}>
                 <div className="flex items-center mb-6">
