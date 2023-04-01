@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Button, Modal } from "@/ui";
-import LinkCard from "../link-card";
+import DirectoryItemCard from "../directory-item-card";
 import { BE_BASE_URL } from "@/config/be-config";
 import { FE_BASE_URL } from "@/config";
 // import { unfurl } from 'unfurl.js'
@@ -93,7 +93,7 @@ export default function NewFolder({ isOpen, onClose }: NewFolderProps) {
     };
 
     return (
-        <Modal isOpen={isOpen} onClose={closeModal}>
+        <Modal isOpen={isOpen} onClose={closeModal} onOutsideClick={closeModal}>
             <h3 className="text-neutral-800 mb-8">New Folder</h3>
             <form onSubmit={onSubmit}>
                 <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-0 mb-6">
@@ -161,13 +161,14 @@ export default function NewFolder({ isOpen, onClose }: NewFolderProps) {
                             className="input"
                         />
                     </div>
-                    <LinkCard
+                    {/* TODO: adapt to the new directory item card */}
+                    {/* <DirectoryItemCard
                         content="display link"
                         title={title}
                         url={linkNameRef.current?.value || ""}
                         effieUrl=""
                         className="h-fit"
-                    />
+                    /> */}
                 </div>
             </form>
         </Modal>

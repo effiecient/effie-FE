@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/ui";
-import LinkCard from "@/components/link-card";
+import DirectoryItemCard from "@/components/directory-item-card";
 import { BE_BASE_URL } from "@/config/be-config";
 import Image from "next/image";
 import Head from "next/head";
@@ -183,13 +183,14 @@ export default function QuickCreate() {
                                     className="input"
                                 />
                             </div>
-                            <LinkCard
+                            {/* TODO: adapt to the new direcotory Item Card */}
+                            {/* <DirectoryItemCard
                                 content="display link"
                                 title={title}
                                 url={linkNameRef.current?.value || ""}
                                 effieUrl=""
                                 className="h-fit"
-                            />
+                            /> */}
                         </div>
                     </form>
                 </div>

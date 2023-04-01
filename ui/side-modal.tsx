@@ -20,9 +20,7 @@ export default function SideModal({
             {/* Clickable Background */}
             <div
                 className={`w-full h-full bg-black bg-opacity-50 backdrop-blur absolute duration-300 ${
-                    isOpen
-                        ? "opacity-100"
-                        : "opacity-0"
+                    isOpen ? "opacity-100" : "opacity-0"
                 }`}
                 onClick={onClose}
             />

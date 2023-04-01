@@ -22,7 +22,7 @@ export default function CheckUser({ children }: any) {
     const setHasPhotoURL = useUserStore((state: any) => state.setHasPhotoURL);
 
     // if effie_auth_token exist, set user to logged in
-    const [effieAuthToken, setEffieAuthToken] = useState("");
+    const [effieAuthToken, setEffieAuthToken] = useState<any>(null);
 
     // get effie_auth_token from cookie
     useEffect(() => {
@@ -52,10 +52,10 @@ export default function CheckUser({ children }: any) {
                 isSubdomain = true;
             }
         }
-
+        // get the URLLocation
         setIsSubdomain(isSubdomain);
         setSubdomain(arrayOfURL[0]);
-    }, [setIsSubdomain, setSubdomain]);
+    }, []);
     const [{ isLoading, isError, response, fetchStarted }, fetcher] =
         useFetchEffieBENew();
 
