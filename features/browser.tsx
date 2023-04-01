@@ -253,18 +253,12 @@ export default function Browser() {
                     </div>
                 </div>
                 {/* width animimation from w-3 to w-1/3 */}
-                <div
-                    className={`h-full ${
-                        isSideBarPropertiesOpen ? "w-1/3" : "w-6"
-                    }  flex flex-col transition-all duration-300`}
-                >
-                    {/* SIDEBAR PROPERTIES */}
-                    <SideBarProperties
-                        isOpen={isSideBarPropertiesOpen}
-                        itemData={focusedItemData}
-                        relativePath={focusedItemName}
-                    />
-                </div>
+                {/* SIDEBAR PROPERTIES */}
+                <SideBarProperties
+                    isOpen={isSideBarPropertiesOpen}
+                    itemData={focusedItemData}
+                    relativePath={focusedItemName}
+                />
             </main>
             {/* MODALS */}
             <NewLink
