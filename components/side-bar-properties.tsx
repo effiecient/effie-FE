@@ -144,224 +144,226 @@ export default function SideBarProperties({
     }
 
     return (
-        <div
-            className={`${className} h-full ${
-                isOpen ? "w-1/3" : "w-6"
-            } overflow-visible transition-all duration-1000 ease-in-out `}
-        >
-            <div
-                className={`transition-all duration-1000 ease-in-out ${
-                    isOpen ? "" : "translate-x-full"
-                } justify-items-center bg-white px-9 py-6`}
-            >
-                {/* content */}
-                {itemData === undefined ? (
-                    <>nothing is currently selected</>
-                ) : (
-                    <>
-                        <div className="mb-7">
-                            {isEdit ? (
-                                <div className="mb-4">
-                                    <p className="text-md font-semibold mb-2">
-                                        {pathWithoutLastPath + "/"}
-                                    </p>
-                                    <Input
-                                        type="text"
-                                        className="flex w-full flex-wrap text-md font-semibold"
-                                        id="relative-path-input"
-                                        name="relative-path-input"
-                                        placeholder={relativePath}
-                                        onChange={(e) =>
-                                            setNewRelativePath(e.target.value)
-                                        }
-                                    ></Input>
-                                </div>
-                            ) : (
-                                <div className="flex flex-row justify-between items-center lg:gap-1 mb-3">
-                                    <div>
-                                        <Link
-                                            href={effieURL ?? ""}
-                                            className="text-primary-400 underline"
-                                        >
-                                            {effieURL}
-                                        </Link>
-                                    </div>
-                                    <div>
-                                        <button
-                                            className="opacity-100 h-full p-2 z-10 bg-white duration-100 rounded-r-xl"
-                                            onClick={copyEffieUrl}
-                                        >
-                                            <CopyIcon className="duration-100 h-7 w-7" />
-                                            {/* Copy success notif */}
-                                            <div
-                                                ref={copySuccessRef}
-                                                className="opacity-0 -translate-y-1 absolute top-14 bg-neutral-900/50 text-white rounded-md py-1 px-2 shadow-lg text-left duration-300 max-w-[12rem]"
-                                            >
-                                                <p className="text-xs">
-                                                    Link copied!
-                                                </p>
-                                            </div>
-                                        </button>
-                                    </div>
-                                </div>
-                            )}
-
-                            {isEdit ? (
+        <RightSideBar isOpen={isOpen} className={className}>
+            {/* content */}
+            {itemData === undefined ? (
+                <>nothing is currently selected</>
+            ) : (
+                <>
+                    <div className="mb-7">
+                        {isEdit ? (
+                            <div className="mb-4">
+                                <p className="text-md font-semibold mb-2">
+                                    {pathWithoutLastPath + "/"}
+                                </p>
                                 <Input
                                     type="text"
-                                    className="flex w-full flex-wrap text-lg font-bold"
-                                    id="title-input"
-                                    name="title-input"
-                                    placeholder={itemData?.title}
+                                    className="flex w-full flex-wrap text-md font-semibold"
+                                    id="relative-path-input"
+                                    name="relative-path-input"
+                                    placeholder={relativePath}
                                     onChange={(e) =>
-                                        setNewTitle(e.target.value)
+                                        setNewRelativePath(e.target.value)
                                     }
                                 ></Input>
-                            ) : (
-                                <h3>{itemData?.title}</h3>
-                            )}
-                        </div>
-                        {itemData.type === "link" && !isEdit && (
-                            <div className="mb-7">
-                                <h5>Link</h5>
-                                <Link
-                                    href={itemData.link}
-                                    className="underline"
-                                >
-                                    {itemData.link}
-                                </Link>
                             </div>
-                        )}
-                        {itemData.type === "link" && isEdit && (
-                            <div className="mb-7">
-                                <h5>Link</h5>
-                                <Input
-                                    type="text"
-                                    className="flex w-full flex-wrap"
-                                    id="link-input"
-                                    name="link-input"
-                                    placeholder={itemData?.link}
-                                    onChange={(e) => setNewLink(e.target.value)}
-                                ></Input>
-                            </div>
-                        )}
-                        <div>
-                            <h5>Access</h5>
-                            <div className="flex flex-row justify-between items-center">
-                                {isEditAccess || isEdit ? (
-                                    <div className="w-full">
-                                        <select
-                                            className="bg-transparent mt-1 py-2 px-1 w-full border-primary-300 border-2 rounded-lg font-sans"
-                                            defaultValue={
-                                                itemData.shareConfiguration
-                                                    .isShared
-                                                    ? "public"
-                                                    : "private"
-                                            }
-                                            onChange={(e) => {
-                                                setNewIsShared(
-                                                    e.target.value === "public"
-                                                );
-                                                setSharingUpdated(true);
-                                            }}
+                        ) : (
+                            <div className="flex flex-row justify-between items-center lg:gap-1 mb-3">
+                                <div>
+                                    <Link
+                                        href={effieURL ?? ""}
+                                        className="text-primary-400 underline"
+                                    >
+                                        {effieURL}
+                                    </Link>
+                                </div>
+                                <div>
+                                    <button
+                                        className="opacity-100 h-full p-2 z-10 bg-white duration-100 rounded-r-xl"
+                                        onClick={copyEffieUrl}
+                                    >
+                                        <CopyIcon className="duration-100 h-7 w-7" />
+                                        {/* Copy success notif */}
+                                        <div
+                                            ref={copySuccessRef}
+                                            className="opacity-0 -translate-y-1 absolute top-14 bg-neutral-900/50 text-white rounded-md py-1 px-2 shadow-lg text-left duration-300 max-w-[12rem]"
                                         >
-                                            <option
-                                                value="public"
-                                                className="hover:bg-primary-400"
-                                            >
-                                                Public
-                                            </option>
-                                            <option
-                                                value="private"
-                                                className="hover:bg-primary-400"
-                                            >
-                                                Private
-                                            </option>
-                                        </select>
-                                    </div>
-                                ) : (
-                                    <>
-                                        <div>
-                                            {itemData.shareConfiguration
-                                                .isShared ? (
-                                                <p>Public</p>
-                                            ) : (
-                                                <p>Private</p>
-                                            )}
+                                            <p className="text-xs">
+                                                Link copied!
+                                            </p>
                                         </div>
-                                        <div>
-                                            <Button
-                                                type="custom"
-                                                className="bg-none text-primary-500 border-primary-500 border-2 hover:bg-primary-500 hover:text-white"
-                                                onClick={() => {
-                                                    // setIsEditAccess(true);
-                                                }}
-                                            >
-                                                change
-                                            </Button>
-                                        </div>
-                                    </>
-                                )}
+                                    </button>
+                                </div>
                             </div>
+                        )}
+
+                        {isEdit ? (
+                            <Input
+                                type="text"
+                                className="flex w-full flex-wrap text-lg font-bold"
+                                id="title-input"
+                                name="title-input"
+                                placeholder={itemData?.title}
+                                onChange={(e) => setNewTitle(e.target.value)}
+                            ></Input>
+                        ) : (
+                            <h3>{itemData?.title}</h3>
+                        )}
+                    </div>
+                    {itemData.type === "link" && !isEdit && (
+                        <div className="mb-7">
+                            <h5>Link</h5>
+                            <Link href={itemData.link} className="underline">
+                                {itemData.link}
+                            </Link>
                         </div>
-                        <div className="mt-7 flex justify-center flex-col gap-4">
-                            {isEdit || isEditAccess ? (
-                                <div className="flex flex-col gap-4 w-full justify-between">
-                                    <Button
-                                        type="custom"
-                                        onClick={() => {
-                                            // setIsEdit(false);
-                                            // setIsEditAccess(false);
+                    )}
+                    {itemData.type === "link" && isEdit && (
+                        <div className="mb-7">
+                            <h5>Link</h5>
+                            <Input
+                                type="text"
+                                className="flex w-full flex-wrap"
+                                id="link-input"
+                                name="link-input"
+                                placeholder={itemData?.link}
+                                onChange={(e) => setNewLink(e.target.value)}
+                            ></Input>
+                        </div>
+                    )}
+                    <div>
+                        <h5>Access</h5>
+                        <div className="flex flex-row justify-between items-center">
+                            {isEditAccess || isEdit ? (
+                                <div className="w-full">
+                                    <select
+                                        className="bg-transparent mt-1 py-2 px-1 w-full border-primary-300 border-2 rounded-lg font-sans"
+                                        defaultValue={
+                                            itemData.shareConfiguration.isShared
+                                                ? "public"
+                                                : "private"
+                                        }
+                                        onChange={(e) => {
+                                            setNewIsShared(
+                                                e.target.value === "public"
+                                            );
+                                            setSharingUpdated(true);
                                         }}
-                                        className="hover:bg-danger-300 border-danger-300 border-2 text-danger-300 hover:text-black"
                                     >
-                                        <div className="flex flex-row gap-1.5 items-center justify-center">
-                                            Cancel
-                                        </div>
-                                    </Button>
-                                    <Button
-                                        type="custom"
-                                        className="hover:bg-success-300 border-success-300 border-2"
-                                        onClick={handleSaveClick}
-                                    >
-                                        <div className="flex flex-row gap-1.5 items-center justify-center">
-                                            Save
-                                        </div>
-                                    </Button>
+                                        <option
+                                            value="public"
+                                            className="hover:bg-primary-400"
+                                        >
+                                            Public
+                                        </option>
+                                        <option
+                                            value="private"
+                                            className="hover:bg-primary-400"
+                                        >
+                                            Private
+                                        </option>
+                                    </select>
                                 </div>
                             ) : (
                                 <>
-                                    <Button
-                                        type="custom"
-                                        className="bg-none text-primary-500 border-primary-500 border-2"
-                                        // onClick={() => setIsEdit(true)}
-                                    >
-                                        <div className="flex flex-row gap-1.5 items-center justify-center">
-                                            <Image
-                                                src={editIcon}
-                                                alt="Edit Icon"
-                                            />
-                                            Edit Properties
-                                        </div>
-                                    </Button>
-                                    <Button
-                                        type="custom"
-                                        className="bg-none hover:bg-danger-300 border-danger-300 border-2 text-danger-300 hover:text-black"
-                                        onClick={handleDeleteClick}
-                                    >
-                                        <div className="flex flex-row gap-1.5 items-center justify-center">
-                                            Delete
-                                        </div>
-                                    </Button>
+                                    <div>
+                                        {itemData.shareConfiguration
+                                            .isShared ? (
+                                            <p>Public</p>
+                                        ) : (
+                                            <p>Private</p>
+                                        )}
+                                    </div>
+                                    <div>
+                                        <Button
+                                            type="custom"
+                                            className="bg-none text-primary-500 border-primary-500 border-2 hover:bg-primary-500 hover:text-white"
+                                            onClick={() => {
+                                                // setIsEditAccess(true);
+                                            }}
+                                        >
+                                            change
+                                        </Button>
+                                    </div>
                                 </>
                             )}
                         </div>
-                    </>
-                )}
-            </div>
-        </div>
+                    </div>
+                    <div className="mt-7 flex justify-center flex-col gap-4">
+                        {isEdit || isEditAccess ? (
+                            <div className="flex flex-col gap-4 w-full justify-between">
+                                <Button
+                                    type="custom"
+                                    onClick={() => {
+                                        // setIsEdit(false);
+                                        // setIsEditAccess(false);
+                                    }}
+                                    className="hover:bg-danger-300 border-danger-300 border-2 text-danger-300 hover:text-black"
+                                >
+                                    <div className="flex flex-row gap-1.5 items-center justify-center">
+                                        Cancel
+                                    </div>
+                                </Button>
+                                <Button
+                                    type="custom"
+                                    className="hover:bg-success-300 border-success-300 border-2"
+                                    onClick={handleSaveClick}
+                                >
+                                    <div className="flex flex-row gap-1.5 items-center justify-center">
+                                        Save
+                                    </div>
+                                </Button>
+                            </div>
+                        ) : (
+                            <>
+                                <Button
+                                    type="custom"
+                                    className="bg-none text-primary-500 border-primary-500 border-2"
+                                    // onClick={() => setIsEdit(true)}
+                                >
+                                    <div className="flex flex-row gap-1.5 items-center justify-center">
+                                        <Image src={editIcon} alt="Edit Icon" />
+                                        Edit Properties
+                                    </div>
+                                </Button>
+                                <Button
+                                    type="custom"
+                                    className="bg-none hover:bg-danger-300 border-danger-300 border-2 text-danger-300 hover:text-black"
+                                    onClick={handleDeleteClick}
+                                >
+                                    <div className="flex flex-row gap-1.5 items-center justify-center">
+                                        Delete
+                                    </div>
+                                </Button>
+                            </>
+                        )}
+                    </div>
+                </>
+            )}
+        </RightSideBar>
     );
 }
 
 // TODO: move to a separate file
-const RightSideBar = ({}) => {};
+type RightSideBarProps = {
+    children: React.ReactNode;
+    isOpen?: boolean;
+    className?: string;
+};
+const RightSideBar = ({
+    children,
+    isOpen = false,
+    className = "",
+}: RightSideBarProps) => {
+    return (
+        <div
+            className={`${className}overflow-hidden transition-all duration-1000 ease-in-out bg-white ${
+                isOpen ? "w-1/3" : "w-6"
+            }`}
+        >
+            <div className="m-6 relative w-[20vw] h-[86vh]">
+                <div className={`w-full h-full absolute`}>{children}</div>
+            </div>
+        </div>
+    );
+};
