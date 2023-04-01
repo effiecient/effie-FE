@@ -74,11 +74,11 @@ export default function DirectoryItemCard({
                         ? "flex-col gap-1 border-neutral-200"
                         : `flex-col gap-1 ${
                               isFocused
-                                  ? "border-primary-400 border-2"
-                                  : "hover:border-neutral-200"
-                          } cursor-pointer border-white`
+                                  ? "border-primary-400"
+                                  : "hover:border-neutral-200 border-white"
+                          } cursor-pointer`
                 } 
-                group relative flex pt-3 pb-2 px-5 bg-white rounded-xl border focus:border-primary-500 w-[32vw] md:w-[44vw] lg:w-[20vw] max-w-[16rem] min-w-[8rem] min-h-[4rem] overflow-hidden`}
+                group relative flex pt-3 pb-2 px-5 border-2 bg-white rounded-xl focus:border-primary-500 w-[32vw] md:w-[44vw] lg:w-[20vw] max-w-[16rem] min-w-[8rem] min-h-[4rem]`}
             >
                 {/* images */}
                 {content === "new folder" ? (
@@ -102,7 +102,7 @@ export default function DirectoryItemCard({
                         <h6 className="text-primary-500 ml-2">New link</h6>
                     </>
                 ) : (
-                    <div className="flex">
+                    <div className={`flex ${isFocused && ""}`}>
                         {content === "link" || content === "display link" ? (
                             <div className="mr-2">
                                 <Image
@@ -114,7 +114,7 @@ export default function DirectoryItemCard({
                             </div>
                         ) : (
                             <div
-                                className={`absolute left-0 top-0 h-full w-2 rounded-l-xl`}
+                                className={`absolute left-[0px] top-0 h-full w-3 rounded-l-[10px]`}
                                 style={{ backgroundColor: "#FFF" }}
                             />
                         )}
@@ -122,7 +122,6 @@ export default function DirectoryItemCard({
                         <div>
                             <h6 className={`text-neutral-800`}>
                                 {DirectoryItemData?.title}
-                                {DirectoryItemData?.isPinned && "pinned"}
                             </h6>
                             <a
                                 href={DirectoryItemData?.url}
@@ -134,14 +133,15 @@ export default function DirectoryItemCard({
                             </a>
                             {(content === "link" || content === "folder") && (
                                 <button
-                                    className="group-hover:opacity-100 opacity-0 translate-x-1 group-hover:translate-x-0 absolute right-0 bottom-0 flex items-end h-full p-2 z-10 bg-white duration-100 rounded-r-xl"
+                                    className={`group-hover:opacity-100 opacity-0 translate-x-1 group-hover:translate-x-0 absolute right-0 bottom-0 flex items-end h-full z-10 bg-white duration-100 rounded-r-xl`}
                                     onClick={copyEffieUrl}
                                 >
                                     <CopyIcon className="duration-100 h-7 w-7" />
                                     {/* Copy success notif */}
                                     <div
                                         ref={copySuccessRef}
-                                        className="absolute top-14 bg-neutral-900/50 text-white rounded-md py-1 px-2 shadow-lg text-left duration-300 max-w-[12rem]"
+                                        className="opacity-0
+                                        -translate-y-1 absolute top-14 bg-neutral-900/50 text-white rounded-md py-1 px-2 shadow-lg text-left duration-300 max-w-[12rem]"
                                     >
                                         <p className="text-xs">
                                             Link copied!
@@ -155,15 +155,13 @@ export default function DirectoryItemCard({
                             )}
                         </div>
                         {DirectoryItemData?.isPinned && (
-                            <>
-                                <Image
-                                    src="/icons/pin.svg"
-                                    alt="link"
-                                    width={28}
-                                    height={28}
-                                    className="absolute top-1 right-1 z-0"
-                                />
-                            </>
+                            <Image
+                                src="/icons/pin.svg"
+                                alt="link"
+                                width={28}
+                                height={28}
+                                className="absolute top-1 right-1 z-0"
+                            />
                         )}
                     </div>
                 )}
