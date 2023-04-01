@@ -132,26 +132,41 @@ export default function DirectoryItemCard({
                                 {DirectoryItemData?.url}
                             </a>
                             {(content === "link" || content === "folder") && (
-                                <button
-                                    className={`group-hover:opacity-100 opacity-0 translate-x-1 group-hover:translate-x-0 absolute right-0 bottom-0 flex items-end h-full z-10 bg-white duration-100 rounded-r-xl`}
-                                    onClick={copyEffieUrl}
-                                >
-                                    <CopyIcon className="duration-100 h-7 w-7" />
+                                <>
+                                    <button
+                                        className={`group-hover:opacity-100 opacity-0 translate-x-1 group-hover:translate-x-0 absolute right-0 bottom-0 flex items-end h-full z-10 bg-white duration-100 rounded-r-xl p-1`}
+                                        onClick={copyEffieUrl}
+                                    >
+                                        <CopyIcon className="duration-100 h-7 w-7" />
+                                    </button>
                                     {/* Copy success notif */}
                                     <div
                                         ref={copySuccessRef}
                                         className="opacity-0
-                                        -translate-y-1 absolute top-14 bg-neutral-900/50 text-white rounded-md py-1 px-2 shadow-lg text-left duration-300 max-w-[12rem]"
+                                        -translate-y-1 absolute top-16 -right-12 bg-neutral-800 text-white rounded-md py-1 px-2 shadow-lg text-left duration-300 max-w-[12rem]"
                                     >
                                         <p className="text-xs">
                                             Link copied!
                                             <br />
-                                            <span className="text-[0.6rem] underline text-neutral-100">
-                                                {effieURL}
-                                            </span>
+                                            <a
+                                                className="text-[0.6rem] underline text-neutral-100"
+                                                href={DirectoryItemData?.link}
+                                                target="_blank"
+                                            >
+                                                {/* if effieURl > 20 character, show 15 characters with ... */}
+                                                {effieURL.length > 20
+                                                    ? `${effieURL.slice(
+                                                          0,
+                                                          10
+                                                      )}...${effieURL.slice(
+                                                          effieURL.length - 10,
+                                                          effieURL.length
+                                                      )}`
+                                                    : effieURL}
+                                            </a>
                                         </p>
                                     </div>
-                                </button>
+                                </>
                             )}
                         </div>
                         {DirectoryItemData?.isPinned && (
