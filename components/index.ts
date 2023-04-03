@@ -5,7 +5,7 @@ import ConfirmationModal from "./create-modal/confirmation-modal";
 import NewFolder from "./create-modal/new-folder";
 import NewLink from "./create-modal/new-link";
 import Footer from "./footer";
-import LinkCard from "./link-card";
+import DirectoryItemCard from "./directory-item-card";
 import Navbar from "./navbar";
 import SideBarProperties from "./side-bar-properties";
 import SideBar from "./side-bar";
@@ -18,7 +18,7 @@ export {
     NewFolder,
     NewLink,
     Footer,
-    LinkCard,
+    DirectoryItemCard,
     Navbar,
     SideBarProperties,
     SideBar,

@@ -3,7 +3,7 @@ type dataType = "folder" | "link";
 export type ShareConfiguration = {
     isShared: boolean;
     sharedPrivilege: "read" | "write";
-}
+};
 
 export type FolderLinkDataArray = {
     type: string;
@@ -15,7 +15,7 @@ export type FolderLinkData = {
     isPinned: boolean;
     link: string;
     type: dataType;
-    effieUrl: string;
+    url?: string;
     shareConfiguration: ShareConfiguration;
 };
 
@@ -34,7 +34,7 @@ export type UpdateLinkReq = {
     path: string;
     relativePath: string;
     title?: string;
-    link? :string;
+    link?: string;
     isPinned?: boolean;
     newRelativePath?: string;
     shareConfiguration?: ShareConfiguration;

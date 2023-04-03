@@ -36,7 +36,7 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
     return (
         <>
             {/* Navbar */}
-            <div
+            <nav
                 className={`sticky z-50 top-0 left-0 flex flex-row justify-between w-full bg-white items-center px-6 py-3`}
             >
                 {/* Logo */}
@@ -150,7 +150,7 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
                         </>
                     )}
                 </div>
-            </div>
+            </nav>
 
             {/* Register */}
             <Register

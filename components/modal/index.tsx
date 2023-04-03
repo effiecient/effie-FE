@@ -8,6 +8,7 @@ type ModalProps = {
 };
 import { useEffect, useState } from "react";
 import styles from "./modal.module.css";
+import { stopEventPropagation } from "@/utils";
 
 export default function Modal({
     children,
@@ -51,7 +52,7 @@ export default function Modal({
         >
             <div
                 className={`${styles.modal} relative`}
-                onClick={stopEventPropagationTry}
+                onClick={stopEventPropagation}
             >
                 {withCloseButton && (
                     // top right corner
@@ -84,9 +85,3 @@ export default function Modal({
         </div>
     );
 }
-
-export const stopEventPropagationTry = (event: any) => {
-    if (event.target === event.currentTarget) {
-        event.stopPropagation();
-    }
-};
