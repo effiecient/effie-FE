@@ -1,5 +1,5 @@
 import { Navbar } from "@/components";
-import { Browser, Landing, Page404 } from "@/features";
+import { Browser, Landing } from "@/features";
 import QuickCreate from "@/features/quick-create";
 import { useUserStore } from "@/hooks";
 export default function Index() {
