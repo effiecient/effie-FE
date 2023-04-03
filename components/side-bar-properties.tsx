@@ -357,7 +357,8 @@ const RightSideBar = ({
 }: RightSideBarProps) => {
     return (
         <div
-            className={`${className}overflow-hidden transition-all duration-1000 ease-in-out bg-white ${
+            className={`${className}overflow-hidden transition-all duration-500 ease-in-out bg-white ${
+
                 isOpen ? "w-1/3" : "w-6"
             }`}
         >

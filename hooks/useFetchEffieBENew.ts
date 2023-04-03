@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useReducer, useState } from "react";
 import { EFFIE_AUTH_TOKEN } from "@/constants";
+import { BE_STATUS_ERROR } from "@/config";
 
 // in milliseconds
 const FETCH_TIMEOUT = 10000;
@@ -63,7 +64,7 @@ export function useFetchEffieBENew(): [any, any] {
                 .then((data) => {
                     setState({
                         isLoading: false,
-                        isError: false,
+                        isError: data.status === BE_STATUS_ERROR,
                         response: data,
                     });
                 })
