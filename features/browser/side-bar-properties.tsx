@@ -6,12 +6,13 @@ import { copyToClipboard } from "@/utils";
 import { Button } from "@/ui";
 import editIcon from "@/public/icons/edit.svg";
 import Image from "next/image";
-import Input from "./input";
-import Modal from "./modal";
-import ConfirmationModal from "./create-modal/confirmation-modal";
+import Input from "../../components/input";
+import Modal from "../../components/modal";
+import ConfirmationModal from "../../components/create-modal/confirmation-modal";
 import { BE_BASE_URL, FE_BASE_URL, FE_PROTOCOL } from "@/config";
 import { useFetchEffieBE, useUserStore } from "@/hooks";
 import { useRouter } from "next/router";
+import { RightSideBar } from "./right-side-bar";
 
 type SideBarPropertiesProps = {
     isOpen: boolean;
@@ -343,27 +344,3 @@ export default function SideBarProperties({
         </RightSideBar>
     );
 }
-
-// TODO: move to a separate file
-type RightSideBarProps = {
-    children: React.ReactNode;
-    isOpen?: boolean;
-    className?: string;
-};
-const RightSideBar = ({
-    children,
-    isOpen = false,
-    className = "",
-}: RightSideBarProps) => {
-    return (
-        <div
-            className={`${className}overflow-hidden transition-all duration-500 ease-in-out bg-white ${
-                isOpen ? "w-1/3" : "w-6"
-            }`}
-        >
-            <div className="m-6 relative w-[20vw] h-[86vh]">
-                <div className={`w-full h-full absolute`}>{children}</div>
-            </div>
-        </div>
-    );
-};

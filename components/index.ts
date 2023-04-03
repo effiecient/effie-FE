@@ -1,14 +1,14 @@
 import KeyboardShortcuts from "./accessibilities/keyboard-shortcuts";
-import Login from "./auth/login";
-import Register from "./auth/register";
+import Login from "./navbar/auth/login";
+import Register from "./navbar/auth/register";
 import ConfirmationModal from "./create-modal/confirmation-modal";
 import NewFolder from "./create-modal/new-folder";
 import NewLink from "./create-modal/new-link";
 import Footer from "./footer";
 import DirectoryItemCard from "./directory-item-card";
 import Navbar from "./navbar";
-import SideBarProperties from "./side-bar-properties";
-import SideBar from "./side-bar";
+import SideBarProperties from "../features/browser/side-bar-properties";
+import SideBar from "../features/browser/side-bar";
 
 export {
     KeyboardShortcuts,
