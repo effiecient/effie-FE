@@ -60,7 +60,7 @@ export default function Browser() {
     // }, [location]);
 
     const router = useRouter();
-    const pathname = router.asPath;
+    const pathname = window.location.pathname;
 
     const subdomain = useUserStore((state: any) => state.subdomain);
 
@@ -90,7 +90,7 @@ export default function Browser() {
         fetcher({
             url: `${BE_BASE_URL}/directory/${subdomain}${pathname}`,
         });
-    }, [subdomain, pathname]);
+    }, [subdomain]);
 
     if (isError) {
         console.error(response.message);
@@ -306,7 +306,7 @@ const BrowserBreadcrumb = () => {
     const subdomain = useUserStore((state: any) => state.subdomain);
     const router = useRouter();
 
-    const location = router.asPath
+    const location = window.location.pathname
         .split("/")
         .filter((loc: string) => loc !== "");
 
@@ -340,10 +340,8 @@ const BrowserBreadcrumb = () => {
                 .slice(window.innerWidth < 768 ? -1 : -3)
                 .map((loc: any, index: any) => {
                     return (
-                        <>
-                            <p key={"p" + index} className="text-neutral-300">
-                                /
-                            </p>
+                        <span key={index}>
+                            <p className="text-neutral-300">/</p>
                             <Breadcrumb
                                 key={index}
                                 path={loc}
@@ -356,7 +354,7 @@ const BrowserBreadcrumb = () => {
                                 }}
                                 className="px-4"
                             />
-                        </>
+                        </span>
                     );
                 })}
         </div>

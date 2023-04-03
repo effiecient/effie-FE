@@ -41,7 +41,7 @@ export default function SideBarProperties({
     const fullRelativePath = "fullRelativePath";
     // Extract path without last path
     const router = useRouter();
-    let pathname = router.asPath;
+    let pathname = window.location.pathname;
     let subdomain = useUserStore((state: any) => state.username);
     // add / in the back if doesn't exist
     if (pathname[pathname.length - 1] !== "/") {
@@ -358,7 +358,6 @@ const RightSideBar = ({
     return (
         <div
             className={`${className}overflow-hidden transition-all duration-500 ease-in-out bg-white ${
-
                 isOpen ? "w-1/3" : "w-6"
             }`}
         >
