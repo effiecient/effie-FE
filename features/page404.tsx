@@ -38,12 +38,10 @@ export default function Page404() {
                         <p className="text-neutral-500 text-xl leading-relaxed mb-1">
                             Having trouble accessing an Effie link?
                         </p>
-                        <p className="text-neutral-800 text-xl leading-relaxed pl-8 mb-6">
-                            <ul className="list-disc list-outside">
-                                <li>Check the link to make sure it's typed correctly. Links are case-sensitive.</li>
-                                <li>You might not have the right access. In that case, contact the link owner for help. </li>
+                            <ul className="list-disc list-outside pl-8 mb-6">
+                                <li><p className="text-neutral-800 text-xl leading-relaxed ">Check the link to make sure it's typed correctly. Links are case-sensitive.</p></li>
+                                <li><p className="text-neutral-800 text-xl leading-relaxed ">You might not have the right access. In that case, contact the link owner for help.</p> </li>
                             </ul>
-                        </p>
                         <p className="text-neutral-800 text-xl leading-relaxed">
                             Alternatively, let's go back to the&nbsp;
                             <Link href={`${FE_FULL_BASE_URL}`} target="_self">
