@@ -15,7 +15,6 @@ import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
 
 import Page404 from "./page404";
 
-
 const dummyFolderLinkData: FolderLinkData = {
     title: "",
     isPinned: false,
@@ -95,8 +94,7 @@ export default function Browser() {
 
     if (isError) {
         console.error(response.message);
-        return <Page404/>;
-
+        return <Page404 />;
     }
     if (isLoading || !fetchStarted) {
         return <>skeleton</>;
@@ -183,7 +181,13 @@ export default function Browser() {
                                 );
                             }}
                         >
-                            open properties
+                            <Image
+                                width={20}
+                                height={20}
+                                src="/icons/info.svg"
+                                alt="info"
+                                className="h-8 w-8"
+                            />
                         </button>
                     </div>
 

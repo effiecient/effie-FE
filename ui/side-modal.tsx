@@ -13,8 +13,8 @@ export default function SideModal({
 }: SideModalProps) {
     return (
         <div
-            className={`fixed left-0 w-full h-full ${
-                isOpen ? "z-10" : "-z-10 duration-500"
+            className={`fixed left-0 w-full h-full  ${
+                isOpen ? "z-50" : "-z-10 duration-500"
             }`}
         >
             {/* Clickable Background */}

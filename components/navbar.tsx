@@ -34,10 +34,10 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
     const photoURL = useUserStore((state: any) => state.photoURL);
 
     return (
-        <>
+        <div className="sticky top-0 z-50">
             {/* Navbar */}
             <nav
-                className={`sticky z-50 top-0 left-0 flex flex-row justify-between w-full bg-white items-center px-6 py-3`}
+                className={`left-0 flex flex-row justify-between w-full bg-white items-center px-6 py-3`}
             >
                 {/* Logo */}
                 <Link href={`${FE_FULL_BASE_URL}`} target="_self">
@@ -160,6 +160,6 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
 
             {/* Login */}
             <Login isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
-        </>
+        </div>
     );
 }

@@ -16,7 +16,7 @@ export default function Directory() {
 
     // const postID = router.query... I want to get postID from url somehow.
     return (
-        <div className="flex h-full w-full flex-col">
+        <div className="flex flex-col h-full w-full">
             <Navbar />
             <Browser />
         </div>
