@@ -25,7 +25,6 @@ export default function Page404() {
                 <link rel="icon" href="/favicon.svg" />
             </Head>
 
-            <Navbar />
             <main className="px-44 xl:px-[10%] py-28">
             <div className="grid grid-cols-2 grid-rows-1 gap-x-10 items-center justify-center">
                 <div className="flex justify-center">

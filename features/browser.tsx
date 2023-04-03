@@ -12,6 +12,7 @@ import SideBarProperties from "@/components/side-bar-properties";
 import { FolderLinkData, FolderLinkDataArray } from "@/type";
 import useDelayUnmount from "@/hooks/useDelayUnmount";
 import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
+import Page404 from "./page404";
 
 const dummyFolderLinkData: FolderLinkData = {
     title: "",
@@ -91,12 +92,12 @@ export default function Browser() {
     }, [subdomain, pathname]);
 
     if (isError) {
-        return <div>Error:{response.message}</div>;
+        console.error(response.message);
+        return <Page404/>;
     }
     if (isLoading || !fetchStarted) {
         return <>skeleton</>;
     }
-
     let data: FolderLinkDataArray = response.data;
     // setup dataChildren as array
     let dataChildrenFolders: any = [];
