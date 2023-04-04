@@ -92,7 +92,7 @@ export default function Browser() {
 
                 {/* content */}
                 <div
-                    className={`z-0 absolute lg:ml-20 top-32 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out h-[200vh] ${
+                    className={`z-0 absolute lg:ml-20 top-32 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
                         isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
                     }`}
                 >

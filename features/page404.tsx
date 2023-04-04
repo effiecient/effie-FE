@@ -5,6 +5,7 @@ import Link from "next/link";
 
 // TODO: update this to import from config only
 import { FE_FULL_BASE_URL } from "@/config/fe-config";
+import { Navbar } from "@/components";
 
 export default function Page404() {
     return (
@@ -18,8 +19,8 @@ export default function Page404() {
                 />
                 <link rel="icon" href="/favicon.svg" />
             </Head>
-
             <main className="px-6 xl:px-44 py-12 xl:py-28 flex items-center justify-center h-screen w-screen">
+                <Navbar />
                 <div className="flex flex-col xl:flex-row items-center justify-center h-screen w-screen">
                     <div className="relative flex justify-center w-3/5 h-3/5">
                         <Image
