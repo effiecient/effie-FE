@@ -60,7 +60,7 @@ export default function CheckUser({ children }: any) {
         useFetchEffieBENew();
 
     useEffect(() => {
-        if (effieAuthToken !== "") {
+        if (effieAuthToken !== "" && effieAuthToken !== null) {
             fetcher({
                 url: `${BE_BASE_URL}/auth`,
                 method: "POST",

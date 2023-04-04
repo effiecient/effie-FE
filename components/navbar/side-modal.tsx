@@ -6,31 +6,31 @@ type SideModalProps = {
 };
 
 export default function SideModal({
-    isOpen,
+    isOpen = false,
     onClose,
     children,
     className,
 }: SideModalProps) {
     return (
         <div
-            className={`fixed left-0 w-full h-full ${
-                isOpen ? "z-10" : "-z-10 duration-500"
+            className={`mt-16 fixed top-0 bottom-0 right-0 left-0 duration-500 overflow-clip ${
+                isOpen ? "z-20" : "-z-10"
             }`}
         >
             {/* Clickable Background */}
             <div
-                className={`w-full h-full bg-black bg-opacity-50 backdrop-blur absolute duration-300 ${
+                className={`h-full w-full bg-black bg-opacity-50 backdrop-blur duration-300 ${
                     isOpen ? "opacity-100" : "opacity-0"
                 }`}
                 onClick={onClose}
             />
             {/* Side Modal */}
             <div
-                className={`${className} fixed right-0 ease-in-out duration-300 w-1/4 h-full bg-white p-6 ${
-                    isOpen ? "translate-x-0" : "translate-x-[100%]"
+                className={`absolute bottom-0 top-0 right-0 ease-in-out bg-white duration-300 w-1/4  ${
+                    isOpen ? "translate-x-0" : "translate-x-full"
                 }`}
             >
-                {children}
+                <div className={`p-6 ${className}`}>{children}</div>
             </div>
         </div>
     );

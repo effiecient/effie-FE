@@ -34,8 +34,7 @@ export default function DirectoryItemCard({
     relativePath,
     isFocused = false,
 }: DirectoryItemCardProps) {
-    const router = useRouter();
-    let pathname = router.asPath;
+    let pathname = window.location.pathname;
     let subdomain = useUserStore((state: any) => state.username);
     // add / in the back if doesn't exist
     if (pathname[pathname.length - 1] !== "/") {

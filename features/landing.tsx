@@ -29,7 +29,7 @@ export default function Landing() {
             </Head>
 
             <Navbar />
-            <main className="px-16 md:px-44 xl:px-[20%] py-32">
+            <main className="px-16 md:px-44 xl:px-[20%] py-16">
                 <div className="grid grid-cols-1 md:grid-cols-2 md:grid-rows-3 gap-y-16 md:gap-y-24 md:gap-x-20 items-center justify-center">
                     {width ? (
                         width <= 768 && (
