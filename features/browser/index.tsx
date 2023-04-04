@@ -99,15 +99,15 @@ export default function Browser() {
                 isOpen ? "w-[20vw]" : "w-6"
             }`} */}
             <div
-                className={`z-0 fixed bg-neutral-50 ml-20 bottom-0 lg:top-16 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
-                    isSideBarPropertiesOpen ? "mr-[20vw]" : "mr-6"
+                className={`z-0 h-full fixed bg-neutral-50 lg:ml-20 bottom-0 lg:top-16 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
+                    isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
                 }`}
             >
                 <Background />
             </div>
             <div
-                className={`z-10 fixed bg-neutral-50 ml-20 lg:top-16 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
-                    isSideBarPropertiesOpen ? "mr-[20vw]" : "mr-6"
+                className={`z-10 fixed bg-neutral-50 lg:ml-20 lg:top-16 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
+                    isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
                 }`}
             >
                 <div className="p-6 flex justify-between">
@@ -131,8 +131,8 @@ export default function Browser() {
             </div>
             {/* content */}
             <div
-                className={`z-0 absolute ml-20 lg:top-32 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
-                    isSideBarPropertiesOpen ? "mr-[20vw]" : "mr-6"
+                className={`z-0 absolute lg:ml-20 top-32 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
+                    isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
                 }`}
             >
                 <div className="p-6">
@@ -200,6 +200,7 @@ export default function Browser() {
             </div>
             {/* right sidebar */}
             <SideBarProperties
+                onClose={() => setIsSideBarPropertiesOpen(false)}
                 isOpen={isSideBarPropertiesOpen}
                 itemData={focusedItemData}
                 relativePath={focusedItemName}
