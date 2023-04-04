@@ -87,137 +87,144 @@ export default function Browser() {
                 />
                 <link rel="icon" href="/favicon.svg" />
             </Head>
-            <Navbar />
-            {/* left sidebar */}
-            <SideBar
-                handleNewLinkClick={handleNewLinkClick}
-                handleNewFolderClick={handleNewFolderClick}
-            />
-            {/* background */}
-            {/* className=
-            {`fixed right-0 bottom-0 top-0 overflow-hidden duration-500 ease-in-out bg-white ${
-                isOpen ? "w-[20vw]" : "w-6"
-            }`} */}
-            <div
-                className={`z-0 h-full fixed bg-neutral-50 lg:ml-20 bottom-0 lg:top-16 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
-                    isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
-                }`}
-            >
-                <Background />
-            </div>
-            <div
-                className={`z-10 fixed bg-neutral-50 lg:ml-20 lg:top-16 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
-                    isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
-                }`}
-            >
-                <div className="p-6 flex justify-between">
-                    <BrowserBreadcrumb />
-                    <button
-                        onClick={() => {
-                            setIsSideBarPropertiesOpen(
-                                !isSideBarPropertiesOpen
-                            );
-                        }}
-                    >
-                        <Image
-                            width={20}
-                            height={20}
-                            src="/icons/info.svg"
-                            alt="info"
-                            className="h-8 w-8"
-                        />
-                    </button>
+            <main className="bg-white w-full h-full">
+                <Navbar />
+                {/* left sidebar */}
+                <SideBar
+                    handleNewLinkClick={handleNewLinkClick}
+                    handleNewFolderClick={handleNewFolderClick}
+                />
+                {/* background */}
+                <div
+                    className={`z-0 h-full fixed bg-neutral-50 lg:ml-20 bottom-0 lg:top-16 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
+                        isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
+                    }`}
+                >
+                    <Background />
                 </div>
-            </div>
-            {/* content */}
-            <div
-                className={`z-0 absolute lg:ml-20 top-32 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
-                    isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
-                }`}
-            >
-                <div className="p-6">
-                    <h5 className="text-neutral-400 relative z-10  pb-2">
-                        Folders
-                    </h5>
-                    <section className="flex gap-4 w-full flex-wrap">
-                        <DirectoryItemCard
-                            content="new folder"
-                            onClick={handleNewFolderClick}
-                        />
-                        {dataChildrenFolders.map((folder: any, index: any) => {
-                            let child = folder.key;
-                            let data = folder.data;
-                            return (
-                                <DirectoryItemCard
-                                    key={index}
-                                    content="folder"
-                                    relativePath={child}
-                                    DirectoryItemData={data}
-                                    onDoubleClick={() => {
-                                        router.push(`${pathname}/${child}`);
-                                    }}
-                                    onClick={() => {
-                                        setFocusedItemData(data);
-                                        setFocusedItemName(child);
-                                    }}
-                                    isFocused={focusedItemName === child}
-                                />
-                            );
-                        })}
-                    </section>
 
-                    <h5 className="text-neutral-400 relative z-10 pt-6 pb-2">
-                        Links
-                    </h5>
-                    <section className="flex gap-4 w-full flex-wrap">
-                        <DirectoryItemCard
-                            content="new link"
-                            onClick={handleNewLinkClick}
-                        />
-                        {dataChildrenLinks.map((link: any, index: any) => {
-                            let child = link.key;
-                            let data = link.data;
-                            return (
-                                <DirectoryItemCard
-                                    key={index}
-                                    content="link"
-                                    relativePath={child}
-                                    DirectoryItemData={data}
-                                    onDoubleClick={() => {
-                                        // open url in new page
-                                        window.open(data.link, "_blank");
-                                    }}
-                                    onClick={() => {
-                                        setFocusedItemData(data);
-                                        setFocusedItemName(child);
-                                    }}
-                                    isFocused={focusedItemName === child}
-                                />
-                            );
-                        })}
-                    </section>
+                {/* content */}
+                <div
+                    className={`z-0 absolute lg:ml-20 top-32 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out h-[200vh] ${
+                        isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
+                    }`}
+                >
+                    <div className="p-6">
+                        <h5 className="text-neutral-400 relative z-10  pb-2">
+                            Folders
+                        </h5>
+                        <section className="flex gap-4 w-full flex-wrap">
+                            <DirectoryItemCard
+                                content="new folder"
+                                onClick={handleNewFolderClick}
+                            />
+                            {dataChildrenFolders.map(
+                                (folder: any, index: any) => {
+                                    let child = folder.key;
+                                    let data = folder.data;
+                                    return (
+                                        <DirectoryItemCard
+                                            key={index}
+                                            content="folder"
+                                            relativePath={child}
+                                            DirectoryItemData={data}
+                                            onDoubleClick={() => {
+                                                router.push(
+                                                    `${pathname}/${child}`
+                                                );
+                                            }}
+                                            onClick={() => {
+                                                setFocusedItemData(data);
+                                                setFocusedItemName(child);
+                                            }}
+                                            isFocused={
+                                                focusedItemName === child
+                                            }
+                                        />
+                                    );
+                                }
+                            )}
+                        </section>
+
+                        <h5 className="text-neutral-400 relative z-10 pt-6 pb-2">
+                            Links
+                        </h5>
+                        <section className="flex gap-4 w-full flex-wrap">
+                            <DirectoryItemCard
+                                content="new link"
+                                onClick={handleNewLinkClick}
+                            />
+                            {dataChildrenLinks.map((link: any, index: any) => {
+                                let child = link.key;
+                                let data = link.data;
+                                return (
+                                    <DirectoryItemCard
+                                        key={index}
+                                        content="link"
+                                        relativePath={child}
+                                        DirectoryItemData={data}
+                                        onDoubleClick={() => {
+                                            // open url in new page
+                                            window.open(data.link, "_blank");
+                                        }}
+                                        onClick={() => {
+                                            setFocusedItemData(data);
+                                            setFocusedItemName(child);
+                                        }}
+                                        isFocused={focusedItemName === child}
+                                    />
+                                );
+                            })}
+                        </section>
+                    </div>
                 </div>
-            </div>
-            {/* right sidebar */}
-            <SideBarProperties
-                onClose={() => setIsSideBarPropertiesOpen(false)}
-                isOpen={isSideBarPropertiesOpen}
-                itemData={focusedItemData}
-                relativePath={focusedItemName}
-            />
-            {/* MODALS */}
-            <NewLink
-                isOpen={isNewLinkModalOpen}
-                onClose={() => setIsNewLinkModalOpen(false)}
-            />
-            <NewFolder
-                isOpen={isNewFolderModalOpen}
-                onClose={() => setIsNewFolderModalOpen(false)}
-            />
-            <KeyboardShortcuts
-                isOpen={isKeyboardShortcutsModalOpen}
-                onClose={() => setIsKeyboardShortcutsModalOpen(false)}
-            />
+
+                {/* header */}
+                <div
+                    className={`z-0 fixed bg-neutral-50 lg:ml-20 lg:top-[63px] left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
+                        isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
+                    }`}
+                >
+                    <div className="p-6 flex justify-between">
+                        <BrowserBreadcrumb />
+                        <button
+                            onClick={() => {
+                                setIsSideBarPropertiesOpen(
+                                    !isSideBarPropertiesOpen
+                                );
+                            }}
+                        >
+                            <Image
+                                width={20}
+                                height={20}
+                                src="/icons/info.svg"
+                                alt="info"
+                                className="h-8 w-8"
+                            />
+                        </button>
+                    </div>
+                </div>
+                {/* right sidebar */}
+                <SideBarProperties
+                    onClose={() => setIsSideBarPropertiesOpen(false)}
+                    isOpen={isSideBarPropertiesOpen}
+                    itemData={focusedItemData}
+                    relativePath={focusedItemName}
+                />
+                {/* MODALS */}
+                <NewLink
+                    isOpen={isNewLinkModalOpen}
+                    onClose={() => setIsNewLinkModalOpen(false)}
+                />
+                <NewFolder
+                    isOpen={isNewFolderModalOpen}
+                    onClose={() => setIsNewFolderModalOpen(false)}
+                />
+                <KeyboardShortcuts
+                    isOpen={isKeyboardShortcutsModalOpen}
+                    onClose={() => setIsKeyboardShortcutsModalOpen(false)}
+                />
+            </main>
         </>
     );
 }
