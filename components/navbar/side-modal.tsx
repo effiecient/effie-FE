@@ -13,7 +13,7 @@ export default function SideModal({
 }: SideModalProps) {
     return (
         <div
-            className={`mt-16 absolute top-0 bottom-0 right-0 left-0 duration-500 overflow-clip ${
+            className={`mt-16 fixed top-0 bottom-0 right-0 left-0 duration-500 overflow-clip ${
                 isOpen ? "z-20" : "-z-10"
             }`}
         >
