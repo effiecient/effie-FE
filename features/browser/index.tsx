@@ -3,29 +3,16 @@ import DirectoryItemCard from "@/components/directory-item-card";
 import Image from "next/image";
 import SideBar from "./side-bar";
 import { BE_BASE_URL } from "@/config/be-config";
-import { useFetchEffieBE, useUserStore } from "@/hooks";
-import { useRouter, Router } from "next/router";
+import { useUserStore } from "@/hooks";
+import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { KeyboardShortcuts, NewLink, NewFolder, Navbar } from "@/components";
-import { Breadcrumb } from "@/ui";
 import SideBarProperties from "./side-bar-properties";
 import { FolderLinkData, FolderLinkDataArray } from "@/type";
-import useDelayUnmount from "@/hooks/useDelayUnmount";
 import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
 
 import Page404 from "../page404";
 import { BrowserBreadcrumb } from "./browser-breadcrumb";
-
-const dummyFolderLinkData: FolderLinkData = {
-    title: "",
-    isPinned: false,
-    link: "",
-    type: "folder",
-    shareConfiguration: {
-        isShared: false,
-        sharedPrivilege: "read",
-    },
-};
 
 export default function Browser() {
     const router = useRouter();

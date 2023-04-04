@@ -11,13 +11,7 @@ import defaultUserImg from "@/public/images/user.png";
 import { useRegister, useUserStore } from "@/hooks";
 import Link from "next/link";
 // TODO: update this to import from config only
-import {
-    FE_BASE_URL,
-    FE_DOMAIN,
-    FE_FULL_BASE_URL,
-    FE_PROTOCOL,
-    FE_TOP_LEVEL_DOMAIN,
-} from "@/config/fe-config";
+import { FE_BASE_URL, FE_FULL_BASE_URL, FE_PROTOCOL } from "@/config/fe-config";
 
 type NavbarProps = {
     isOnLanding?: boolean;

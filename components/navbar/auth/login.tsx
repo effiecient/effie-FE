@@ -1,19 +1,12 @@
 import { Button } from "@/ui";
 import SideModal from "../side-modal";
-import {
-    getAuth,
-    GoogleAuthProvider,
-    signInWithPopup,
-    onAuthStateChanged,
-    signOut,
-} from "firebase/auth";
-import { setToLocalStorage } from "@/helpers";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 import { initializeApp } from "firebase/app";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { BE_BASE_URL, FIREBASE_CONFIG } from "@/config";
-import { useFetchEffieBE, useUserStore } from "@/hooks";
+import { useUserStore } from "@/hooks";
 import { useRouter } from "next/router";
 
 // TODO: update this to import from config only
