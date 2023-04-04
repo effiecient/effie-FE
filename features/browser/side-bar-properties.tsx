@@ -148,7 +148,7 @@ export default function SideBarProperties({
         <RightSideBar isOpen={isOpen} className={className}>
             {/* content */}
             {itemData === undefined ? (
-                <>nothing is currently selected</>
+                <div className="mt-12">nothing is currently selected</div>
             ) : (
                 <>
                     <div className="mb-7">

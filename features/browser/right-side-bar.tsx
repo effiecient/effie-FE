@@ -18,11 +18,11 @@ export const RightSideBar = ({
                 }`}
             ></div>
             <div
-                className={`absolute right-0 bottom-0 top-0 overflow-hidden duration-500 ease-in-out bg-white ${
+                className={`fixed right-0 bottom-0 top-0 overflow-hidden duration-500 ease-in-out bg-white ${
                     isOpen ? "w-[20vw]" : "w-6"
                 }`}
             >
-                <div className={`w-[20vw] p-6`}>{children}</div>
+                <div className={`w-[20vw] p-6 fixed`}>{children}</div>
             </div>
         </>
     );

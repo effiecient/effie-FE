@@ -36,7 +36,8 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
     return (
         <>
             {/* Navbar */}
-            <div className="sticky right-0 left-0 top-0 h-16 z-50">
+            <div className="relative right-0 left-0 top-0 h-16" />
+            <div className="fixed right-0 left-0 top-0 h-16 z-50">
                 <nav
                     className={`flex flex-row justify-between w-full bg-white items-center px-6 py-3`}
                 >
