@@ -9,6 +9,7 @@ import { useFetchEffieBE, useUserStore } from "@/hooks";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { FE_BASE_URL } from "@/config";
+import LoadingPage from "@/components/loading";
 
 type NewLinkProps = {
     isOpen: boolean;
@@ -97,6 +98,10 @@ export default function NewLink({ isOpen, onClose }: NewLinkProps) {
     });
 
     // REFRESH UI AFTER NEW LINK ADDED
+    if (isLoading) {
+        return <LoadingPage />;
+    }
+
     if (readyToPost && !isLoading && !isError && response) {
         router.reload();
     }
