@@ -1,6 +1,5 @@
-import { Button, SideModal, Modal, Input } from "@/components";
-
-import { useState } from "react";
+import { Button } from "@/ui";
+import SideModal from "../side-modal";
 
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 

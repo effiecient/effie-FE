@@ -1,5 +1,4 @@
-import Button from "../button";
-import Modal from "../modal";
+import { Button, Modal } from "@/ui";
 
 type ConfirmationModalProps = {
     isOpen: boolean;

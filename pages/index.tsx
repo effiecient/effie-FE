@@ -11,10 +11,9 @@ export default function Index() {
     console.log(process.env.NEXT_PUBLIC_ENV_TYPE);
     if (isSubdomain) {
         return (
-            <>
-                <Navbar />
+            <div className="flex h-full w-full flex-col">
                 <Browser />
-            </>
+            </div>
         );
     } else {
         if (isLoggedIn) {

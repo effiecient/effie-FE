@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import Button from "@/components/button";
-import LinkCard from "@/components/link-card";
+import { Button } from "@/ui";
+import DirectoryItemCard from "@/components/directory-item-card";
 import { BE_BASE_URL } from "@/config/be-config";
 import Image from "next/image";
 import Head from "next/head";
@@ -101,7 +101,7 @@ export default function QuickCreate() {
                     name="viewport"
                     content="width=device-width, initial-scale=1"
                 />
-                <link rel="icon" href="/favicon.ico" />
+                <link rel="icon" href="/favicon.svg" />
             </Head>
             <Navbar isOnLanding />
             <div className="flex flex-col px-44 xl:px-[20%] w-full">
@@ -183,13 +183,14 @@ export default function QuickCreate() {
                                     className="input"
                                 />
                             </div>
-                            <LinkCard
+                            {/* TODO: adapt to the new direcotory Item Card */}
+                            {/* <DirectoryItemCard
                                 content="display link"
                                 title={title}
                                 url={linkNameRef.current?.value || ""}
                                 effieUrl=""
                                 className="h-fit"
-                            />
+                            /> */}
                         </div>
                     </form>
                 </div>

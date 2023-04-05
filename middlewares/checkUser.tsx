@@ -3,13 +3,12 @@ import { BE_BASE_URL } from "@/config";
 // TODO: update this to import from config only
 import { FE_DOMAIN } from "@/config/fe-config";
 
-import { EFFIE_AUTH_TOKEN } from "@/constants";
-
 import { useUserStore } from "@/hooks";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
 import { getEffieAuthTokenFromCookie } from "@/helpers";
+import LoadingPage from "@/components/loading-page";
 
 // used to set isLoggedIn, username, isSubdomain, subdomain
 export default function CheckUser({ children }: any) {
@@ -23,7 +22,7 @@ export default function CheckUser({ children }: any) {
     const setHasPhotoURL = useUserStore((state: any) => state.setHasPhotoURL);
 
     // if effie_auth_token exist, set user to logged in
-    const [effieAuthToken, setEffieAuthToken] = useState("");
+    const [effieAuthToken, setEffieAuthToken] = useState<any>(null);
 
     // get effie_auth_token from cookie
     useEffect(() => {
@@ -53,15 +52,15 @@ export default function CheckUser({ children }: any) {
                 isSubdomain = true;
             }
         }
-
+        // get the URLLocation
         setIsSubdomain(isSubdomain);
         setSubdomain(arrayOfURL[0]);
-    }, [setIsSubdomain, setSubdomain]);
+    }, []);
     const [{ isLoading, isError, response, fetchStarted }, fetcher] =
         useFetchEffieBENew();
 
     useEffect(() => {
-        if (effieAuthToken !== "") {
+        if (effieAuthToken !== "" && effieAuthToken !== null) {
             fetcher({
                 url: `${BE_BASE_URL}/auth`,
                 method: "POST",
@@ -91,7 +90,7 @@ export default function CheckUser({ children }: any) {
         }
 
         if (isLoading || !fetchStarted) {
-            return <div>global page Loading</div>;
+            return <LoadingPage />;
         } else {
             setUsername(response.username);
             setIsLoggedIn(true);

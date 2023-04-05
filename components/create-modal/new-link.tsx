@@ -1,8 +1,7 @@
 // IMPORTS
 import { useState, useEffect, useRef } from "react";
-import Button from "../button";
-import LinkCard from "../link-card";
-import Modal from "../modal";
+import { Button, Modal } from "@/ui";
+import DirectoryItemCard from "../directory-item-card";
 import { BE_BASE_URL } from "@/config/be-config";
 import { useFetchEffieBE, useUserStore } from "@/hooks";
 // import { unfurl } from 'unfurl.js'
@@ -18,7 +17,6 @@ type NewLinkProps = {
 
 export default function NewLink({ isOpen, onClose }: NewLinkProps) {
     // USER CONSTANTS
-    const username = useUserStore((state: any) => state.username);
     const subdomain = useUserStore((state: any) => state.subdomain);
     const USER_BASE_URL = `${subdomain}.${FE_BASE_URL}/`;
     const currPathArray = window.location.pathname
@@ -107,7 +105,7 @@ export default function NewLink({ isOpen, onClose }: NewLinkProps) {
     }
 
     return (
-        <Modal isOpen={isOpen} onClose={closeModal}>
+        <Modal isOpen={isOpen} onClose={closeModal} onOutsideClick={closeModal}>
             <h3 className="text-neutral-800 mb-8">New Link</h3>
             <form onSubmit={onSubmit}>
                 <div className="flex items-center mb-6">
@@ -186,13 +184,15 @@ export default function NewLink({ isOpen, onClose }: NewLinkProps) {
                             className="input"
                         />
                     </div>
-                    <LinkCard
+                    {/* TODO: adapt to the new directory item card */}
+
+                    {/* <DirectoryItemCard
                         content="display link"
                         title={title}
                         url={linkNameRef.current?.value || ""}
                         effieUrl=""
                         className="h-fit"
-                    />
+                    /> */}
                 </div>
             </form>
         </Modal>
