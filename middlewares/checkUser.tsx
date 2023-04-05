@@ -4,7 +4,7 @@ import { BE_BASE_URL } from "@/config";
 import { FE_DOMAIN } from "@/config/fe-config";
 
 import { useUserStore } from "@/hooks";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
 import { getEffieAuthTokenFromCookie } from "@/helpers";
@@ -23,8 +23,11 @@ export default function CheckUser({ children }: any) {
 
     // if effie_auth_token exist, set user to logged in
     const [effieAuthToken, setEffieAuthToken] = useState<any>(null);
+    const [pathname, setPathname] = useState<string>("");
 
+    const firstRender = useRef(true);
     // get effie_auth_token from cookie
+    
     useEffect(() => {
         setEffieAuthToken(getEffieAuthTokenFromCookie());
 
@@ -55,6 +58,7 @@ export default function CheckUser({ children }: any) {
         // get the URLLocation
         setIsSubdomain(isSubdomain);
         setSubdomain(arrayOfURL[0]);
+        setPathname(window.location.pathname)
     }, []);
     const [{ isLoading, isError, response, fetchStarted }, fetcher] =
         useFetchEffieBENew();
@@ -69,8 +73,12 @@ export default function CheckUser({ children }: any) {
         }
     }, [effieAuthToken]);
     // short circuit
+    if (firstRender.current) {
+        firstRender.current = false;
+        return children;
+    }
     // if /logout, return children
-    if (router.pathname === "/logout") {
+    if (pathname === "/logout" || pathname === "/create-username") {
         return children;
     }
 
