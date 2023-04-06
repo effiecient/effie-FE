@@ -12,7 +12,6 @@ export default function Index() {
     if (isSubdomain) {
         return (
             <div className="flex h-full w-full flex-col">
-                <Navbar />
                 <Browser />
             </div>
         );

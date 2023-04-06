@@ -6,12 +6,13 @@ import Image from "next/image";
 import LP1 from "../public/images/lp1.png";
 import LP2 from "../public/images/lp2.png";
 import LP3 from "../public/images/lp3.png";
-import { useRegister } from "@/hooks";
+import { useRegister, useWindowSize } from "@/hooks";
 import { Navbar } from "@/components";
 
 export default function Landing() {
     const isRegisterOpen = useRegister((state) => state.isRegisterOpen);
     const setIsRegisterOpen = useRegister((state) => state.setIsRegisterOpen);
+    const { width } = useWindowSize();
     return (
         <>
             <Head>
@@ -28,15 +29,27 @@ export default function Landing() {
             </Head>
 
             <Navbar />
-            <main className="px-44 xl:px-[20%] py-32">
-                <div className="grid grid-cols-2 grid-rows-3 gap-y-24 gap-x-20 items-center justify-center">
+            <main className="px-16 md:px-44 xl:px-[20%] py-16">
+                <div className="grid grid-cols-1 md:grid-cols-2 md:grid-rows-3 gap-y-16 md:gap-y-24 md:gap-x-20 items-center justify-center">
+                    {width ? (
+                        width <= 768 && (
+                            <div className="flex justify-center">
+                                <Image
+                                    src={LP1}
+                                    alt="All your links in one place"
+                                />
+                            </div>
+                        )
+                    ) : (
+                        <></>
+                    )}
                     <div className="">
-                        <h1 className="mb-4">
+                        <h1 className="mb-2 md:mb-4">
                             All your links,
                             <br />
                             in one place
                         </h1>
-                        <p className="text-neutral-600 text-2xl mb-8">
+                        <p className="text-neutral-600 text-xl mb-4 md:text-2xl md:mb-8">
                             Keep your links with folders and custom URLs with
                             Effie.
                         </p>
@@ -47,37 +60,61 @@ export default function Landing() {
                             Get Started Now &nbsp;&nbsp;&gt;
                         </Button>
                     </div>
-                    <div className="flex justify-center">
-                        <Image src={LP1} alt="All your links in one place" />
-                    </div>
+                    {width ? (
+                        width > 768 && (
+                            <div className="flex justify-center">
+                                <Image
+                                    src={LP1}
+                                    alt="All your links in one place"
+                                />
+                            </div>
+                        )
+                    ) : (
+                        <></>
+                    )}
                     <div className="flex justify-center">
                         <Image src={LP2} alt="Build trust with your customer" />
                     </div>
-                    <div className="text-right">
-                        <h1 className="mb-4">
+                    <div className="md:text-right">
+                        <h1 className="mb-2 md:mb-4 text-3xl md:text-4xl">
                             Build trust with
                             <br />
                             your customers
                         </h1>
-                        <p className="text-neutral-600 text-2xl">
+                        <p className="text-neutral-600 text-xl mb-4 md:text-2xl md:mb-8">
                             Establish credibility by sharing cutsom links with
                             your own brand.
                         </p>
                     </div>
+                    {width ? (
+                        width <= 768 && (
+                            <div className="flex justify-center">
+                                <Image src={LP3} alt="Simplify how you share" />
+                            </div>
+                        )
+                    ) : (
+                        <></>
+                    )}
                     <div className="">
-                        <h1 className="mb-4">
+                        <h1 className="mb-2 md:mb-4">
                             Simplify how
                             <br />
                             you share
                         </h1>
-                        <p className="text-neutral-600 text-2xl">
+                        <p className="text-neutral-600 text-xl mb-4 md:text-2xl md:mb-8">
                             Share shorter links with your colleagues and
                             friends.
                         </p>
                     </div>
-                    <div className="flex justify-center">
-                        <Image src={LP3} alt="Simplify how you share" />
-                    </div>
+                    {width ? (
+                        width > 768 && (
+                            <div className="flex justify-center">
+                                <Image src={LP3} alt="Simplify how you share" />
+                            </div>
+                        )
+                    ) : (
+                        <></>
+                    )}
                 </div>
             </main>
             <Footer />

@@ -35,9 +35,6 @@ export default function LoggingIn() {
         }
     }, []);
 
-    console.log("isLoading", isLoading);
-    console.log("isError", isError);
-
     // return
     if (isError) {
         return (
