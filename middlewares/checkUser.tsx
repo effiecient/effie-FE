@@ -72,7 +72,7 @@ export default function CheckUser({ children }: any) {
 
     // short circuit
     // if /logout, return children
-    if (pathname === "/logout" || pathname === "/create-username") {
+    if (pathname === "/logout") {
         return children;
     }
 
