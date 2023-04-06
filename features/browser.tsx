@@ -58,7 +58,10 @@ export default function Browser() {
     // }, [location]);
 
     const router = useRouter();
-    const pathname = router.asPath;
+    let pathname: any;
+    if (typeof window !== "undefined") {
+        pathname = window.location.pathname;
+    }
 
     const subdomain = useUserStore((state: any) => state.subdomain);
 
