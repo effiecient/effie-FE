@@ -4,16 +4,13 @@ import { BE_BASE_URL } from "@/config";
 import { FE_DOMAIN } from "@/config/fe-config";
 
 import { useUserStore } from "@/hooks";
-import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
 import { getEffieAuthTokenFromCookie } from "@/helpers";
 import LoadingPage from "@/components/loading-page";
 
 // used to set isLoggedIn, username, isSubdomain, subdomain
 export default function CheckUser({ children }: any) {
-    const router = useRouter();
-
     const setUsername = useUserStore((state: any) => state.setUsername);
     const setIsLoggedIn = useUserStore((state: any) => state.setIsLoggedIn);
     const setIsSubdomain = useUserStore((state: any) => state.setIsSubdomain);
@@ -21,13 +18,9 @@ export default function CheckUser({ children }: any) {
     const setPhotoURL = useUserStore((state: any) => state.setPhotoURL);
     const setHasPhotoURL = useUserStore((state: any) => state.setHasPhotoURL);
 
-    // if effie_auth_token exist, set user to logged in
     const [effieAuthToken, setEffieAuthToken] = useState<any>(null);
-    const [pathname, setPathname] = useState<string>("");
-
-    const firstRender = useRef(true);
-    // get effie_auth_token from cookie
-    
+    let pathname;
+    // get effie_auth_token from cookie on first render
     useEffect(() => {
         setEffieAuthToken(getEffieAuthTokenFromCookie());
 
@@ -58,7 +51,11 @@ export default function CheckUser({ children }: any) {
         // get the URLLocation
         setIsSubdomain(isSubdomain);
         setSubdomain(arrayOfURL[0]);
-        setPathname(window.location.pathname)
+
+        if (typeof window !== "undefined") {
+            pathname = window.location.pathname;
+            console.log(pathname);
+        }
     }, []);
     const [{ isLoading, isError, response, fetchStarted }, fetcher] =
         useFetchEffieBENew();
@@ -72,11 +69,8 @@ export default function CheckUser({ children }: any) {
             });
         }
     }, [effieAuthToken]);
+
     // short circuit
-    if (firstRender.current) {
-        firstRender.current = false;
-        return children;
-    }
     // if /logout, return children
     if (pathname === "/logout" || pathname === "/create-username") {
         return children;

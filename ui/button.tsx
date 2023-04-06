@@ -1,7 +1,7 @@
 type ButtonProps = {
   type?: "default" | "danger" | "success" | "warning" | "info" | "custom";
   children?: React.ReactNode;
-  onClick?: () => void;
+  onClick?: (e: any) => void;
   className?: string;
   disabled?: boolean;
   pill?: boolean;

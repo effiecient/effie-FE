@@ -6,17 +6,20 @@ import { useRouter } from "next/router";
 import Icon from "@/public/icons/create-username.svg";
 import Image from "next/image";
 export default function CreateUsername() {
+    const router = useRouter();
+
+    const [username, setUsername] = useState<string>("");
+
     function handleUsernameInput(e: any) {
         setUsername(e.target.value);
     }
 
-    const [username, setUsername] = useState("");
-    const router = useRouter();
-    function handleCreateUsernameOnClick() {
+    function handleCreateUsernameOnClick(e: any) {
         // hit register.
+        e.preventDefault();
         const accessToken = localStorage.getItem("accessToken");
         const uid = localStorage.getItem("uid");
-
+        console.log(accessToken, "\n\n\n", uid, "\n\n\n", username);
         if (!accessToken || !uid || !username) {
             console.error("error");
         } else {
@@ -34,6 +37,7 @@ export default function CreateUsername() {
             })
                 .then((res) => res.json())
                 .then((data) => {
+                    console.log(data);
                     router.push("/logging-in");
                 });
         }
@@ -60,7 +64,10 @@ export default function CreateUsername() {
                             once created.
                         </p>
                     </div>
-                    <form onSubmit={handleCreateUsernameOnClick} className="flex flex-row gap-6">
+                    <form
+                        onSubmit={handleCreateUsernameOnClick}
+                        className="flex flex-row gap-6"
+                    >
                         <input
                             className="input flex flex-grow"
                             required
@@ -70,11 +77,20 @@ export default function CreateUsername() {
                             onChange={handleUsernameInput}
                             placeholder="Username"
                         />
-                        <Button onClick={handleCreateUsernameOnClick} className="p-3 flex items-center">
+                        <Button
+                            onClick={handleCreateUsernameOnClick}
+                            className="p-3 flex items-center"
+                        >
                             Create Username
                         </Button>
                     </form>
-                    <p className="text-neutral-500 mt-6">Your shareable Effie link: https://<span className="text-primary-500 font-bold">username</span>.effie.boo/path/to/file</p>
+                    <p className="text-neutral-500 mt-6">
+                        Your shareable Effie link: https://
+                        <span className="text-primary-500 font-bold">
+                            username
+                        </span>
+                        .effie.boo/path/to/file
+                    </p>
                 </div>
             </div>
             {/* </Modal> */}
