@@ -5,7 +5,7 @@ import SideBar from "./side-bar";
 import { BE_BASE_URL } from "@/config/be-config";
 import { useUserStore } from "@/hooks";
 import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { KeyboardShortcuts, NewLink, NewFolder, Navbar } from "@/components";
 import SideBarProperties from "./side-bar-properties";
 import { FolderLinkData, FolderLinkDataArray } from "@/type";
@@ -17,9 +17,6 @@ import { BrowserBreadcrumb } from "./browser-breadcrumb";
 export default function Browser() {
     const router = useRouter();
     let pathname: any;
-    if (typeof window !== "undefined") {
-        pathname = window.location.pathname;
-    }
 
     const subdomain = useUserStore((state: any) => state.subdomain);
 
@@ -36,25 +33,64 @@ export default function Browser() {
     const [isSomethingChanged, setIsSomethingChanged] =
         useState<boolean>(false);
 
+    const updatePathname = () => {
+        if (typeof window !== "undefined") {
+            pathname = window.location.pathname;
+            // remove / in the front if exists
+            if (pathname[0] === "/") {
+                pathname = pathname.slice(1);
+            }
+        }
+    };
+    updatePathname();
+
     const handleNewLinkClick = () => {
         setIsNewLinkModalOpen(true);
     };
     const handleNewFolderClick = () => {
         setIsNewFolderModalOpen(true);
     };
+    const handleDirectoryCardClick = (child: any) => {
+        let newUrl = `${pathname}/${child}`;
+        // change path without rerendering
+        window.history.replaceState(
+            {
+                ...window.history.state,
+                as: newUrl,
+                url: newUrl,
+            },
+            "",
+            newUrl
+        );
+        updatePathname();
 
-    const fetchURL = `${BE_BASE_URL}/directory/${subdomain}${pathname}`;
+        setIsSomethingChanged(true);
+    };
+    const handleBreadcrumbClick = (newUrl: any) => {
+        // change path without rerendering
+        window.history.replaceState(
+            {
+                ...window.history.state,
+                as: newUrl,
+                url: newUrl,
+            },
+            "",
+            newUrl
+        );
+        updatePathname();
+
+        setIsSomethingChanged(true);
+    };
+    const fetchURL = `${BE_BASE_URL}/directory/${subdomain}/${pathname}`;
 
     const [{ isLoading, isError, response, fetchStarted }, fetcher] =
         useFetchEffieBENew();
 
     useEffect(() => {
-        setFocusedItemData(undefined);
-        setFocusedItemName("");
         fetcher({
             url: fetchURL,
         });
-    }, [subdomain, fetchURL]);
+    }, [subdomain]);
 
     // useEffect for creating new item
     const [
@@ -78,6 +114,8 @@ export default function Browser() {
     }, [isSomethingChanged]);
 
     useEffect(() => {
+        console.log("isLoadingRefetch", isLoadingRefetch);
+        console.log("fetchStartedRefetch", fetchStartedRefetch);
         if (!isLoadingRefetch && fetchStartedRefetch) {
             setIsSomethingChanged(false);
         }
@@ -130,6 +168,10 @@ export default function Browser() {
                     className={`z-0 h-full fixed bg-neutral-50 lg:ml-20 bottom-0 lg:top-16 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
                         isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
                     }`}
+                    onClick={() => {
+                        setFocusedItemData(undefined);
+                        setFocusedItemName("");
+                    }}
                 >
                     <Background />
                 </div>
@@ -160,9 +202,7 @@ export default function Browser() {
                                             relativePath={child}
                                             DirectoryItemData={data}
                                             onDoubleClick={() => {
-                                                router.push(
-                                                    `${pathname}/${child}`
-                                                );
+                                                handleDirectoryCardClick(child);
                                             }}
                                             onClick={() => {
                                                 setFocusedItemData(data);
@@ -217,7 +257,9 @@ export default function Browser() {
                     }`}
                 >
                     <div className="p-6 flex justify-between items-center">
-                        <BrowserBreadcrumb />
+                        <BrowserBreadcrumb
+                            onBreadcrumbClick={handleBreadcrumbClick}
+                        />
                         {/* TODO: add syncing animation */}
                         <div className="flex flex-row items-center gap-2">
                             {isLoadingRefetch && <span>syncing...</span>}
