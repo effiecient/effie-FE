@@ -71,6 +71,7 @@ export default function Browser() {
 
     const [focusedItemData, setFocusedItemData] = useState<any>(undefined);
     const [focusedItemName, setFocusedItemName] = useState<string>("");
+    const [newItemCreated, setNewItemCreated] = useState<boolean>(false);
 
     const handleNewLinkClick = () => {
         setIsNewLinkModalOpen(true);
@@ -79,6 +80,8 @@ export default function Browser() {
         setIsNewFolderModalOpen(true);
     };
 
+    const fetchURL = `${BE_BASE_URL}/directory/${subdomain}${pathname}`;
+
     const [{ isLoading, isError, response, fetchStarted }, fetcher] =
         useFetchEffieBENew();
 
@@ -86,9 +89,20 @@ export default function Browser() {
         setFocusedItemData(undefined);
         setFocusedItemName("");
         fetcher({
-            url: `${BE_BASE_URL}/directory/${subdomain}${pathname}`,
+            url: fetchURL,
         });
     }, [subdomain, pathname]);
+
+    // useEffect for creating new item
+    useEffect(() => {
+        if (!newItemCreated) {
+            return;
+        }
+        fetcher({
+            url: fetchURL,
+        });
+        setNewItemCreated(false);
+    }, [newItemCreated]);
 
     if (isError) {
         return <div>Error:{response.message}</div>;
@@ -264,6 +278,7 @@ export default function Browser() {
             <NewLink
                 isOpen={isNewLinkModalOpen}
                 onClose={() => setIsNewLinkModalOpen(false)}
+                setNewItemCreated={setNewItemCreated}
             />
             <NewFolder
                 isOpen={isNewFolderModalOpen}
