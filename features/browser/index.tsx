@@ -33,7 +33,8 @@ export default function Browser() {
 
     const [focusedItemData, setFocusedItemData] = useState<any>(undefined);
     const [focusedItemName, setFocusedItemName] = useState<string>("");
-    const [newItemCreated, setNewItemCreated] = useState<boolean>(false);
+    const [isSomethingChanged, setIsSomethingChanged] =
+        useState<boolean>(false);
 
     const handleNewLinkClick = () => {
         setIsNewLinkModalOpen(true);
@@ -53,30 +54,56 @@ export default function Browser() {
         fetcher({
             url: fetchURL,
         });
-    }, [subdomain]);
+    }, [subdomain, fetchURL]);
 
     // useEffect for creating new item
+    const [
+        {
+            isLoading: isLoadingRefetch,
+            isError: isErrorRefetch,
+            response: responseRefetch,
+            fetchStarted: fetchStartedRefetch,
+        },
+        refetcher,
+    ] = useFetchEffieBENew();
     useEffect(() => {
-        if (!newItemCreated) {
+        console.log(isSomethingChanged);
+        if (!isSomethingChanged) {
             return;
+        } else {
+            refetcher({
+                url: fetchURL,
+            });
         }
-        fetcher({
-            url: fetchURL,
-        });
-        setNewItemCreated(false);
-    }, [newItemCreated]);
+    }, [isSomethingChanged]);
+
+    useEffect(() => {
+        if (!isLoadingRefetch && fetchStartedRefetch) {
+            setIsSomethingChanged(false);
+        }
+    }, [isLoadingRefetch, fetchStartedRefetch]);
 
     if (isError) {
         console.error(response.message);
+        return <Page404 />;
+    }
+    if (isErrorRefetch) {
+        console.error(responseRefetch.message);
         return <Page404 />;
     }
     if (isLoading || !fetchStarted) {
         return <>skeleton</>;
     }
 
-    const { dataChildrenFolders, dataChildrenLinks } = sortDataToFolderAndLink(
-        response.data
-    );
+    let responseData;
+    if (responseRefetch !== undefined) {
+        responseData = responseRefetch.data;
+    } else {
+        responseData = response.data;
+    }
+
+    const { dataChildrenFolders, dataChildrenLinks } =
+        sortDataToFolderAndLink(responseData);
     return (
         <>
             <Head>
@@ -189,23 +216,27 @@ export default function Browser() {
                         isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
                     }`}
                 >
-                    <div className="p-6 flex justify-between">
+                    <div className="p-6 flex justify-between items-center">
                         <BrowserBreadcrumb />
-                        <button
-                            onClick={() => {
-                                setIsSideBarPropertiesOpen(
-                                    !isSideBarPropertiesOpen
-                                );
-                            }}
-                        >
-                            <Image
-                                width={20}
-                                height={20}
-                                src="/icons/info.svg"
-                                alt="info"
-                                className="h-8 w-8"
-                            />
-                        </button>
+                        {/* TODO: add syncing animation */}
+                        <div className="flex flex-row items-center gap-2">
+                            {isLoadingRefetch && <span>syncing...</span>}
+                            <button
+                                onClick={() => {
+                                    setIsSideBarPropertiesOpen(
+                                        !isSideBarPropertiesOpen
+                                    );
+                                }}
+                            >
+                                <Image
+                                    width={20}
+                                    height={20}
+                                    src="/icons/info.svg"
+                                    alt="info"
+                                    className="h-8 w-8"
+                                />
+                            </button>
+                        </div>
                     </div>
                 </div>
                 {/* right sidebar */}
@@ -216,15 +247,15 @@ export default function Browser() {
                     relativePath={focusedItemName}
                 />
                 {/* MODALS */}
-                {/* MODALS */}
                 <NewLink
                     isOpen={isNewLinkModalOpen}
                     onClose={() => setIsNewLinkModalOpen(false)}
-                    setNewItemCreated={setNewItemCreated}
+                    onNewItemCreated={() => setIsSomethingChanged(true)}
                 />
                 <NewFolder
                     isOpen={isNewFolderModalOpen}
                     onClose={() => setIsNewFolderModalOpen(false)}
+                    onNewItemCreated={() => setIsSomethingChanged(true)}
                 />
                 <KeyboardShortcuts
                     isOpen={isKeyboardShortcutsModalOpen}

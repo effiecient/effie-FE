@@ -13,10 +13,14 @@ import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
 type NewLinkProps = {
     isOpen: boolean;
     onClose: () => void;
-    setNewItemCreated: (value: boolean) => void;
+    onNewItemCreated: () => void;
 };
 
-export default function NewLink({ isOpen, onClose, setNewItemCreated }: NewLinkProps) {
+export default function NewLink({
+    isOpen,
+    onClose,
+    onNewItemCreated,
+}: NewLinkProps) {
     // USER CONSTANTS
     const subdomain = useUserStore((state: any) => state.subdomain);
     const USER_BASE_URL = `${subdomain}.${FE_BASE_URL}/`;
@@ -97,7 +101,9 @@ export default function NewLink({ isOpen, onClose, setNewItemCreated }: NewLinkP
     });
 
     if (readyToPost && !isLoading && !isError && response) {
-        setNewItemCreated(true);
+        onNewItemCreated();
+        onClose();
+        setReadyToPost(false);
     }
 
     return (
