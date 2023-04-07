@@ -119,22 +119,22 @@ export default function DirectoryItemCard({
                             />
                         )}
                         {/* link or folder data */}
-                        <div>
+                        <div className="overflow-hidden">
                             <h6 className={`text-neutral-800`}>
                                 {DirectoryItemData?.title}
                             </h6>
                             <a
-                                href={DirectoryItemData?.url}
+                                href={DirectoryItemData?.link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className={`hover:text-primary-500 text-neutral-600 text-xs un hover:decoration-primary-500 inline-block max-w-full overflow-hidden`}
+                                className={`hover:text-primary-500 text-neutral-600 text-xs un hover:decoration-primary-500 inline-block max-w-full`}
                             >
-                                {DirectoryItemData?.url}
+                                {DirectoryItemData?.link}
                             </a>
                             {(content === "link" || content === "folder") && (
-                                <>
+                                <div>
                                     <button
-                                        className={`group-hover:opacity-100 opacity-0 translate-x-1 group-hover:translate-x-0 absolute right-0 bottom-0 flex items-end h-full z-10 bg-white duration-100 rounded-r-xl p-1`}
+                                        className={`group-hover:opacity-100 opacity-0 translate-x-1 group-hover:translate-x-0 absolute right-0 bottom-0 flex items-end h-full bg-white duration-100 rounded-r-xl p-1`}
                                         onClick={copyEffieUrl}
                                     >
                                         <CopyIcon className="duration-100 h-7 w-7" />
@@ -143,7 +143,7 @@ export default function DirectoryItemCard({
                                     <div
                                         ref={copySuccessRef}
                                         className="opacity-0
-                                        -translate-y-1 absolute top-16 -right-12 bg-neutral-800 text-white rounded-md py-1 px-2 shadow-lg text-left duration-300 max-w-[12rem]"
+                                        -translate-y-1 absolute -bottom-12 -right-12 bg-neutral-800 text-white rounded-md z-30 py-1 px-2 shadow-lg text-left duration-300 max-w-[12rem]"
                                     >
                                         <p className="text-xs">
                                             Link copied!
@@ -167,7 +167,7 @@ export default function DirectoryItemCard({
                                             </a>
                                         </p>
                                     </div>
-                                </>
+                                </div>
                             )}
                         </div>
                         {DirectoryItemData?.isPinned && (
