@@ -44,7 +44,7 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
                         {/* Navbar for logged-in users */}
                         {isLoggedIn ? (
                             <div className="flex flex-row items-center gap-1.5">
-                                {username}
+                                <h6>{username}</h6>
                                 {isOnLanding ? (
                                     <>
                                         <Link
