@@ -16,7 +16,10 @@ import { BrowserBreadcrumb } from "./browser-breadcrumb";
 
 export default function Browser() {
     const router = useRouter();
-    const pathname = window.location.pathname;
+    let pathname: string;
+    if (typeof window !== "undefined") {
+        pathname = window.location.pathname;
+    }
 
     const subdomain = useUserStore((state: any) => state.subdomain);
 
