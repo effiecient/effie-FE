@@ -8,13 +8,19 @@ import { useFetchEffieBE, useUserStore } from "@/hooks";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { FE_BASE_URL } from "@/config";
+import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
 
 type NewLinkProps = {
     isOpen: boolean;
     onClose: () => void;
+    onNewItemCreated: () => void;
 };
 
-export default function NewLink({ isOpen, onClose }: NewLinkProps) {
+export default function NewLink({
+    isOpen,
+    onClose,
+    onNewItemCreated,
+}: NewLinkProps) {
     // USER CONSTANTS
     const subdomain = useUserStore((state: any) => state.subdomain);
     const USER_BASE_URL = `${subdomain}.${FE_BASE_URL}/`;
@@ -94,9 +100,10 @@ export default function NewLink({ isOpen, onClose }: NewLinkProps) {
         body: body,
     });
 
-    // REFRESH UI AFTER NEW LINK ADDED
     if (readyToPost && !isLoading && !isError && response) {
-        router.reload();
+        onNewItemCreated();
+        onClose();
+        setReadyToPost(false);
     }
 
     return (

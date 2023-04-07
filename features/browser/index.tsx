@@ -4,22 +4,19 @@ import Image from "next/image";
 import SideBar from "./side-bar";
 import { BE_BASE_URL } from "@/config/be-config";
 import { useUserStore } from "@/hooks";
-import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { KeyboardShortcuts, NewLink, NewFolder, Navbar } from "@/components";
 import SideBarProperties from "./side-bar-properties";
-import { FolderLinkData, FolderLinkDataArray } from "@/type";
+import { FolderLinkDataArray } from "@/type";
 import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
 
 import Page404 from "../page404";
 import { BrowserBreadcrumb } from "./browser-breadcrumb";
 
 export default function Browser() {
-    const router = useRouter();
-    let pathname: string;
-    if (typeof window !== "undefined") {
-        pathname = window.location.pathname;
-    }
+
+    let pathname: any;
+
 
     const subdomain = useUserStore((state: any) => state.subdomain);
 
@@ -33,6 +30,8 @@ export default function Browser() {
 
     const [focusedItemData, setFocusedItemData] = useState<any>(undefined);
     const [focusedItemName, setFocusedItemName] = useState<string>("");
+    const [isSomethingChanged, setIsSomethingChanged] =
+        useState<boolean>(false);
 
     const handleNewLinkClick = () => {
         setIsNewLinkModalOpen(true);
@@ -40,29 +39,111 @@ export default function Browser() {
     const handleNewFolderClick = () => {
         setIsNewFolderModalOpen(true);
     };
+    const handleDirectoryCardClick = (child: any) => {
+        let newUrl = `${pathname}/${child}`;
+        // change path without rerendering
+        window.history.replaceState(
+            {
+                ...window.history.state,
+                as: newUrl,
+                url: newUrl,
+            },
+            "",
+            newUrl
+        );
+        updatePathname();
 
+        setIsSomethingChanged(true);
+    };
+    const handleBreadcrumbClick = (newUrl: any) => {
+        // change path without rerendering
+        window.history.replaceState(
+            {
+                ...window.history.state,
+                as: newUrl,
+                url: newUrl,
+            },
+            "",
+            newUrl
+        );
+        updatePathname();
+
+        setIsSomethingChanged(true);
+    };
+
+    const updatePathname = () => {
+        if (typeof window !== "undefined") {
+            pathname = window.location.pathname;
+            // remove / in the front if exists
+            if (pathname[0] === "/") {
+                pathname = pathname.slice(1);
+            }
+        }
+    };
+    updatePathname();
+
+    const fetchURL = `${BE_BASE_URL}/directory/${subdomain}/${pathname}`;
+
+    // initial fetch
     const [{ isLoading, isError, response, fetchStarted }, fetcher] =
         useFetchEffieBENew();
 
     useEffect(() => {
-        setFocusedItemData(undefined);
-        setFocusedItemName("");
         fetcher({
-            url: `${BE_BASE_URL}/directory/${subdomain}${pathname}`,
+            url: fetchURL,
         });
     }, [subdomain]);
 
+    // refetch
+    const [
+        {
+            isLoading: isLoadingRefetch,
+            isError: isErrorRefetch,
+            response: responseRefetch,
+            fetchStarted: fetchStartedRefetch,
+        },
+        refetcher,
+    ] = useFetchEffieBENew();
+    useEffect(() => {
+        console.log(isSomethingChanged);
+        if (!isSomethingChanged) {
+            return;
+        } else {
+            refetcher({
+                url: fetchURL,
+            });
+        }
+    }, [isSomethingChanged]);
+
+    useEffect(() => {
+        if (!isLoadingRefetch && fetchStartedRefetch) {
+            setIsSomethingChanged(false);
+        }
+    }, [isLoadingRefetch, fetchStartedRefetch]);
+
+    // return
     if (isError) {
         console.error(response.message);
+        return <Page404 />;
+    }
+    if (isErrorRefetch) {
+        console.error(responseRefetch.message);
         return <Page404 />;
     }
     if (isLoading || !fetchStarted) {
         return <>skeleton</>;
     }
 
-    const { dataChildrenFolders, dataChildrenLinks } = sortDataToFolderAndLink(
-        response.data
-    );
+    // preprocess data to be shown
+    let responseData;
+    if (responseRefetch !== undefined) {
+        responseData = responseRefetch.data;
+    } else {
+        responseData = response.data;
+    }
+
+    const { dataChildrenFolders, dataChildrenLinks } =
+        sortDataToFolderAndLink(responseData);
     return (
         <>
             <Head>
@@ -89,6 +170,10 @@ export default function Browser() {
                     className={`z-0 h-full fixed bg-neutral-50 lg:ml-20 bottom-0 lg:top-16 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
                         isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
                     }`}
+                    onClick={() => {
+                        setFocusedItemData(undefined);
+                        setFocusedItemName("");
+                    }}
                 >
                     <Background />
                 </div>
@@ -119,9 +204,7 @@ export default function Browser() {
                                             relativePath={child}
                                             DirectoryItemData={data}
                                             onDoubleClick={() => {
-                                                router.push(
-                                                    `${pathname}/${child}`
-                                                );
+                                                handleDirectoryCardClick(child);
                                             }}
                                             onClick={() => {
                                                 setFocusedItemData(data);
@@ -175,23 +258,28 @@ export default function Browser() {
                         isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
                     }`}
                 >
-                    <div className="p-6 flex justify-between">
-                        <BrowserBreadcrumb />
-                        <button
-                            onClick={() => {
-                                setIsSideBarPropertiesOpen(
-                                    !isSideBarPropertiesOpen
-                                );
-                            }}
-                        >
-                            <Image
-                                width={20}
-                                height={20}
-                                src="/icons/info.svg"
-                                alt="info"
-                                className="h-8 w-8"
-                            />
-                        </button>
+                    <div className="p-6 flex justify-between items-center">
+                        <BrowserBreadcrumb
+                            onBreadcrumbClick={handleBreadcrumbClick}
+                        />
+                        <div className="flex flex-row items-center gap-2">
+                            {isLoadingRefetch && <SyncingAnimation />}
+                            <button
+                                onClick={() => {
+                                    setIsSideBarPropertiesOpen(
+                                        !isSideBarPropertiesOpen
+                                    );
+                                }}
+                            >
+                                <Image
+                                    width={20}
+                                    height={20}
+                                    src="/icons/info.svg"
+                                    alt="info"
+                                    className="h-8 w-8"
+                                />
+                            </button>
+                        </div>
                     </div>
                 </div>
                 {/* right sidebar */}
@@ -205,10 +293,12 @@ export default function Browser() {
                 <NewLink
                     isOpen={isNewLinkModalOpen}
                     onClose={() => setIsNewLinkModalOpen(false)}
+                    onNewItemCreated={() => setIsSomethingChanged(true)}
                 />
                 <NewFolder
                     isOpen={isNewFolderModalOpen}
                     onClose={() => setIsNewFolderModalOpen(false)}
+                    onNewItemCreated={() => setIsSomethingChanged(true)}
                 />
                 <KeyboardShortcuts
                     isOpen={isKeyboardShortcutsModalOpen}
@@ -221,7 +311,7 @@ export default function Browser() {
 
 const Background = () => {
     return (
-        <div className="absolute right-0 bottom-0 w-1/2 h-1/2">
+        <div className="absolute right-0 bottom-16 w-1/2 h-1/2">
             <Image
                 src={"/images/background.png"}
                 alt=""
@@ -281,6 +371,10 @@ function sortDataToFolderAndLink(input: any) {
     return { dataChildrenFolders, dataChildrenLinks };
 }
 
+function SyncingAnimation() {
+    // make the dot animate
+    return <h6 className="text-primary-600 animate-pulse">syncing...</h6>;
+}
 // KEYBOARD SHORTCUTS
 // CURRENTLY DEACTIVATED BECAUSE IT INTERFERES WITH INPUT
 // ? - help

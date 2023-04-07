@@ -2,7 +2,7 @@ import { useUserStore } from "@/hooks";
 import { Breadcrumb } from "@/ui";
 import { useRouter } from "next/router";
 
-export const BrowserBreadcrumb = () => {
+export const BrowserBreadcrumb = ({ onBreadcrumbClick }: any) => {
     const subdomain = useUserStore((state: any) => state.subdomain);
     const router = useRouter();
 
@@ -15,7 +15,9 @@ export const BrowserBreadcrumb = () => {
             <Breadcrumb
                 path={subdomain}
                 onClick={() => {
-                    router.push(`/`);
+                    // if last breadcrumb is clicked, do nothing
+                    if (location.length === 0) return;
+                    onBreadcrumbClick(`/`);
                 }}
                 className="pr-4"
             />
@@ -26,7 +28,7 @@ export const BrowserBreadcrumb = () => {
                     <Breadcrumb
                         path="..."
                         onClick={() => {
-                            router.push(
+                            onBreadcrumbClick(
                                 `/${location
                                     .slice(0, window.innerWidth < 768 ? -1 : -3)
                                     .join("/")}`
@@ -46,7 +48,10 @@ export const BrowserBreadcrumb = () => {
                                 key={index}
                                 path={loc}
                                 onClick={() => {
-                                    router.push(
+                                    // if last breadcrumb is clicked, do nothing
+                                    if (index === location.length - 1) return;
+
+                                    onBreadcrumbClick(
                                         `/${location
                                             .slice(0, index + 1)
                                             .join("/")}`

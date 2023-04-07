@@ -37,8 +37,6 @@ export default function SideBarProperties({
     const [body, setBody] = useState<any>({});
     const [readyToDelete, setReadyToDelete] = useState(false);
     const [readyToUpdate, setReadyToUpdate] = useState(false);
-    console.log("itemData");
-    console.log(itemData);
     const isEdit = false;
     const isEditAccess = false;
     const fullRelativePath = "fullRelativePath";
@@ -140,8 +138,6 @@ export default function SideBarProperties({
         method: "PATCH",
         body: body,
     });
-    console.log(responseUpdate);
-    console.log(body);
     if (readyToUpdate && responseUpdate && !isErrorUpdate && !isLoadingUpdate) {
         router.reload();
     }

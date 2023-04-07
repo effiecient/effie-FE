@@ -11,9 +11,14 @@ import { useFetchEffieBE, useUserStore } from "@/hooks";
 type NewFolderProps = {
     isOpen: boolean;
     onClose: () => void;
+    onNewItemCreated: () => void;
 };
 
-export default function NewFolder({ isOpen, onClose }: NewFolderProps) {
+export default function NewFolder({
+    isOpen,
+    onClose,
+    onNewItemCreated,
+}: NewFolderProps) {
     // USER CONSTANTS
     const username = useUserStore((state: any) => state.username);
     const subdomain = useUserStore((state: any) => state.subdomain);
@@ -77,7 +82,10 @@ export default function NewFolder({ isOpen, onClose }: NewFolderProps) {
         body: body,
     });
     if (readyToPost && !isLoading && !isError && response) {
-        router.reload();
+        console.log("refetch di new folder");
+        onNewItemCreated();
+        onClose();
+        setReadyToPost(false);
     }
     const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.value !== "") {
