@@ -15,6 +15,8 @@ export const BrowserBreadcrumb = ({ onBreadcrumbClick }: any) => {
             <Breadcrumb
                 path={subdomain}
                 onClick={() => {
+                    // if last breadcrumb is clicked, do nothing
+                    if (location.length === 0) return;
                     onBreadcrumbClick(`/`);
                 }}
                 className="pr-4"
@@ -46,6 +48,9 @@ export const BrowserBreadcrumb = ({ onBreadcrumbClick }: any) => {
                                 key={index}
                                 path={loc}
                                 onClick={() => {
+                                    // if last breadcrumb is clicked, do nothing
+                                    if (index === location.length - 1) return;
+
                                     onBreadcrumbClick(
                                         `/${location
                                             .slice(0, index + 1)

@@ -4,18 +4,16 @@ import Image from "next/image";
 import SideBar from "./side-bar";
 import { BE_BASE_URL } from "@/config/be-config";
 import { useUserStore } from "@/hooks";
-import { useRouter } from "next/router";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { KeyboardShortcuts, NewLink, NewFolder, Navbar } from "@/components";
 import SideBarProperties from "./side-bar-properties";
-import { FolderLinkData, FolderLinkDataArray } from "@/type";
+import { FolderLinkDataArray } from "@/type";
 import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
 
 import Page404 from "../page404";
 import { BrowserBreadcrumb } from "./browser-breadcrumb";
 
 export default function Browser() {
-    const router = useRouter();
     let pathname: any;
 
     const subdomain = useUserStore((state: any) => state.subdomain);
@@ -32,17 +30,6 @@ export default function Browser() {
     const [focusedItemName, setFocusedItemName] = useState<string>("");
     const [isSomethingChanged, setIsSomethingChanged] =
         useState<boolean>(false);
-
-    const updatePathname = () => {
-        if (typeof window !== "undefined") {
-            pathname = window.location.pathname;
-            // remove / in the front if exists
-            if (pathname[0] === "/") {
-                pathname = pathname.slice(1);
-            }
-        }
-    };
-    updatePathname();
 
     const handleNewLinkClick = () => {
         setIsNewLinkModalOpen(true);
@@ -81,8 +68,21 @@ export default function Browser() {
 
         setIsSomethingChanged(true);
     };
+
+    const updatePathname = () => {
+        if (typeof window !== "undefined") {
+            pathname = window.location.pathname;
+            // remove / in the front if exists
+            if (pathname[0] === "/") {
+                pathname = pathname.slice(1);
+            }
+        }
+    };
+    updatePathname();
+
     const fetchURL = `${BE_BASE_URL}/directory/${subdomain}/${pathname}`;
 
+    // initial fetch
     const [{ isLoading, isError, response, fetchStarted }, fetcher] =
         useFetchEffieBENew();
 
@@ -92,7 +92,7 @@ export default function Browser() {
         });
     }, [subdomain]);
 
-    // useEffect for creating new item
+    // refetch
     const [
         {
             isLoading: isLoadingRefetch,
@@ -114,13 +114,12 @@ export default function Browser() {
     }, [isSomethingChanged]);
 
     useEffect(() => {
-        console.log("isLoadingRefetch", isLoadingRefetch);
-        console.log("fetchStartedRefetch", fetchStartedRefetch);
         if (!isLoadingRefetch && fetchStartedRefetch) {
             setIsSomethingChanged(false);
         }
     }, [isLoadingRefetch, fetchStartedRefetch]);
 
+    // return
     if (isError) {
         console.error(response.message);
         return <Page404 />;
@@ -133,6 +132,7 @@ export default function Browser() {
         return <>skeleton</>;
     }
 
+    // preprocess data to be shown
     let responseData;
     if (responseRefetch !== undefined) {
         responseData = responseRefetch.data;
@@ -310,7 +310,7 @@ export default function Browser() {
 
 const Background = () => {
     return (
-        <div className="absolute right-0 bottom-0 w-1/2 h-1/2">
+        <div className="absolute right-0 bottom-16 w-1/2 h-1/2">
             <Image
                 src={"/images/background.png"}
                 alt=""
