@@ -14,7 +14,9 @@ import Page404 from "../page404";
 import { BrowserBreadcrumb } from "./browser-breadcrumb";
 
 export default function Browser() {
+
     let pathname: any;
+
 
     const subdomain = useUserStore((state: any) => state.subdomain);
 
