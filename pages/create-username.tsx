@@ -149,7 +149,7 @@ export default function CreateUsername() {
         );
     } else {
         return (
-            <div className="flex w-full h-full justify-center items-center bg-primary-200">
+            <div className="flex w-full h-full justify-center items-center bg-primary-50">
                 {/* <Modal isOpen={isModalOpen} onClose={handleModalClose}> */}
                 <div className="flex flex-row h-fit w-fit gap-8">
                     <div>
