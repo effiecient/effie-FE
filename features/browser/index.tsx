@@ -260,9 +260,8 @@ export default function Browser() {
                         <BrowserBreadcrumb
                             onBreadcrumbClick={handleBreadcrumbClick}
                         />
-                        {/* TODO: add syncing animation */}
                         <div className="flex flex-row items-center gap-2">
-                            {isLoadingRefetch && <span>syncing...</span>}
+                            {isLoadingRefetch && <SyncingAnimation />}
                             <button
                                 onClick={() => {
                                     setIsSideBarPropertiesOpen(
@@ -370,6 +369,10 @@ function sortDataToFolderAndLink(input: any) {
     return { dataChildrenFolders, dataChildrenLinks };
 }
 
+function SyncingAnimation() {
+    // make the dot animate
+    return <h6 className="text-primary-600 animate-pulse">syncing...</h6>;
+}
 // KEYBOARD SHORTCUTS
 // CURRENTLY DEACTIVATED BECAUSE IT INTERFERES WITH INPUT
 // ? - help
