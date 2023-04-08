@@ -13,9 +13,8 @@ export type FolderLinkDataArray = {
 export type FolderLinkData = {
     title: string;
     isPinned: boolean;
-    link: string;
+    link?: string;
     type: dataType;
-    url?: string;
     shareConfiguration: ShareConfiguration;
 };
 

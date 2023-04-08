@@ -5,6 +5,7 @@ type ButtonProps = {
     className?: string;
     disabled?: boolean;
     pill?: boolean;
+    borderMode?: boolean;
 };
 
 export default function Button({
@@ -14,59 +15,63 @@ export default function Button({
     className,
     disabled = false,
     pill = false,
+    borderMode = false,
 }: ButtonProps) {
     let buttonClassNames = "";
-    if (disabled) {
-        // Set the button to disabled and minus the color by 200 and 
-        switch (type) {
-            case "danger":
-                buttonClassNames = "bg-danger-200";
-                break;
-            case "success":
-                buttonClassNames = "bg-success-200";
-                break;
-            case "warning":
-                buttonClassNames = "bg-warning-200";
-                break;
-            case "info":
-                buttonClassNames = "bg-info-200";
-                break;
-            case "custom":
-                buttonClassNames = "";
-                break;
-            default:
-                buttonClassNames =
-                    "bg-primary-300 text-white";
-                break;
-        }
+    // Set the button to disabled and minus the color by 200 and
+
+    if (
+        type === "danger" ||
+        type === "success" ||
+        type === "warning" ||
+        type === "info"
+    ) {
+        // set color
+        buttonClassNames = `${borderMode ? "border" : "bg"}-${type}-${
+            disabled ? "100" : "300"
+        }`;
+        // set text
+        buttonClassNames += ` ${
+            borderMode
+                ? `text-${type}-${disabled ? "100" : "300"}`
+                : "text-white"
+        }`;
+        // set on hover
+        buttonClassNames += ` ${
+            !disabled &&
+            `hover:bg-${type}-${borderMode ? "300" : "500"} hover:text-white`
+        }`;
+    } else if (type === "custom") {
     } else {
-        switch (type) {
-            case "danger":
-                buttonClassNames = "bg-danger-400";
-                break;
-            case "success":
-                buttonClassNames = "bg-success-400";
-                break;
-            case "warning":
-                buttonClassNames = "bg-warning-400";
-                break;
-            case "info":
-                buttonClassNames = "bg-info-400";
-                break;
-            case "custom":
-                buttonClassNames = "";
-                break;
-            default:
-                buttonClassNames =
-                    "bg-primary-500 text-white hover:bg-primary-700";
-                break;
-        }
+        // buttonClassNames = "bg-primary-300 text-white";
+
+        // buttonClassNames = "bg-primary-500 text-white hover:bg-primary-700";
+
+        // set color
+        buttonClassNames = `${borderMode ? "border" : "bg"}-primary-${
+            disabled ? "300" : "500"
+        }`;
+        // set text
+        buttonClassNames += ` ${
+            borderMode
+                ? `text-primary-${disabled ? "300" : "500"}`
+                : "text-white"
+        }`;
+        // set on hover
+        buttonClassNames += ` ${
+            !disabled &&
+            `hover:bg-primary-${borderMode ? "500" : "700"} hover:text-white`
+        }`;
+    }
+
+    if (borderMode) {
+        buttonClassNames += " border-2";
     }
 
     return (
         <button
             onClick={onClick}
-            className={`${buttonClassNames}
+            className={`${buttonClassNames} 
         ${pill ? "rounded-full" : "rounded-md"} px-3 py-2 duration-200
         ${className}
     `}
