@@ -102,9 +102,9 @@ export default function DirectoryItemCard({
                         <h6 className="text-primary-500 ml-2">New link</h6>
                     </>
                 ) : (
-                    <div className={`flex`}>
+                    <div className={`flex flex-row`}>
                         {content === "link" || content === "display link" ? (
-                            <div className="mr-2">
+                            <div className="mr-2 w-1/5">
                                 <Image
                                     src={`https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${DirectoryItemData?.link}&size=64`}
                                     alt="link"
@@ -119,7 +119,7 @@ export default function DirectoryItemCard({
                             />
                         )}
                         {/* link or folder data */}
-                        <div className="overflow-hidden">
+                        <div className="overflow-hidden w-[80%]">
                             <h6 className={`text-neutral-800`}>
                                 {DirectoryItemData?.title}
                             </h6>
