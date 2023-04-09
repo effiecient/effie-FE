@@ -33,6 +33,7 @@ type SideBarPropertiesProps = {
     className?: string;
     relativePath: string;
     onClose: () => void;
+    onUpdate: () => void;
 };
 
 const ShareConfigurationOptions = [
@@ -112,6 +113,7 @@ export default function SideBarProperties({
     itemData,
     className,
     relativePath,
+    onUpdate = () => {},
 }: SideBarPropertiesProps) {
     // use modal when screen size is small
     const { width = 976 } = useWindowSize();
@@ -120,18 +122,26 @@ export default function SideBarProperties({
         <>
             {isSmallScreen ? (
                 <Modal isOpen={isOpen} onClose={onClose}>
-                    <Content itemData={itemData} relativePath={relativePath} />
+                    <Content
+                        itemData={itemData}
+                        relativePath={relativePath}
+                        onUpdate={onUpdate}
+                    />
                 </Modal>
             ) : (
                 <RightSideBar isOpen={isOpen} className={`${className} h-full`}>
-                    <Content itemData={itemData} relativePath={relativePath} />
+                    <Content
+                        itemData={itemData}
+                        relativePath={relativePath}
+                        onUpdate={onUpdate}
+                    />
                 </RightSideBar>
             )}
         </>
     );
 }
 
-const Content = ({ itemData, relativePath }: any) => {
+const Content = ({ itemData, relativePath, onUpdate }: any) => {
     const subdomain = useUserStore((state: any) => state.subdomain);
     const pathname = useUserStore((state: any) => state.pathname);
 
@@ -150,6 +160,15 @@ const Content = ({ itemData, relativePath }: any) => {
         setIsInEditMode(false);
         setIsChanged(false);
     }, [itemData]);
+
+    // reset editedItemData when the exit edit mode
+    useEffect(() => {
+        if (!isInEditMode) {
+            editedItemData.current = itemData;
+            setEditedRelativePath(relativePath);
+            setIsChanged(false);
+        }
+    }, [isInEditMode]);
 
     // set isChanged
     function checkIsChanged() {
@@ -174,6 +193,12 @@ const Content = ({ itemData, relativePath }: any) => {
                 itemData,
                 editedItemData.current
             );
+            // if itemDataDifferences has shareConfiguration, then it changed(we need to do this because it part of it might be the same object as item data)
+            if (itemDataDifferences.shareConfiguration !== undefined) {
+                itemDataDifferences.shareConfiguration =
+                    editedItemData.current.shareConfiguration;
+            }
+
             fetcher({
                 url: `${BE_BASE_URL}/directory/${
                     itemData.type === "folder" ? "folder" : "link"
@@ -190,9 +215,23 @@ const Content = ({ itemData, relativePath }: any) => {
                     ...itemDataDifferences,
                 },
             });
-            setStartUpdate(false);
         }
     }, [startUpdate]);
+
+    // handle update
+    useEffect(() => {
+        if (startUpdate) {
+            if (isError) {
+                setStartUpdate(false);
+                setIsInEditMode(false);
+            } else if (isLoading || !fetchStarted) {
+            } else {
+                setStartUpdate(false);
+                onUpdate();
+                setIsInEditMode(false);
+            }
+        }
+    }, [isLoading, isError, response, fetchStarted]);
 
     function handleSaveButtonClick() {
         setStartUpdate(true);
@@ -257,7 +296,7 @@ const Content = ({ itemData, relativePath }: any) => {
                                             className="my-1"
                                             onChange={(e: any) => {
                                                 setEditedRelativePath(
-                                                    e.target.value === ""
+                                                    e.target.value == ""
                                                         ? relativePath
                                                         : e.target.value
                                                 );
@@ -310,14 +349,14 @@ const Content = ({ itemData, relativePath }: any) => {
                                                     defaultValue ==
                                                     e.target.value
                                                 ) {
-                                                    console.log("same");
+                                                    // console.log("same");
                                                     editedItemData.current = {
                                                         ...editedItemData.current,
                                                         shareConfiguration:
                                                             itemData.shareConfiguration,
                                                     };
                                                 } else {
-                                                    console.log("different");
+                                                    // console.log("different");
 
                                                     editedItemData.current = {
                                                         ...editedItemData.current,
@@ -328,10 +367,10 @@ const Content = ({ itemData, relativePath }: any) => {
                                                 }
 
                                                 checkIsChanged();
-                                                console.log(itemData);
-                                                console.log(
-                                                    editedItemData.current
-                                                );
+                                                // console.log(itemData);
+                                                // console.log(
+                                                //     editedItemData.current
+                                                // );
                                             }}
                                             defaultValue={
                                                 itemData.shareConfiguration
@@ -400,20 +439,32 @@ const Content = ({ itemData, relativePath }: any) => {
                         {isInEditMode ? (
                             <>
                                 <Button
-                                    className="w-full flex justify-center items-center gap-1"
+                                    className="w-full flex justify-center items-center gap-1 h-12"
                                     onClick={handleSaveButtonClick}
                                     disabled={!isChanged}
                                 >
-                                    <Image
-                                        src={saveIcon}
-                                        alt="save icon"
-                                        height={24}
-                                        width={24}
-                                    />
-                                    Save changes
+                                    {startUpdate ? (
+                                        isLoading || !fetchStarted ? (
+                                            <div className="animate-pulse text-2xl flex">
+                                                ...
+                                            </div>
+                                        ) : (
+                                            <>success</>
+                                        )
+                                    ) : (
+                                        <>
+                                            <Image
+                                                src={saveIcon}
+                                                alt="save icon"
+                                                height={24}
+                                                width={24}
+                                            />
+                                            Save changes
+                                        </>
+                                    )}
                                 </Button>
                                 <Button
-                                    className="w-full flex justify-center items-center gap-1"
+                                    className="w-full flex justify-center items-center gap-1 h-12"
                                     borderMode
                                     onClick={() => setIsInEditMode(false)}
                                 >
@@ -429,7 +480,7 @@ const Content = ({ itemData, relativePath }: any) => {
                         ) : (
                             <>
                                 <Button
-                                    className="w-full flex justify-center items-center gap-1"
+                                    className="w-full flex justify-center items-center gap-1 h-12"
                                     borderMode
                                     onClick={() => setIsInEditMode(true)}
                                 >
@@ -442,7 +493,7 @@ const Content = ({ itemData, relativePath }: any) => {
                                     Edit Properties
                                 </Button>
                                 <Button
-                                    className="w-full flex justify-center items-center gap-1"
+                                    className="w-full flex justify-center items-center gap-1 h-12"
                                     type="danger"
                                     borderMode
                                 >

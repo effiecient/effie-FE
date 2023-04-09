@@ -14,9 +14,7 @@ import Page404 from "../page404";
 import { BrowserBreadcrumb } from "./browser-breadcrumb";
 
 export default function Browser() {
-
     let pathname: any;
-
 
     const subdomain = useUserStore((state: any) => state.subdomain);
 
@@ -117,6 +115,14 @@ export default function Browser() {
 
     useEffect(() => {
         if (!isLoadingRefetch && fetchStartedRefetch) {
+            // update focused item data
+            const focusedItemData =
+                responseRefetch?.data?.childrens[focusedItemName];
+            if (focusedItemData === undefined) {
+                setFocusedItemName("");
+            }
+            setFocusedItemData(focusedItemData);
+
             setIsSomethingChanged(false);
         }
     }, [isLoadingRefetch, fetchStartedRefetch]);
@@ -171,6 +177,7 @@ export default function Browser() {
                         isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
                     }`}
                     onClick={() => {
+                        // reset focused item
                         setFocusedItemData(undefined);
                         setFocusedItemName("");
                     }}
@@ -188,7 +195,14 @@ export default function Browser() {
                         <h5 className="text-neutral-400 relative z-10  pb-2">
                             Folders
                         </h5>
-                        <section className="flex gap-4 w-full flex-wrap">
+                        <section
+                            className="flex gap-4 w-full flex-wrap"
+                            onClick={() => {
+                                // reset focused item
+                                setFocusedItemData(undefined);
+                                setFocusedItemName("");
+                            }}
+                        >
                             <DirectoryItemCard
                                 content="new folder"
                                 onClick={handleNewFolderClick}
@@ -222,7 +236,14 @@ export default function Browser() {
                         <h5 className="text-neutral-400 relative z-10 pt-6 pb-2">
                             Links
                         </h5>
-                        <section className="flex gap-4 w-full flex-wrap">
+                        <section
+                            className="flex gap-4 w-full flex-wrap"
+                            onClick={() => {
+                                // reset focused item
+                                setFocusedItemData(undefined);
+                                setFocusedItemName("");
+                            }}
+                        >
                             <DirectoryItemCard
                                 content="new link"
                                 onClick={handleNewLinkClick}
@@ -288,6 +309,7 @@ export default function Browser() {
                     isOpen={isSideBarPropertiesOpen}
                     itemData={focusedItemData}
                     relativePath={focusedItemName}
+                    onUpdate={() => setIsSomethingChanged(true)}
                 />
                 {/* MODALS */}
                 <NewLink
