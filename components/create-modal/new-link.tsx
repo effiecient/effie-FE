@@ -132,7 +132,7 @@ export default function NewLink({
                         required
                     />
                 </div>
-                <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-0 mb-6">
+                <div className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
                     <input
                         type="text"
                         id="link-url"
