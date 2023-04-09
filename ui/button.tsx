@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 type ButtonProps = {
     type?: "default" | "danger" | "success" | "warning" | "info" | "custom";
     children?: React.ReactNode;
@@ -18,8 +20,6 @@ export default function Button({
     borderMode = false,
 }: ButtonProps) {
     let buttonClassNames = "";
-    // Set the button to disabled and minus the color by 200 and
-
     if (
         type === "danger" ||
         type === "success" ||
@@ -41,12 +41,11 @@ export default function Button({
             !disabled &&
             `hover:bg-${type}-${borderMode ? "300" : "500"} hover:text-white`
         }`;
-    } else if (type === "custom") {
-    } else {
-        // buttonClassNames = "bg-primary-300 text-white";
-
-        // buttonClassNames = "bg-primary-500 text-white hover:bg-primary-700";
-
+        // on hover change svg color
+        buttonClassNames += ` ${
+            !disabled && `hover:text-${type}-${borderMode ? "300" : "500"}`
+        }`;
+    } else if (type === "default") {
         // set color
         buttonClassNames = `${borderMode ? "border" : "bg"}-primary-${
             disabled ? "300" : "500"
@@ -72,7 +71,7 @@ export default function Button({
         <button
             onClick={onClick}
             className={`${buttonClassNames} 
-        ${pill ? "rounded-full" : "rounded-md"} px-3 py-2 duration-200
+        ${pill ? "rounded-full" : "rounded-md"} px-3 py-2 duration-200 
         ${className}
     `}
             disabled={disabled}

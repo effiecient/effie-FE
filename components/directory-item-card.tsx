@@ -45,7 +45,13 @@ export default function DirectoryItemCard({
 
     const copyEffieUrl = (e: any) => {
         stopEventPropagation(e);
-        copySuccessRef.current?.classList.remove("opacity-0", "-translate-y-1");
+        copySuccessRef.current?.classList.remove(
+            "opacity-0",
+            "-translate-y-1",
+            "-z-10"
+        );
+        // add z-30
+        copySuccessRef.current?.classList.add("z-30");
         if (!navigator.clipboard) {
             // Fallback to unsupported browsers
             copyToClipboard(effieURL ?? "");
@@ -55,8 +61,11 @@ export default function DirectoryItemCard({
         setTimeout(() => {
             copySuccessRef.current?.classList.add(
                 "opacity-0",
-                "-translate-y-1"
+                "-translate-y-1",
+                "-z-10"
             );
+            // remove z-30
+            copySuccessRef.current?.classList.remove("z-30");
         }, 1500);
     };
 
@@ -142,8 +151,8 @@ export default function DirectoryItemCard({
                                     {/* Copy success notif */}
                                     <div
                                         ref={copySuccessRef}
-                                        className="opacity-0
-                                        -translate-y-1 absolute -bottom-12 -right-12 bg-neutral-800 text-white rounded-md z-30 py-1 px-2 shadow-lg text-left duration-300 max-w-[12rem]"
+                                        className={`opacity-0
+                                        -translate-y-1 -z-10 absolute -bottom-12 -right-12 bg-neutral-800 text-white rounded-md py-1 px-2 shadow-lg text-left duration-300 max-w-[12rem]`}
                                     >
                                         <p className="text-xs">
                                             Link copied!

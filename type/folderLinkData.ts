@@ -2,7 +2,7 @@ type dataType = "folder" | "link";
 
 export type ShareConfiguration = {
     isShared: boolean;
-    sharedPrivilege: "read" | "write";
+    sharedPrivilege?: string; // "read" | "write"
 };
 
 export type FolderLinkDataArray = {
