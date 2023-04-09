@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-
 type ButtonProps = {
     type?: "default" | "danger" | "success" | "warning" | "info" | "custom";
     children?: React.ReactNode;

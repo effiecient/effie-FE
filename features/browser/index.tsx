@@ -116,8 +116,13 @@ export default function Browser() {
     useEffect(() => {
         if (!isLoadingRefetch && fetchStartedRefetch) {
             // update focused item data
-            const focusedItemData =
-                responseRefetch?.data?.childrens[focusedItemName];
+            let focusedItemData = undefined;
+            if (responseRefetch?.data?.childrens !== undefined) {
+                if (focusedItemName in responseRefetch.data.childrens) {
+                    focusedItemData =
+                        responseRefetch.data.childrens[focusedItemName];
+                }
+            }
             if (focusedItemData === undefined) {
                 setFocusedItemName("");
             }
@@ -199,8 +204,8 @@ export default function Browser() {
                             className="flex gap-4 w-full flex-wrap"
                             onClick={() => {
                                 // reset focused item
-                                setFocusedItemData(undefined);
-                                setFocusedItemName("");
+                                // setFocusedItemData(undefined);
+                                // setFocusedItemName("");
                             }}
                         >
                             <DirectoryItemCard
@@ -240,8 +245,8 @@ export default function Browser() {
                             className="flex gap-4 w-full flex-wrap"
                             onClick={() => {
                                 // reset focused item
-                                setFocusedItemData(undefined);
-                                setFocusedItemName("");
+                                // setFocusedItemData(undefined);
+                                // setFocusedItemName("");
                             }}
                         >
                             <DirectoryItemCard

@@ -385,6 +385,7 @@ const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                             }
                                         />
                                     </div>
+                                    <div>{/* TODO: add is pinned */}</div>
                                 </div>
                             </div>
                         </>
