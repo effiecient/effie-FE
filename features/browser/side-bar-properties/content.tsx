@@ -159,9 +159,186 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                     {itemData.type === "folder" ? (
                         // folder
                         isInEditMode ? (
-                            <>edit mode folder</>
+                            // folder in edit mode
+                            <>
+                                <div className="mt-6 lg:mt-16 h-full">
+                                    <div className="flex flex-col break-words gap-8 p-1">
+                                        <Input
+                                            type="text"
+                                            placeholder={itemData.title}
+                                            className="text-lg my-1"
+                                            onChange={(e: any) => {
+                                                editedItemData.current = {
+                                                    ...editedItemData.current,
+                                                    title:
+                                                        e.target.value === ""
+                                                            ? itemData.title
+                                                            : e.target.value,
+                                                };
+                                                checkIsChanged();
+                                            }}
+                                        />
+                                        <div>
+                                            <h5 className="text-neutral-800">
+                                                Link
+                                            </h5>
+                                            <p className="underline text-neutral-700 hover:text-neutral-900">{`${FE_PROTOCOL}://${subdomain}.${FE_BASE_URL}${
+                                                pathname === ""
+                                                    ? ""
+                                                    : `/${pathname}`
+                                            }/`}</p>
+                                            <Input
+                                                type="text"
+                                                placeholder={relativePath}
+                                                className="my-1"
+                                                onChange={(e: any) => {
+                                                    setEditedRelativePath(
+                                                        e.target.value == ""
+                                                            ? relativePath
+                                                            : e.target.value
+                                                    );
+                                                    checkIsChanged();
+                                                }}
+                                            />
+                                        </div>
+                                        <div>
+                                            <h5 className="text-neutral-800">
+                                                Access
+                                            </h5>
+                                            <Select
+                                                options={ShareConfigurationOptions.map(
+                                                    (option, index) => ({
+                                                        value: index,
+                                                        label: option,
+                                                    })
+                                                )}
+                                                onChange={(e: any) => {
+                                                    const defaultValue =
+                                                        itemData
+                                                            .shareConfiguration
+                                                            .isShared
+                                                            ? itemData
+                                                                  .shareConfiguration
+                                                                  .sharedPrivilege ===
+                                                              "read"
+                                                                ? 1
+                                                                : 2
+                                                            : 0;
+
+                                                    if (
+                                                        defaultValue ==
+                                                        e.target.value
+                                                    ) {
+                                                        // console.log("same");
+                                                        editedItemData.current =
+                                                            {
+                                                                ...editedItemData.current,
+                                                                shareConfiguration:
+                                                                    itemData.shareConfiguration,
+                                                            };
+                                                    } else {
+                                                        // console.log("different");
+
+                                                        editedItemData.current =
+                                                            {
+                                                                ...editedItemData.current,
+                                                                ...ShareConfigurationOptionsToData[
+                                                                    e.target
+                                                                        .value
+                                                                ],
+                                                            };
+                                                    }
+
+                                                    checkIsChanged();
+                                                }}
+                                                defaultValue={
+                                                    itemData.shareConfiguration
+                                                        .isShared
+                                                        ? itemData
+                                                              .shareConfiguration
+                                                              .sharedPrivilege ===
+                                                          "read"
+                                                            ? 1
+                                                            : 2
+                                                        : 0
+                                                }
+                                            />
+                                        </div>
+                                        <div className="flex">
+                                            <h5 className="text-neutral-800">
+                                                Pinned
+                                            </h5>
+                                            <Input
+                                                type="checkbox"
+                                                checked={
+                                                    editedItemData.current
+                                                        .isPinned
+                                                }
+                                                onChange={(e: any) => {
+                                                    editedItemData.current = {
+                                                        ...editedItemData.current,
+                                                        isPinned:
+                                                            e.target.checked,
+                                                    };
+                                                    checkIsChanged();
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </>
                         ) : (
-                            <>Folder</>
+                            // folder not in edit mode
+                            <div className="mt-6 lg:mt-16 h-full">
+                                <div className="flex flex-col break-words gap-8 p-1">
+                                    <h4 className="text-neutral-900">
+                                        {itemData.title}
+                                    </h4>
+                                    <div>
+                                        <h5 className="text-neutral-800">
+                                            Link
+                                        </h5>
+                                        <a
+                                            className="underline text-neutral-700 hover:text-neutral-900"
+                                            href={`${FE_PROTOCOL}://${subdomain}.${FE_BASE_URL}${
+                                                pathname === ""
+                                                    ? ""
+                                                    : `/${pathname}`
+                                            }/${relativePath}`}
+                                        >{`${FE_PROTOCOL}://${subdomain}.${FE_BASE_URL}${
+                                            pathname === ""
+                                                ? ""
+                                                : `/${pathname}`
+                                        }/${relativePath}`}</a>
+                                    </div>
+
+                                    <div>
+                                        <h5 className="text-neutral-800">
+                                            Access
+                                        </h5>
+                                        <p className="text-neutral-700">
+                                            {itemData.shareConfiguration
+                                                .isShared
+                                                ? itemData.shareConfiguration
+                                                      .sharedPrivilege ===
+                                                  "read"
+                                                    ? ShareConfigurationOptions[1]
+                                                    : ShareConfigurationOptions[2]
+                                                : ShareConfigurationOptions[0]}
+                                        </p>
+                                    </div>
+                                    <div className="flex">
+                                        <h5 className="text-neutral-800">
+                                            Pinned
+                                        </h5>
+                                        <Input
+                                            disabled
+                                            type="checkbox"
+                                            checked={itemData.isPinned}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
                         )
                     ) : // link
                     isInEditMode ? (
