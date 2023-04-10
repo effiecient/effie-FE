@@ -12,11 +12,10 @@ import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
 
 import Page404 from "../page404";
 import { BrowserBreadcrumb } from "./browser-breadcrumb";
+import { LoadingAnimation } from "@/ui";
 
 export default function Browser() {
-
     let pathname: any;
-
 
     const subdomain = useUserStore((state: any) => state.subdomain);
 
@@ -117,6 +116,19 @@ export default function Browser() {
 
     useEffect(() => {
         if (!isLoadingRefetch && fetchStartedRefetch) {
+            // update focused item data
+            let focusedItemData = undefined;
+            if (responseRefetch?.data?.childrens !== undefined) {
+                if (focusedItemName in responseRefetch.data.childrens) {
+                    focusedItemData =
+                        responseRefetch.data.childrens[focusedItemName];
+                }
+            }
+            if (focusedItemData === undefined) {
+                setFocusedItemName("");
+            }
+            setFocusedItemData(focusedItemData);
+
             setIsSomethingChanged(false);
         }
     }, [isLoadingRefetch, fetchStartedRefetch]);
@@ -171,6 +183,7 @@ export default function Browser() {
                         isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
                     }`}
                     onClick={() => {
+                        // reset focused item
                         setFocusedItemData(undefined);
                         setFocusedItemName("");
                     }}
@@ -188,7 +201,14 @@ export default function Browser() {
                         <h5 className="text-neutral-400 relative z-10  pb-2">
                             Folders
                         </h5>
-                        <section className="flex gap-4 w-full flex-wrap">
+                        <section
+                            className="flex gap-4 w-full flex-wrap"
+                            onClick={() => {
+                                // reset focused item
+                                // setFocusedItemData(undefined);
+                                // setFocusedItemName("");
+                            }}
+                        >
                             <DirectoryItemCard
                                 content="new folder"
                                 onClick={handleNewFolderClick}
@@ -222,7 +242,14 @@ export default function Browser() {
                         <h5 className="text-neutral-400 relative z-10 pt-6 pb-2">
                             Links
                         </h5>
-                        <section className="flex gap-4 w-full flex-wrap">
+                        <section
+                            className="flex gap-4 w-full flex-wrap"
+                            onClick={() => {
+                                // reset focused item
+                                // setFocusedItemData(undefined);
+                                // setFocusedItemName("");
+                            }}
+                        >
                             <DirectoryItemCard
                                 content="new link"
                                 onClick={handleNewLinkClick}
@@ -288,6 +315,7 @@ export default function Browser() {
                     isOpen={isSideBarPropertiesOpen}
                     itemData={focusedItemData}
                     relativePath={focusedItemName}
+                    onUpdate={() => setIsSomethingChanged(true)}
                 />
                 {/* MODALS */}
                 <NewLink
@@ -373,7 +401,11 @@ function sortDataToFolderAndLink(input: any) {
 
 function SyncingAnimation() {
     // make the dot animate
-    return <h6 className="text-primary-600 animate-pulse">syncing...</h6>;
+    return (
+        <h6 className="text-primary-600 animate-pulse">
+            <LoadingAnimation />
+        </h6>
+    );
 }
 // KEYBOARD SHORTCUTS
 // CURRENTLY DEACTIVATED BECAUSE IT INTERFERES WITH INPUT

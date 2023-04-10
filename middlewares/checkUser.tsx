@@ -17,7 +17,7 @@ export default function CheckUser({ children }: any) {
     const setSubdomain = useUserStore((state: any) => state.setSubdomain);
     const setPhotoURL = useUserStore((state: any) => state.setPhotoURL);
     const setHasPhotoURL = useUserStore((state: any) => state.setHasPhotoURL);
-
+    const setPathname = useUserStore((state: any) => state.setPathname);
     const [effieAuthToken, setEffieAuthToken] = useState<any>(null);
     let pathname;
     // get effie_auth_token from cookie on first render
@@ -55,6 +55,8 @@ export default function CheckUser({ children }: any) {
         if (typeof window !== "undefined") {
             pathname = window.location.pathname;
             console.log(pathname);
+            // remove if start with /
+            setPathname(pathname.replace(/^\//, ""));
         }
     }, []);
     const [{ isLoading, isError, response, fetchStarted }, fetcher] =
