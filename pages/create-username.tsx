@@ -10,11 +10,12 @@ import {
 } from "@/config";
 import { EFFIE_AUTH_TOKEN } from "@/constants";
 import { useRouter } from "next/router";
-import Icon from "@/public/icons/create-username.svg";
+import Icon from "@/public/images/new-users.gif";
 import Image from "next/image";
 import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
 import LoadingSVG from "@/components/loading-svg";
 import { useUserStore } from "@/hooks";
+import LoadingAnimation from "@/ui/loading-animation";
 export default function CreateUsername() {
     const router = useRouter();
 
@@ -149,52 +150,53 @@ export default function CreateUsername() {
         );
     } else {
         return (
-            <div className="flex w-full h-full justify-center items-center bg-primary-50">
+            <div className="flex w-full h-full justify-center items-center bg-primary-50 px-6 md:px-24">
                 {/* <Modal isOpen={isModalOpen} onClose={handleModalClose}> */}
-                <div className="flex flex-row h-fit w-fit gap-8">
+                <div className="flex flex-col lg:flex-row items-center lg:items-start h-fit w-full lg:w-[52rem] gap-8">
                     <div>
-                        <Image src={Icon} alt="create username icon"></Image>
+                        <Image src={Icon} alt="create username icon" height={240} width={240} className="object-contain" />
                     </div>
-                    <div>
-                        <h1 className="text-neutral-900">
+                    <div className="w-full">
+                        <h1 className="text-2xl md:text-3xl text-neutral-900">
                             Create your username.
                         </h1>
-                        <div className="flex flex-col my-6 gap-1">
+                        <div className="flex flex-col my-6 gap-1 text-neutral-700">
                             <p className="text-neutra-900">
-                                One last step! Your Effie username will be used
-                                in your personal shareable link.
+                                Here&apos;s the cool part! Your Effie username will be used in your 
+                                personal shareable link.
                             </p>
-                            <p className="text-danger-400">
+                            <p className="text-danger-200">
                                 This username is permanent and cannot be changed
                                 once created.
                             </p>
                         </div>
                         <form
                             onSubmit={handleCreateUsernameOnClick}
-                            className="flex flex-row gap-6"
+                            className="flex flex-col md:flex-row gap-4"
                         >
                             <input
-                                className="input flex flex-grow"
+                                className="input flex flex-grow !bg-white"
                                 required
                                 type="text"
                                 id="usernameInput"
                                 name="usernameInput"
                                 onChange={handleUsernameInput}
-                                placeholder="Username"
+                                placeholder="username"
+                                autoFocus
                             />
                             <Button
                                 onClick={handleCreateUsernameOnClick}
-                                className="p-3 w-2/6 flex items-center justify-center"
-                                disabled={isLoadingUsername}
+                                className="p-3 flex items-center justify-center disabled:bg-neutral-500"
+                                disabled={isLoadingUsername || username === ""}
                             >
                                 {isLoadingUsername
-                                    ? "Loading"
+                                    ? <LoadingAnimation />
                                     : "Create Username"}
                             </Button>
                         </form>
                         <div className="h-4 flex mt-2">
                             {isErrorUsername && !isInputtingUsername && (
-                                <p className="text-danger-400">
+                                <p className="text-danger-300">
                                     {errorMessage}
                                 </p>
                             )}
@@ -202,7 +204,7 @@ export default function CreateUsername() {
                         <p className="text-neutral-500 mt-4">
                             Your shareable Effie link: https://
                             <span className="text-primary-500 font-bold">
-                                username
+                                {username !== "" ? username : "username"}
                             </span>
                             .effie.boo/path/to/file
                         </p>
