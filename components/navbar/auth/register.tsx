@@ -9,6 +9,8 @@ import { FIREBASE_CONFIG, BE_BASE_URL } from "@/config";
 import { useRouter } from "next/router";
 
 import { setToLocalStorage } from "@/helpers";
+import { useState } from "react";
+import LoadingAnimation from "@/ui/loading-animation";
 
 type RegisterProps = {
     isOpen: boolean;
@@ -23,7 +25,10 @@ export default function Register({ isOpen, onClose }: RegisterProps) {
     const provider = new GoogleAuthProvider();
     const router = useRouter();
 
+    const [isLoading, setIsLoading] = useState(false);
+
     function handleOnRegisterButtonClick() {
+        setIsLoading(true);
         signInWithPopup(auth, provider)
             .then(async (result: any) => {
                 // The signed-in user info.
@@ -69,6 +74,7 @@ export default function Register({ isOpen, onClose }: RegisterProps) {
             .catch((error) => {
                 console.error(error);
             });
+        setIsLoading(false);
     }
 
     return (
@@ -80,7 +86,7 @@ export default function Register({ isOpen, onClose }: RegisterProps) {
             >
                 <h1 className="text-neutral-900">Create a new Effie account</h1>
                 <Button onClick={handleOnRegisterButtonClick}>
-                    Register with Google
+                    { isLoading ? <LoadingAnimation /> : "Register with Google"}
                 </Button>
             </SideModal>
         </>
