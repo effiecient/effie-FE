@@ -40,23 +40,19 @@ export default function Button({
             !disabled &&
             `hover:bg-${type}-${borderMode ? "300" : "500"} hover:text-white`
         }`;
-        // on hover change svg color
-        buttonClassNames += ` ${
-            !disabled && `hover:text-${type}-${borderMode ? "300" : "500"}`
-        }`;
     } else if (type === "default") {
         // set color
         buttonClassNames = `${borderMode ? "border" : "bg"}-primary-${
             disabled ? "300" : "500"
         }`;
         // set text
-        buttonClassNames += ` ${
+        buttonClassNames += `${
             borderMode
                 ? `text-primary-${disabled ? "300" : "500"}`
                 : "text-white"
         }`;
         // set on hover
-        buttonClassNames += ` ${
+        buttonClassNames += `${
             !disabled &&
             `hover:bg-primary-${borderMode ? "500" : "700"} hover:text-white `
         }`;
@@ -69,7 +65,35 @@ export default function Button({
     return (
         <button
             onClick={onClick}
-            className={`${buttonClassNames} 
+            className={`${
+                type === "default"
+                    ? `${borderMode ? "border" : "bg"}-primary-${
+                          disabled ? "300" : "500"
+                      } ${
+                          borderMode
+                              ? `text-primary-${disabled ? "300" : "500"}`
+                              : "text-white"
+                      } ${
+                          !disabled &&
+                          `hover:bg-primary-${
+                              borderMode ? "500" : "700"
+                          } hover:text-white `
+                      }`
+                    : type === "custom"
+                    ? ""
+                    : `${borderMode ? "border" : "bg"}-${type}-${
+                          disabled ? "100" : "300"
+                      }  ${
+                          borderMode
+                              ? `text-${type}-${disabled ? "100" : "300"}`
+                              : "text-white"
+                      }  ${
+                          !disabled &&
+                          `hover:bg-${type}-${
+                              borderMode ? "300" : "500"
+                          } hover:text-white`
+                      }`
+            } ${borderMode ? "border-2" : ""}
         ${pill ? "rounded-full" : "rounded-md"} px-3 py-2 duration-200 
         ${className}
     `}

@@ -400,7 +400,7 @@ function sortDataToFolderAndLink(input: any) {
 
 function SyncingAnimation() {
     // make the dot animate
-    return <h6 className="text-primary-600 animate-pulse">syncing...</h6>;
+    return <h6 className="text-primary-600 animate-pulse"></h6>;
 }
 // KEYBOARD SHORTCUTS
 // CURRENTLY DEACTIVATED BECAUSE IT INTERFERES WITH INPUT
