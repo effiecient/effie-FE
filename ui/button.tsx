@@ -18,6 +18,7 @@ export default function Button({
     borderMode = false,
 }: ButtonProps) {
     let buttonClassNames = "";
+
     if (
         type === "danger" ||
         type === "success" ||
@@ -57,7 +58,7 @@ export default function Button({
         // set on hover
         buttonClassNames += ` ${
             !disabled &&
-            `hover:bg-primary-${borderMode ? "500" : "700"} hover:text-white`
+            `hover:bg-primary-${borderMode ? "500" : "700"} hover:text-white `
         }`;
     }
 

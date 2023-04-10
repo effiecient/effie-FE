@@ -270,10 +270,6 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                                 }
 
                                                 checkIsChanged();
-                                                // console.log(itemData);
-                                                // console.log(
-                                                //     editedItemData.current
-                                                // );
                                             }}
                                             defaultValue={
                                                 itemData.shareConfiguration
@@ -288,7 +284,24 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                             }
                                         />
                                     </div>
-                                    <div>{/* TODO: add is pinned */}</div>
+                                    <div className="flex">
+                                        <h5 className="text-neutral-800">
+                                            Pinned
+                                        </h5>
+                                        <Input
+                                            type="checkbox"
+                                            checked={
+                                                editedItemData.current.isPinned
+                                            }
+                                            onChange={(e: any) => {
+                                                editedItemData.current = {
+                                                    ...editedItemData.current,
+                                                    isPinned: e.target.checked,
+                                                };
+                                                checkIsChanged();
+                                            }}
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </>
@@ -333,6 +346,14 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                                 : ShareConfigurationOptions[2]
                                             : ShareConfigurationOptions[0]}
                                     </p>
+                                </div>
+                                <div className="flex">
+                                    <h5 className="text-neutral-800">Pinned</h5>
+                                    <Input
+                                        disabled
+                                        type="checkbox"
+                                        checked={itemData.isPinned}
+                                    />
                                 </div>
                             </div>
                         </div>

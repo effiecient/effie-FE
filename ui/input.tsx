@@ -6,6 +6,8 @@ export function Input({
     value = "",
     className,
     type = "text",
+    disabled = false,
+    checked = false,
 }: any) {
     const [inputValue, setInputValue] = useState(value);
 
@@ -15,6 +17,8 @@ export function Input({
     }
     return (
         <input
+            checked={checked}
+            disabled={disabled}
             type={type}
             placeholder={placeholder}
             onChange={handleChange}
