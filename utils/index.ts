@@ -5,3 +5,5 @@ export const stopEventPropagation = (event: any) => {
 };
 
 export { copyToClipboard };
+
+export { checkIfObjectSame, getObjectDifferences } from "./objectCheck";

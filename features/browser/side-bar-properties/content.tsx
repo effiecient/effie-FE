@@ -6,20 +6,10 @@ import Image from "next/image";
 
 import { Button, Input, Select } from "@/ui";
 
-import Modal from "../../components/modal";
+import { BE_BASE_URL, FE_BASE_URL, FE_PROTOCOL } from "@/config";
 
-import {
-    BE_BASE_URL,
-    FE_BASE_URL,
-    FE_FULL_BASE_URL,
-    FE_PROTOCOL,
-} from "@/config";
+import { useUserStore } from "@/hooks";
 
-import { useFetchEffieBE, useUserStore, useWindowSize } from "@/hooks";
-import { useRouter } from "next/router";
-import { RightSideBar } from "./right-side-bar";
-
-import CopyIcon from "@/public/icons/copy";
 import editIcon from "@/public/icons/edit.svg";
 import trashIcon from "@/public/icons/trash.svg";
 import cancelIcon from "@/public/icons/cancel.svg";
@@ -27,14 +17,7 @@ import saveIcon from "@/public/icons/save.svg";
 import drawerImage from "@/public/images/drawer.svg";
 import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
 
-type SideBarPropertiesProps = {
-    isOpen: boolean;
-    itemData: FolderLinkData;
-    className?: string;
-    relativePath: string;
-    onClose: () => void;
-    onUpdate: () => void;
-};
+import { getObjectDifferences, checkIfObjectSame } from "@/utils";
 
 const ShareConfigurationOptions = [
     "Private",
@@ -61,87 +44,7 @@ const ShareConfigurationOptionsToData = [
     },
 ];
 
-function checkIfObjectSame(obj1: any, obj2: any): Boolean {
-    if (obj1 === undefined || obj2 === undefined) {
-        return false;
-    }
-    // order the key
-    const obj1Keys = Object.keys(obj1).sort();
-    const obj2Keys = Object.keys(obj2).sort();
-    // check if the keys are the same
-    if (obj1Keys.join("") === obj2Keys.join("")) {
-        // check if the values are the same
-        const isSame: Boolean = obj1Keys.every((key: any) => {
-            // check type
-            if (typeof obj1[key] === "object") {
-                // recursive call
-                return checkIfObjectSame(obj1[key], obj2[key]);
-            }
-            return obj1[key] === obj2[key];
-        });
-
-        return isSame;
-    }
-    return false;
-}
-
-function getObjectDifferences(base: any, target: any) {
-    if (base === undefined || target === undefined) {
-        return {};
-    }
-
-    const result: any = {};
-    Object.keys(target).forEach((key) => {
-        // check type
-        if (typeof target[key] === "object") {
-            // recursive call
-            const diff = getObjectDifferences(base[key], target[key]);
-            if (Object.keys(diff).length > 0) {
-                result[key] = diff;
-            }
-        } else {
-            if (base[key] !== target[key]) {
-                result[key] = target[key];
-            }
-        }
-    });
-    return result;
-}
-export default function SideBarProperties({
-    onClose = () => {},
-    isOpen = false,
-    itemData,
-    className,
-    relativePath,
-    onUpdate = () => {},
-}: SideBarPropertiesProps) {
-    // use modal when screen size is small
-    const { width = 976 } = useWindowSize();
-    const isSmallScreen = width < 976;
-    return (
-        <>
-            {isSmallScreen ? (
-                <Modal isOpen={isOpen} onClose={onClose}>
-                    <Content
-                        itemData={itemData}
-                        relativePath={relativePath}
-                        onUpdate={onUpdate}
-                    />
-                </Modal>
-            ) : (
-                <RightSideBar isOpen={isOpen} className={`${className} h-full`}>
-                    <Content
-                        itemData={itemData}
-                        relativePath={relativePath}
-                        onUpdate={onUpdate}
-                    />
-                </RightSideBar>
-            )}
-        </>
-    );
-}
-
-const Content = ({ itemData, relativePath, onUpdate }: any) => {
+export const Content = ({ itemData, relativePath, onUpdate }: any) => {
     const subdomain = useUserStore((state: any) => state.subdomain);
     const pathname = useUserStore((state: any) => state.pathname);
 
