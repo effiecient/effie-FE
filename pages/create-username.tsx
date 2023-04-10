@@ -162,7 +162,7 @@ export default function CreateUsername() {
                         </h1>
                         <div className="flex flex-col my-6 gap-1 text-neutral-700">
                             <p className="text-neutra-900">
-                                Here's the cool part! Your Effie username will be used in your 
+                                Here&apos;s the cool part! Your Effie username will be used in your 
                                 personal shareable link.
                             </p>
                             <p className="text-danger-200">
