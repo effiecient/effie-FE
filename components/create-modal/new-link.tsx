@@ -110,7 +110,7 @@ export default function NewLink({
         <Modal isOpen={isOpen} onClose={closeModal} onOutsideClick={closeModal}>
             <h3 className="text-neutral-800 mb-8">New Link</h3>
             <form onSubmit={onSubmit}>
-                <div className="flex items-center mb-6">
+                <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-0 mb-6">
                     <h4 className="text-neutral-600 mr-2">
                         {USER_BASE_URL}
                         {currPathArray.length === 1
@@ -132,7 +132,7 @@ export default function NewLink({
                         required
                     />
                 </div>
-                <div className="flex w-full gap-4 mb-6">
+                <div className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
                     <input
                         type="text"
                         id="link-url"
