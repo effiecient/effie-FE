@@ -14,7 +14,11 @@ import editIcon from "@/public/icons/edit.svg";
 import trashIcon from "@/public/icons/trash.svg";
 import cancelIcon from "@/public/icons/cancel.svg";
 import saveIcon from "@/public/icons/save.svg";
+import pinIcon from "@/public/icons/pin.svg";
+import pinBlackIcon from "@/public/icons/pin-black.svg";
+
 import drawerImage from "@/public/images/drawer.svg";
+
 import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
 
 import { getObjectDifferences, checkIfObjectSame } from "@/utils";
@@ -44,6 +48,20 @@ const ShareConfigurationOptionsToData = [
     },
 ];
 
+export function useLegacyState<T>(initialState: any) {
+    // for object, only update key that is changed
+    const [state, setState] = useState<T>(initialState);
+    const setLegacyState: any = (newState: any) => {
+        setState((prevState: any) => {
+            return {
+                ...prevState,
+                ...newState,
+            };
+        });
+    };
+    return [state, setLegacyState];
+}
+
 export const Content = ({ itemData, relativePath, onUpdate }: any) => {
     const subdomain = useUserStore((state: any) => state.subdomain);
     const pathname = useUserStore((state: any) => state.pathname);
@@ -51,14 +69,15 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
     const [isInEditMode, setIsInEditMode] = useState(false);
 
     const [editedRelativePath, setEditedRelativePath] = useState(relativePath);
-    const editedItemData = useRef<FolderLinkData>(itemData);
+    const [editedItemData, setEditedItemData] =
+        useLegacyState<FolderLinkData>(itemData);
 
     const [isChanged, setIsChanged] = useState(false);
 
     // reset everything when the itemData is changed
     useEffect(() => {
         setEditedRelativePath(relativePath);
-        editedItemData.current = itemData;
+        setEditedItemData(itemData);
 
         setIsInEditMode(false);
         setIsChanged(false);
@@ -67,22 +86,22 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
     // reset editedItemData when the exit edit mode
     useEffect(() => {
         if (!isInEditMode) {
-            editedItemData.current = itemData;
+            setEditedItemData(itemData);
             setEditedRelativePath(relativePath);
             setIsChanged(false);
         }
     }, [isInEditMode]);
 
     // set isChanged
-    function checkIsChanged() {
+    useEffect(() => {
         // check if the itemData and editedItemData are the same
-        const isSame = checkIfObjectSame(itemData, editedItemData.current);
+        const isSame = checkIfObjectSame(itemData, editedItemData);
 
         const isRelativePathSame = relativePath == editedRelativePath;
 
         // TODO: handle bug input failed when setIsChanged is called
         setIsChanged(!isSame || !isRelativePathSame);
-    }
+    }, [editedItemData, editedRelativePath]);
 
     const [{ isLoading, isError, response, fetchStarted }, fetcher] =
         useFetchEffieBENew();
@@ -91,15 +110,15 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
 
     useEffect(() => {
         if (startUpdate) {
-            console.log(editedItemData.current);
+            console.log(editedItemData);
             let itemDataDifferences = getObjectDifferences(
                 itemData,
-                editedItemData.current
+                editedItemData
             );
             // if itemDataDifferences has shareConfiguration, then it changed(we need to do this because it part of it might be the same object as item data)
             if (itemDataDifferences.shareConfiguration !== undefined) {
                 itemDataDifferences.shareConfiguration =
-                    editedItemData.current.shareConfiguration;
+                    editedItemData.shareConfiguration;
             }
 
             fetcher({
@@ -168,16 +187,33 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                             placeholder={itemData.title}
                                             className="text-lg my-1"
                                             onChange={(e: any) => {
-                                                editedItemData.current = {
-                                                    ...editedItemData.current,
+                                                setEditedItemData({
                                                     title:
                                                         e.target.value === ""
                                                             ? itemData.title
                                                             : e.target.value,
-                                                };
-                                                checkIsChanged();
+                                                });
                                             }}
                                         />
+                                        <div className="flex justify-end">
+                                            <Image
+                                                className="cursor-pointer"
+                                                src={
+                                                    editedItemData.isPinned
+                                                        ? pinBlackIcon
+                                                        : pinIcon
+                                                }
+                                                alt="pin"
+                                                width={30}
+                                                height={30}
+                                                onClick={() => {
+                                                    setEditedItemData({
+                                                        isPinned:
+                                                            !editedItemData.isPinned,
+                                                    });
+                                                }}
+                                            />
+                                        </div>
                                         <div>
                                             <h5 className="text-neutral-800">
                                                 Link
@@ -197,7 +233,6 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                                             ? relativePath
                                                             : e.target.value
                                                     );
-                                                    checkIsChanged();
                                                 }}
                                             />
                                         </div>
@@ -229,27 +264,19 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                                         defaultValue ==
                                                         e.target.value
                                                     ) {
-                                                        // console.log("same");
-                                                        editedItemData.current =
-                                                            {
-                                                                ...editedItemData.current,
-                                                                shareConfiguration:
-                                                                    itemData.shareConfiguration,
-                                                            };
+                                                        setEditedItemData({
+                                                            shareConfiguration:
+                                                                itemData.shareConfiguration,
+                                                        });
                                                     } else {
                                                         // console.log("different");
 
-                                                        editedItemData.current =
-                                                            {
-                                                                ...editedItemData.current,
-                                                                ...ShareConfigurationOptionsToData[
-                                                                    e.target
-                                                                        .value
-                                                                ],
-                                                            };
+                                                        setEditedItemData({
+                                                            ...ShareConfigurationOptionsToData[
+                                                                e.target.value
+                                                            ],
+                                                        });
                                                     }
-
-                                                    checkIsChanged();
                                                 }}
                                                 defaultValue={
                                                     itemData.shareConfiguration
@@ -264,26 +291,6 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                                 }
                                             />
                                         </div>
-                                        <div className="flex">
-                                            <h5 className="text-neutral-800">
-                                                Pinned
-                                            </h5>
-                                            <Input
-                                                type="checkbox"
-                                                checked={
-                                                    editedItemData.current
-                                                        .isPinned
-                                                }
-                                                onChange={(e: any) => {
-                                                    editedItemData.current = {
-                                                        ...editedItemData.current,
-                                                        isPinned:
-                                                            e.target.checked,
-                                                    };
-                                                    checkIsChanged();
-                                                }}
-                                            />
-                                        </div>
                                     </div>
                                 </div>
                             </>
@@ -294,6 +301,20 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                     <h4 className="text-neutral-900">
                                         {itemData.title}
                                     </h4>
+
+                                    <div className="flex justify-end">
+                                        <Image
+                                            src={
+                                                editedItemData.isPinned
+                                                    ? pinBlackIcon
+                                                    : pinIcon
+                                            }
+                                            alt="pin"
+                                            width={30}
+                                            height={30}
+                                        />
+                                    </div>
+
                                     <div>
                                         <h5 className="text-neutral-800">
                                             Link
@@ -327,16 +348,6 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                                 : ShareConfigurationOptions[0]}
                                         </p>
                                     </div>
-                                    <div className="flex">
-                                        <h5 className="text-neutral-800">
-                                            Pinned
-                                        </h5>
-                                        <Input
-                                            disabled
-                                            type="checkbox"
-                                            checked={itemData.isPinned}
-                                        />
-                                    </div>
                                 </div>
                             </div>
                         )
@@ -351,16 +362,33 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                         placeholder={itemData.title}
                                         className="text-lg my-1"
                                         onChange={(e: any) => {
-                                            editedItemData.current = {
-                                                ...editedItemData.current,
+                                            setEditedItemData({
                                                 title:
                                                     e.target.value === ""
                                                         ? itemData.title
                                                         : e.target.value,
-                                            };
-                                            checkIsChanged();
+                                            });
                                         }}
                                     />
+                                    <div className="flex justify-end">
+                                        <Image
+                                            className="cursor-pointer"
+                                            src={
+                                                editedItemData.isPinned
+                                                    ? pinBlackIcon
+                                                    : pinIcon
+                                            }
+                                            alt="pin"
+                                            width={30}
+                                            height={30}
+                                            onClick={() => {
+                                                setEditedItemData({
+                                                    isPinned:
+                                                        !editedItemData.isPinned,
+                                                });
+                                            }}
+                                        />
+                                    </div>
                                     <div>
                                         <h5 className="text-neutral-800">
                                             Link
@@ -380,7 +408,6 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                                         ? relativePath
                                                         : e.target.value
                                                 );
-                                                checkIsChanged();
                                             }}
                                         />
                                     </div>
@@ -392,14 +419,12 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                             placeholder={itemData.link}
                                             className="my-1"
                                             onChange={(e: any) => {
-                                                editedItemData.current = {
-                                                    ...editedItemData.current,
+                                                setEditedItemData({
                                                     link:
                                                         e.target.value === ""
                                                             ? itemData.link
                                                             : e.target.value,
-                                                };
-                                                checkIsChanged();
+                                                });
                                             }}
                                         />
                                     </div>
@@ -430,23 +455,19 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                                     e.target.value
                                                 ) {
                                                     // console.log("same");
-                                                    editedItemData.current = {
-                                                        ...editedItemData.current,
+                                                    setEditedItemData({
                                                         shareConfiguration:
                                                             itemData.shareConfiguration,
-                                                    };
+                                                    });
                                                 } else {
                                                     // console.log("different");
 
-                                                    editedItemData.current = {
-                                                        ...editedItemData.current,
+                                                    setEditedItemData({
                                                         ...ShareConfigurationOptionsToData[
                                                             e.target.value
                                                         ],
-                                                    };
+                                                    });
                                                 }
-
-                                                checkIsChanged();
                                             }}
                                             defaultValue={
                                                 itemData.shareConfiguration
@@ -461,24 +482,6 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                             }
                                         />
                                     </div>
-                                    <div className="flex">
-                                        <h5 className="text-neutral-800">
-                                            Pinned
-                                        </h5>
-                                        <Input
-                                            type="checkbox"
-                                            checked={
-                                                editedItemData.current.isPinned
-                                            }
-                                            onChange={(e: any) => {
-                                                editedItemData.current = {
-                                                    ...editedItemData.current,
-                                                    isPinned: e.target.checked,
-                                                };
-                                                checkIsChanged();
-                                            }}
-                                        />
-                                    </div>
                                 </div>
                             </div>
                         </>
@@ -489,6 +492,18 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                 <h4 className="text-neutral-900">
                                     {itemData.title}
                                 </h4>
+                                <div className="flex justify-end">
+                                    <Image
+                                        src={
+                                            editedItemData.isPinned
+                                                ? pinBlackIcon
+                                                : pinIcon
+                                        }
+                                        alt="pin"
+                                        width={30}
+                                        height={30}
+                                    />
+                                </div>
                                 <div>
                                     <h5 className="text-neutral-800">Link</h5>
                                     <a
@@ -523,14 +538,6 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                                 : ShareConfigurationOptions[2]
                                             : ShareConfigurationOptions[0]}
                                     </p>
-                                </div>
-                                <div className="flex">
-                                    <h5 className="text-neutral-800">Pinned</h5>
-                                    <Input
-                                        disabled
-                                        type="checkbox"
-                                        checked={itemData.isPinned}
-                                    />
                                 </div>
                             </div>
                         </div>

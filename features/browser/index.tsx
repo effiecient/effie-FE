@@ -12,6 +12,7 @@ import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
 
 import Page404 from "../page404";
 import { BrowserBreadcrumb } from "./browser-breadcrumb";
+import { LoadingAnimation } from "@/ui";
 
 export default function Browser() {
     let pathname: any;
@@ -400,7 +401,11 @@ function sortDataToFolderAndLink(input: any) {
 
 function SyncingAnimation() {
     // make the dot animate
-    return <h6 className="text-primary-600 animate-pulse"></h6>;
+    return (
+        <h6 className="text-primary-600 animate-pulse">
+            <LoadingAnimation />
+        </h6>
+    );
 }
 // KEYBOARD SHORTCUTS
 // CURRENTLY DEACTIVATED BECAUSE IT INTERFERES WITH INPUT
