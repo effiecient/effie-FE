@@ -3,7 +3,7 @@ import DirectoryItemCard from "@/components/directory-item-card";
 import Image from "next/image";
 import SideBar from "./side-bar";
 import { BE_BASE_URL } from "@/config/be-config";
-import { useUserStore } from "@/hooks";
+import { useRenderingStore, useUserStore } from "@/hooks";
 import { useState, useEffect } from "react";
 import { KeyboardShortcuts, NewLink, NewFolder, Navbar } from "@/components";
 import SideBarProperties from "./side-bar-properties";
@@ -18,6 +18,9 @@ export default function Browser() {
     let pathname: any;
 
     const subdomain = useUserStore((state: any) => state.subdomain);
+    const setShowSkeleton = useRenderingStore(
+        (state: any) => state.setShowSkeleton
+    );
 
     const [isNewLinkModalOpen, setIsNewLinkModalOpen] = useState(false);
     const [isNewFolderModalOpen, setIsNewFolderModalOpen] = useState(false);
@@ -103,8 +106,8 @@ export default function Browser() {
         },
         refetcher,
     ] = useFetchEffieBENew();
+
     useEffect(() => {
-        console.log(isSomethingChanged);
         if (!isSomethingChanged) {
             return;
         } else {
@@ -142,9 +145,62 @@ export default function Browser() {
         console.error(responseRefetch.message);
         return <Page404 />;
     }
+
+    // show skeleton
+    setShowSkeleton(true);
+
     if (isLoading || !fetchStarted) {
-        return <>skeleton</>;
+        return (
+            <>
+                <main className="bg-white w-full h-full">
+                    <Navbar />
+                    {/* left sidebar */}
+                    <SideBar
+                        handleNewLinkClick={handleNewLinkClick}
+                        handleNewFolderClick={handleNewFolderClick}
+                    />
+                    {/* background */}
+                    <div
+                        className={`z-0 h-full fixed bg-neutral-50 lg:ml-20 bottom-0 lg:top-16 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
+                            isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
+                        }`}
+                    >
+                        <Background />
+                    </div>
+                    {/* content */}
+                    <div
+                        className={`z-0 absolute lg:ml-20 top-32 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
+                            isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
+                        }`}
+                    >
+                        <div className="p-6">
+                            <h5 className="z-10 pb-2">
+                                <p className="bg-neutral-200 w-12 rounded-full h-5 pb-2 relative" />
+                            </h5>
+                            <section className="flex gap-4 w-full flex-wrap">
+                                <DirectoryItemCard content="new folder" />
+                                <DirectoryItemCard content="new folder" />
+                            </section>
+                        </div>
+                    </div>
+                    {/* header */}
+                    <div
+                        className={`z-0 fixed bg-neutral-50 lg:ml-20 lg:top-[63px] left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
+                            isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
+                        }`}
+                    >
+                        <div className="p-6 flex justify-between items-center">
+                            <BrowserBreadcrumb
+                                onBreadcrumbClick={handleBreadcrumbClick}
+                            />
+                            <div className="w-[30px] h-[30px] rounded-full bg-neutral-200 animate-pulse" />
+                        </div>
+                    </div>
+                </main>
+            </>
+        );
     }
+    setShowSkeleton(false);
 
     // preprocess data to be shown
     let responseData;

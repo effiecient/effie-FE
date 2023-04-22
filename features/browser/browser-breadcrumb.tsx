@@ -1,4 +1,4 @@
-import { useUserStore } from "@/hooks";
+import { useRenderingStore, useUserStore } from "@/hooks";
 import { Breadcrumb } from "@/ui";
 import { useRouter } from "next/router";
 
@@ -10,6 +10,14 @@ export const BrowserBreadcrumb = ({ onBreadcrumbClick }: any) => {
         .split("/")
         .filter((loc: string) => loc !== "");
 
+    const showSkeleton = useRenderingStore((state: any) => state.showSkeleton);
+    if (showSkeleton) {
+        return (
+            <span>
+                <div className="animate-pulse h-5 w-16 bg-neutral-200 rounded-full" />
+            </span>
+        );
+    }
     return (
         <span>
             <Breadcrumb
