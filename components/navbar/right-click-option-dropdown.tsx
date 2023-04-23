@@ -1,8 +1,7 @@
-import { Button } from "@/ui";
 import Link from "next/link";
 import Image from "next/image";
 import { useUserStore } from "@/hooks";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type RightClickOptionDropdownProps = {
     userImg: string;
@@ -21,9 +20,9 @@ export default function RightClickOptionDropdown({userImg, setIsModalOpen} : Rig
             }
         }
         
-        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('mouseup', handleClickOutside);
         return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('mouseup', handleClickOutside);
         };
     }, [modalRef]);
 
@@ -41,6 +40,8 @@ export default function RightClickOptionDropdown({userImg, setIsModalOpen} : Rig
             value: "system"
         }
     ]
+
+    const [currTheme, setCurrTheme] = useState("light");
         
     return (
         <div ref={modalRef} className="absolute right-0 mt-2 z-10 min-w-fit rounded-lg border border-neutral-100 bg-white">
@@ -73,8 +74,22 @@ export default function RightClickOptionDropdown({userImg, setIsModalOpen} : Rig
                 <div className="flex gap-2 ml-8">
                     {Themes.map((theme, index) => (
                         <div key={index} className="flex gap-2 items-center">
-                            <input type="radio" name="theme" id={theme.value} value={theme.value} />
-                            <label htmlFor={theme.value}>{theme.name}</label>
+                            <input 
+                                type="radio" 
+                                name="theme" 
+                                id={theme.value} 
+                                value={theme.value} 
+                                hidden 
+                                onChange={
+                                (e) => {
+                                    setCurrTheme(e.target.value);
+                                }
+                            }/>
+                            <label htmlFor={theme.value} aria-label={theme.name}>
+                                <div className="h-12 w-12 bg-neutral-50 cursor-pointer">
+                                    {currTheme}
+                                </div>
+                            </label>
                         </div>
                     ))}
                 </div>
