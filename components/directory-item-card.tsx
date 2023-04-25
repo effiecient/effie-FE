@@ -5,7 +5,7 @@ import NewLink from "./create-modal/new-link";
 import NewFolder from "./create-modal/new-folder";
 import { copyToClipboard, stopEventPropagation } from "@/utils";
 import { FE_BASE_URL, FE_PROTOCOL } from "@/config";
-import { useUserStore } from "@/hooks";
+import { useRenderingStore, useUserStore } from "@/hooks";
 import { useRouter } from "next/router";
 import { FolderLinkData } from "@/type";
 
@@ -68,6 +68,16 @@ export default function DirectoryItemCard({
             copySuccessRef.current?.classList.remove("z-30");
         }, 1500);
     };
+
+    const showSkeleton = useRenderingStore((state: any) => state.showSkeleton);
+
+    if (showSkeleton) {
+        return (
+            <div
+                className={`animate-pulse pt-3 pb-2 px-5 rounded-xl bg-neutral-200 w-[32vw] md:w-[44vw] lg:w-[20vw] max-w-[16rem] min-w-[8rem] min-h-[4rem]`}
+            />
+        );
+    }
 
     return (
         <>

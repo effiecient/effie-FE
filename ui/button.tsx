@@ -1,3 +1,5 @@
+import { useRenderingStore } from "@/hooks";
+
 type ButtonProps = {
     type?: "default" | "danger" | "success" | "warning" | "info" | "custom";
     children?: React.ReactNode;
@@ -17,6 +19,7 @@ export default function Button({
     pill = false,
     borderMode = false,
 }: ButtonProps) {
+    const showSkeleton = useRenderingStore((state: any) => state.showSkeleton);
     let buttonClassNames = "";
 
     if (
@@ -60,6 +63,12 @@ export default function Button({
 
     if (borderMode) {
         buttonClassNames += " border-2";
+    }
+
+    if (showSkeleton) {
+        return (
+            <div className="w-24 h-10 bg-neutral-200 animate-pulse rounded-full" />
+        );
     }
 
     return (

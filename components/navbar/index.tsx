@@ -8,7 +8,7 @@ import registerIcon from "@/public/icons/register.svg";
 import directoriesIcon from "@/public/icons/directories-white.svg";
 import newLinkIcon from "@/public/icons/new_link.svg";
 import defaultUserImg from "@/public/images/user.png";
-import { useRegister, useUserStore } from "@/hooks";
+import { useRegister, useRenderingStore, useUserStore } from "@/hooks";
 import Link from "next/link";
 // TODO: update this to import from config only
 import { FE_BASE_URL, FE_FULL_BASE_URL, FE_PROTOCOL } from "@/config/fe-config";
@@ -27,6 +27,34 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
     const hasPhotoURL = useUserStore((state: any) => state.hasPhotoURL);
     const photoURL = useUserStore((state: any) => state.photoURL);
 
+    const showSkeleton = useRenderingStore((state: any) => state.showSkeleton);
+    // skeleton
+    if (showSkeleton) {
+        return (
+            <>
+                <div className="relative right-0 left-0 top-0 h-16" />
+                <div className="fixed right-0 left-0 top-0 h-16 z-50 animate-pulse">
+                    <nav
+                        className={`flex flex-row justify-between w-full bg-white items-center px-6 py-3`}
+                    >
+                        {/* Logo */}
+                        <p className="h-8 bg-neutral-200 rounded-full w-16" />
+                        {/* Login-Register */}
+                        <div className="space-x-2">
+                            {/* Navbar for logged-in users */}
+                            <div className="flex flex-row items-center gap-1.5">
+                                <div className="h-4 bg-neutral-200 rounded-full w-16" />
+                                <>
+                                    <Button type="default" pill={true}></Button>
+                                </>
+                                <div className="rounded-full w-[40px] h-[40px] bg-neutral-300"></div>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+            </>
+        );
+    }
     return (
         <>
             {/* Navbar */}
