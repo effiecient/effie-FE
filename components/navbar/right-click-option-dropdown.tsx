@@ -39,24 +39,24 @@ export default function RightClickOptionDropdown({userImg, setIsModalOpen, profi
                 "#FFC212",
             ]
         },
-        {
-            name: "Classic Light",
-            value: "classic-light",
-            colors: [
-                "#8895A7",
-                "#B8C4CE",
-                "#F8F9FA",
-            ]
-        },
-        {
-            name: "Classic Dark",
-            value: "classic-dark",
-            colors: [
-                "#000000",
-                "#434D5A",
-                "#667181",
-            ]
-        }
+        // {
+        //     name: "Classic Light",
+        //     value: "classic-light",
+        //     colors: [
+        //         "#8895A7",
+        //         "#B8C4CE",
+        //         "#F8F9FA",
+        //     ]
+        // },
+        // {
+        //     name: "Classic Dark",
+        //     value: "classic-dark",
+        //     colors: [
+        //         "#000000",
+        //         "#434D5A",
+        //         "#667181",
+        //     ]
+        // }
     ]
         
     return (
@@ -84,7 +84,7 @@ export default function RightClickOptionDropdown({userImg, setIsModalOpen, profi
                         width={24}
                         height={24}
                     />
-                    <p className="py-">Theme</p>
+                    <p className="text-neutral-900">Theme</p>
                 </div>
                 {/* CONTENT */}
                 <div className="flex gap-2 ml-8">
