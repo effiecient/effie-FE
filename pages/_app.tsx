@@ -14,7 +14,7 @@ import { useUserStore } from "@/hooks";
 
 export default function App({ Component, pageProps }: AppProps) {
     const theme = useUserStore((state: any) => state.theme);
-    console.log("theme", theme);
+
     return (
         <div
             className={`${poppins.variable} theme-${theme} selection:bg-secondary-500 accent-tertiary-500 h-screen`}
