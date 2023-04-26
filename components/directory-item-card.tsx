@@ -146,9 +146,9 @@ export default function DirectoryItemCard({
                                 href={DirectoryItemData?.link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className={`hover:text-primary-500 text-neutral-600 text-xs un hover:decoration-primary-500 inline-block max-w-full`}
+                                className={`hover:text-primary-500 text-neutral-600 text-xs un hover:decoration-primary-500 inline-block max-w-full whitespace-nowrap`}
                             >
-                                {DirectoryItemData?.link}
+                                {DirectoryItemData?.link && DirectoryItemData?.link?.slice(8)}
                             </a>
                             {(content === "link" || content === "folder") && (
                                 <div>
