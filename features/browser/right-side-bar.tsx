@@ -22,7 +22,9 @@ export const RightSideBar = ({
                     isOpen ? "w-[20vw]" : "w-6"
                 }`}
             >
-                <div className={`w-[20vw] p-6 fixed`}>{children}</div>
+                <div className={`${className} w-[20vw] p-6 fixed`}>
+                    {children}
+                </div>
             </div>
         </>
     );

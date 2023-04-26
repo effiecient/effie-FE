@@ -19,6 +19,7 @@ const useLegacyState = (initialState: any) =>
         (state: any, update: any) => ({ ...state, ...update }),
         initialState
     );
+
 const initialFetchState = {
     isLoading: false,
     isError: false,

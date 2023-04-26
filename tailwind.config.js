@@ -103,4 +103,13 @@ module.exports = {
         extend: {},
     },
     plugins: [],
+    safelist: [
+        {
+            // bg-danger-, bg-success, bg-warning, bg-info
+            // border-danger-, border-success, border-warning, border-info
+            pattern:
+                /(bg|border)-(danger|success|warning|info|primary)-(100|300|500|700|900)/,
+            variants: ["hover"],
+        },
+    ],
 };

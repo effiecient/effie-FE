@@ -5,7 +5,7 @@ import NewLink from "./create-modal/new-link";
 import NewFolder from "./create-modal/new-folder";
 import { copyToClipboard, stopEventPropagation } from "@/utils";
 import { FE_BASE_URL, FE_PROTOCOL } from "@/config";
-import { useUserStore } from "@/hooks";
+import { useRenderingStore, useUserStore } from "@/hooks";
 import { useRouter } from "next/router";
 import { FolderLinkData } from "@/type";
 
@@ -45,7 +45,13 @@ export default function DirectoryItemCard({
 
     const copyEffieUrl = (e: any) => {
         stopEventPropagation(e);
-        copySuccessRef.current?.classList.remove("opacity-0", "-translate-y-1");
+        copySuccessRef.current?.classList.remove(
+            "opacity-0",
+            "-translate-y-1",
+            "-z-10"
+        );
+        // add z-30
+        copySuccessRef.current?.classList.add("z-30");
         if (!navigator.clipboard) {
             // Fallback to unsupported browsers
             copyToClipboard(effieURL ?? "");
@@ -55,10 +61,23 @@ export default function DirectoryItemCard({
         setTimeout(() => {
             copySuccessRef.current?.classList.add(
                 "opacity-0",
-                "-translate-y-1"
+                "-translate-y-1",
+                "-z-10"
             );
+            // remove z-30
+            copySuccessRef.current?.classList.remove("z-30");
         }, 1500);
     };
+
+    const showSkeleton = useRenderingStore((state: any) => state.showSkeleton);
+
+    if (showSkeleton) {
+        return (
+            <div
+                className={`animate-pulse pt-3 pb-2 px-5 rounded-xl bg-neutral-200 w-[32vw] md:w-[44vw] lg:w-[20vw] max-w-[16rem] min-w-[8rem] min-h-[4rem]`}
+            />
+        );
+    }
 
     return (
         <>
@@ -102,9 +121,9 @@ export default function DirectoryItemCard({
                         <h6 className="text-primary-500 ml-2">New link</h6>
                     </>
                 ) : (
-                    <div className={`flex`}>
+                    <div className={`flex flex-row`}>
                         {content === "link" || content === "display link" ? (
-                            <div className="mr-2">
+                            <div className="mr-2 w-1/5">
                                 <Image
                                     src={`https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${DirectoryItemData?.link}&size=64`}
                                     alt="link"
@@ -119,7 +138,7 @@ export default function DirectoryItemCard({
                             />
                         )}
                         {/* link or folder data */}
-                        <div className="overflow-hidden">
+                        <div className="overflow-hidden w-[80%]">
                             <h6 className={`text-neutral-800`}>
                                 {DirectoryItemData?.title}
                             </h6>
@@ -142,8 +161,8 @@ export default function DirectoryItemCard({
                                     {/* Copy success notif */}
                                     <div
                                         ref={copySuccessRef}
-                                        className="opacity-0
-                                        -translate-y-1 absolute -bottom-12 -right-12 bg-neutral-800 text-white rounded-md z-30 py-1 px-2 shadow-lg text-left duration-300 max-w-[12rem]"
+                                        className={`opacity-0
+                                        -translate-y-1 -z-10 absolute -bottom-12 -right-12 bg-neutral-800 text-white rounded-md py-1 px-2 shadow-lg text-left duration-300 max-w-[12rem]`}
                                     >
                                         <p className="text-xs">
                                             Link copied!
