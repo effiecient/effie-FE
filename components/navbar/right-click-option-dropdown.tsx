@@ -56,7 +56,7 @@ export default function RightClickOptionDropdown({userImg, setIsModalOpen} : Rig
         }
     ]
 
-    const [currTheme, setCurrTheme] = useState("light");
+    const [currTheme, setCurrTheme] = useState("effie");
         
     return (
         <div ref={modalRef} className="absolute right-0 mt-2 z-10 min-w-fit rounded-lg border border-neutral-100 bg-white">
@@ -103,7 +103,7 @@ export default function RightClickOptionDropdown({userImg, setIsModalOpen} : Rig
                             <label htmlFor={theme.value} aria-label={theme.name}>
                                 <div 
                                     className={`${currTheme === theme.value ? "border-2 border-neutral-800" : "border-neutral-100"} border h-9 w-9 bg-neutral-50 cursor-pointer rounded-full`}
-                                    style={{ backgroundImage: `radial-gradient(45deg, ${theme.colors[0]} 0%, ${theme.colors[1]} 60%, ${theme.colors[2]} 100%)` }}
+                                    style={{ backgroundImage: `linear-gradient(45deg, ${theme.colors[0]} 0%, ${theme.colors[1]} 60%, ${theme.colors[2]} 100%)` }}
                                 />
                             </label>
                         </div>
