@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Login from "./auth/login";
 import Register from "./auth/register";
 import { Button } from "@/ui";
@@ -27,6 +27,7 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
     const username = useUserStore((state: any) => state.username);
     const hasPhotoURL = useUserStore((state: any) => state.hasPhotoURL);
     const photoURL = useUserStore((state: any) => state.photoURL);
+    const profileRef = useRef<HTMLImageElement>(null);
 
     return (
         <>
@@ -84,6 +85,7 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
                                 )}
                                 <div className="relative">
                                     <Image
+                                        ref={profileRef}
                                         src={
                                             hasPhotoURL
                                                 ? photoURL
@@ -92,13 +94,13 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
                                         alt="user image"
                                         width={36}
                                         height={36}
-                                        onClick={() =>
-                                            setShowLogout(!showLogout)
-                                        }
-                                        className={`cursor-pointer rounded-full`}
+                                        onClick={() => {
+                                            setShowLogout(!showLogout);
+                                        }}
+                                        className={`cursor-pointer rounded-full border border-neutral-200`}
                                     />
                                     {showLogout && (
-                                        <RightClickOptionDropdown userImg={hasPhotoURL ? photoURL : defaultUserImg} setIsModalOpen={setShowLogout} />
+                                        <RightClickOptionDropdown userImg={hasPhotoURL ? photoURL : defaultUserImg} setIsModalOpen={setShowLogout} profileRef={profileRef} />
                                     )}
                                 </div>
                             </div>

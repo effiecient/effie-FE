@@ -1,14 +1,15 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useUserStore } from "@/hooks";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 
 type RightClickOptionDropdownProps = {
     userImg: string;
     setIsModalOpen: (value: boolean) => void;
+    profileRef: React.RefObject<HTMLImageElement>;
 };
 
-export default function RightClickOptionDropdown({userImg, setIsModalOpen} : RightClickOptionDropdownProps) {
+export default function RightClickOptionDropdown({userImg, setIsModalOpen, profileRef} : RightClickOptionDropdownProps) {
     const username = useUserStore((state: any) => state.username);
     const currTheme = useUserStore((state: any) => state.theme);
     const setCurrTheme = useUserStore((state: any) => state.setTheme);
@@ -17,7 +18,7 @@ export default function RightClickOptionDropdown({userImg, setIsModalOpen} : Rig
     // close modal when click outside
     useEffect(() => {
         function handleClickOutside(event: any) {
-            if (modalRef.current && !modalRef.current.contains(event.target)) {
+            if (modalRef.current && !modalRef.current.contains(event.target) && !profileRef.current?.contains(event.target)) {
                 setIsModalOpen(false);
             }
         }
