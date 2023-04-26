@@ -10,6 +10,8 @@ type RightClickOptionDropdownProps = {
 
 export default function RightClickOptionDropdown({userImg, setIsModalOpen} : RightClickOptionDropdownProps) {
     const username = useUserStore((state: any) => state.username);
+    const currTheme = useUserStore((state: any) => state.theme);
+    const setCurrTheme = useUserStore((state: any) => state.setTheme);
     const modalRef = useRef<HTMLDivElement>(null);
 
     // close modal when click outside
@@ -55,8 +57,6 @@ export default function RightClickOptionDropdown({userImg, setIsModalOpen} : Rig
             ]
         }
     ]
-
-    const [currTheme, setCurrTheme] = useState("effie");
         
     return (
         <div ref={modalRef} className="absolute right-0 mt-2 z-10 min-w-fit rounded-lg border border-neutral-100 bg-white">
