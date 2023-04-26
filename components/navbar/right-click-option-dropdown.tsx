@@ -28,16 +28,31 @@ export default function RightClickOptionDropdown({userImg, setIsModalOpen} : Rig
 
     const Themes = [
         {
-            name: "Light",
-            value: "light"
+            name: "Effie",
+            value: "effie",
+            colors: [
+                "#6C5BBA",
+                "#F9B0C3",
+                "#FFC212",
+            ]
         },
         {
-            name: "Dark",
-            value: "dark"
+            name: "Classic Light",
+            value: "classic-light",
+            colors: [
+                "#8895A7",
+                "#B8C4CE",
+                "#F8F9FA",
+            ]
         },
         {
-            name: "System",
-            value: "system"
+            name: "Classic Dark",
+            value: "classic-dark",
+            colors: [
+                "#000000",
+                "#434D5A",
+                "#667181",
+            ]
         }
     ]
 
@@ -47,13 +62,13 @@ export default function RightClickOptionDropdown({userImg, setIsModalOpen} : Rig
         <div ref={modalRef} className="absolute right-0 mt-2 z-10 min-w-fit rounded-lg border border-neutral-100 bg-white">
             {/* PROFILE */}
             <div className="flex gap-3 py-4 px-5 bg-neutral-100 items-center rounded-t-lg relative">
-                <div className="relative w-12 h-12">
+                <div className="relative w-12 h-12 border border-neutral-200 rounded-full">
                     <Image
                         src={userImg}
                         alt="user image"
                         width={48}
                         height={48}
-                        className={`rounded-full`}
+                        className={`rounded-full shadow-inner`}
                     />
                 </div>
                 <p className="text-neutral-900 font-semibold">{username}</p>
@@ -86,9 +101,10 @@ export default function RightClickOptionDropdown({userImg, setIsModalOpen} : Rig
                                 }
                             }/>
                             <label htmlFor={theme.value} aria-label={theme.name}>
-                                <div className="h-12 w-12 bg-neutral-50 cursor-pointer">
-                                    {currTheme}
-                                </div>
+                                <div 
+                                    className={`${currTheme === theme.value ? "border-2 border-neutral-800" : "border-neutral-100"} border h-9 w-9 bg-neutral-50 cursor-pointer rounded-full`}
+                                    style={{ backgroundImage: `radial-gradient(45deg, ${theme.colors[0]} 0%, ${theme.colors[1]} 60%, ${theme.colors[2]} 100%)` }}
+                                />
                             </label>
                         </div>
                     ))}
