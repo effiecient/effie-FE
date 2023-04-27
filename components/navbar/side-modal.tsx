@@ -13,7 +13,7 @@ export default function SideModal({
 }: SideModalProps) {
     return (
         <div
-            className={`mt-16 fixed top-0 bottom-0 right-0 left-0 duration-500 overflow-clip ${
+            className={`mt-16 fixed -top-1 bottom-0 right-0 left-0 duration-500 overflow-clip ${
                 isOpen ? "z-20" : "-z-10"
             }`}
         >
@@ -26,7 +26,7 @@ export default function SideModal({
             />
             {/* Side Modal */}
             <div
-                className={`absolute bottom-0 top-0 right-0 ease-in-out bg-white duration-300 w-1/4  ${
+                className={`absolute bottom-0 top-0 right-0 ease-in-out bg-white duration-300 w-full md:w-1/2 lg:w-1/4  ${
                     isOpen ? "translate-x-0" : "translate-x-full"
                 }`}
             >
