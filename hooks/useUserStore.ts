@@ -7,6 +7,7 @@ const useUserStore = create((set) => ({
     subdomain: "",
     hasPhotoURL: false,
     photoURL: "",
+    theme: "effie",
     pathname: "",
     setUsername: (username: string) => set(() => ({ username })),
     setIsLoggedIn: (by: boolean) => set(() => ({ isLoggedIn: by })),
@@ -14,6 +15,7 @@ const useUserStore = create((set) => ({
     setSubdomain: (subdomain: string) => set(() => ({ subdomain })),
     setHasPhotoURL: (by: boolean) => set(() => ({ hasPhotoURL: by })),
     setPhotoURL: (photoURL: string) => set(() => ({ photoURL })),
+    setTheme: (theme: string) => set(() => ({ theme })),
     setPathname: (pathname: string) => set(() => ({ pathname })),
 }));
 

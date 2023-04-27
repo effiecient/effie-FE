@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Login from "./auth/login";
 import Register from "./auth/register";
 import { Button } from "@/ui";
@@ -12,6 +12,7 @@ import { useRegister, useRenderingStore, useUserStore } from "@/hooks";
 import Link from "next/link";
 // TODO: update this to import from config only
 import { FE_BASE_URL, FE_FULL_BASE_URL, FE_PROTOCOL } from "@/config/fe-config";
+import RightClickOptionDropdown from "./right-click-option-dropdown";
 
 type NavbarProps = {
     isOnLanding?: boolean;
@@ -26,6 +27,7 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
     const username = useUserStore((state: any) => state.username);
     const hasPhotoURL = useUserStore((state: any) => state.hasPhotoURL);
     const photoURL = useUserStore((state: any) => state.photoURL);
+    const profileRef = useRef<HTMLImageElement>(null);
 
     const showSkeleton = useRenderingStore((state: any) => state.showSkeleton);
     // skeleton
@@ -71,8 +73,8 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
                     <div className="space-x-2">
                         {/* Navbar for logged-in users */}
                         {isLoggedIn ? (
-                            <div className="flex flex-row items-center gap-1.5">
-                                <h6>{username}</h6>
+                            <div className="flex flex-row items-center gap-3">
+                                {/* <h6>{username}</h6> */}
                                 {isOnLanding ? (
                                     <>
                                         <Link
@@ -80,11 +82,13 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
                                             target="_self"
                                         >
                                             <Button type="default" pill={true}>
-                                                <div className="flex flex-row gap-1.5 items-center">
+                                                <div className="flex flex-row gap-2 items-center">
                                                     {}
                                                     <Image
                                                         src={directoriesIcon}
                                                         alt="register icon"
+                                                        height={20}
+                                                        width={20}
                                                     />
                                                     My Directories
                                                 </div>
@@ -94,11 +98,13 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
                                 ) : (
                                     <>
                                         <Button type="default" pill={true}>
-                                            <div className="flex flex-row gap-1.5 items-center">
+                                            <div className="flex flex-row gap-2 items-center">
                                                 {}
                                                 <Image
                                                     src={newLinkIcon}
                                                     alt="new link icon"
+                                                    height={20}
+                                                    width={20}
                                                 />
                                                 New Link
                                             </div>
@@ -107,31 +113,22 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
                                 )}
                                 <div className="relative">
                                     <Image
+                                        ref={profileRef}
                                         src={
                                             hasPhotoURL
                                                 ? photoURL
                                                 : defaultUserImg
                                         }
                                         alt="user image"
-                                        width={40}
-                                        height={40}
-                                        onClick={() =>
-                                            setShowLogout(!showLogout)
-                                        }
-                                        className={`cursor-pointer rounded-full`}
+                                        width={36}
+                                        height={36}
+                                        onClick={() => {
+                                            setShowLogout(!showLogout);
+                                        }}
+                                        className={`cursor-pointer rounded-full border border-neutral-200`}
                                     />
                                     {showLogout && (
-                                        <div className="absolute right-0 mt-2 z-10">
-                                            <Link href={"/logout"}>
-                                                <Button
-                                                    type="default"
-                                                    pill={true}
-                                                    className={`bg-danger-300 hover:bg-danger-400`}
-                                                >
-                                                    Logout
-                                                </Button>
-                                            </Link>
-                                        </div>
+                                        <RightClickOptionDropdown userImg={hasPhotoURL ? photoURL : defaultUserImg} setIsModalOpen={setShowLogout} profileRef={profileRef} />
                                     )}
                                 </div>
                             </div>
