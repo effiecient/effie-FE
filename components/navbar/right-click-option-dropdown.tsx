@@ -39,24 +39,24 @@ export default function RightClickOptionDropdown({userImg, setIsModalOpen, profi
                 "#FFC212",
             ]
         },
-        {
-            name: "Classic Light",
-            value: "classic-light",
-            colors: [
-                "#8895A7",
-                "#B8C4CE",
-                "#F8F9FA",
-            ]
-        },
-        {
-            name: "Classic Dark",
-            value: "classic-dark",
-            colors: [
-                "#000000",
-                "#434D5A",
-                "#667181",
-            ]
-        }
+        // {
+        //     name: "Classic Light",
+        //     value: "classic-light",
+        //     colors: [
+        //         "#8895A7",
+        //         "#B8C4CE",
+        //         "#F8F9FA",
+        //     ]
+        // },
+        // {
+        //     name: "Classic Dark",
+        //     value: "classic-dark",
+        //     colors: [
+        //         "#000000",
+        //         "#434D5A",
+        //         "#667181",
+        //     ]
+        // }
     ]
         
     return (
