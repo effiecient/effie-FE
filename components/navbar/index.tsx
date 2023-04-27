@@ -46,7 +46,6 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
                         <div className="space-x-2">
                             {/* Navbar for logged-in users */}
                             <div className="flex flex-row items-center gap-1.5">
-                                <div className="h-4 bg-neutral-200 rounded-full w-16" />
                                 <>
                                     <Button type="default" pill={true}></Button>
                                 </>

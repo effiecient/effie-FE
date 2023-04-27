@@ -1,4 +1,4 @@
-filename = "../public/icons/new-link-black.svg"
+filename = "../public/icons/info.svg"
 
 '''
     /* --color-black: #000000;
