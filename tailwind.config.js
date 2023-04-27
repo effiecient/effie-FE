@@ -33,9 +33,14 @@ module.exports = {
             },
             primary: {
                 50: "rgba(var(--color-primary-50), var(--tw-bg-opacity))",
+                100: "rgba(var(--color-primary-100), var(--tw-bg-opacity))",
                 200: "rgba(var(--color-primary-200), var(--tw-bg-opacity))",
+                300: "rgba(var(--color-primary-300), var(--tw-bg-opacity))",
+                400: "rgba(var(--color-primary-400), var(--tw-bg-opacity))",
                 500: "rgba(var(--color-primary-500), var(--tw-bg-opacity))",
+                600: "rgba(var(--color-primary-600), var(--tw-bg-opacity))",
                 700: "rgba(var(--color-primary-700), var(--tw-bg-opacity))",
+                800: "rgba(var(--color-primary-800), var(--tw-bg-opacity))",
                 900: "rgba(var(--color-primary-900), var(--tw-bg-opacity))",
             },
             secondary: {
@@ -104,6 +109,11 @@ module.exports = {
             // border-danger-, border-success, border-warning, border-info
             pattern:
                 /(bg|border)-(danger|success|warning|info|primary)-(100|300|500|700|900)/,
+            variants: ["hover"],
+        },
+        {
+            // all fill classes
+            pattern: /fill-(danger|success|warning|info|primary|secondary|tertiary|neutral)-(50|100|200|300|400|500|600|700|800|900)/,
             variants: ["hover"],
         },
     ],

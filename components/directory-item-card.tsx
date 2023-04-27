@@ -8,6 +8,7 @@ import { FE_BASE_URL, FE_PROTOCOL } from "@/config";
 import { useRenderingStore, useUserStore } from "@/hooks";
 import { useRouter } from "next/router";
 import { FolderLinkData } from "@/type";
+import NewFolderIcon from "@/public/icons/new-folder";
 
 type DirectoryItemCardProps = {
     content:
@@ -102,12 +103,7 @@ export default function DirectoryItemCard({
                 {/* images */}
                 {content === "new folder" ? (
                     <>
-                        <Image
-                            src="/icons/new-folder.svg"
-                            alt="new folder"
-                            width={28}
-                            height={28}
-                        />
+                        <NewFolderIcon className="h-7 w-7" />
                         <h6 className="text-primary-500 ml-2">New folder</h6>
                     </>
                 ) : content === "new link" ? (
