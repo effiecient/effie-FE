@@ -1,14 +1,14 @@
 // IMPORTS
 import { useState, useEffect, useRef } from "react";
 import { Button, Modal } from "@/ui";
-import DirectoryItemCard from "../directory-item-card";
+// import DirectoryItemCard from "../directory-item-card";
 import { BE_BASE_URL } from "@/config/be-config";
 import { useFetchEffieBE, useUserStore } from "@/hooks";
 // import { unfurl } from 'unfurl.js'
 import Image from "next/image";
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 import { FE_BASE_URL } from "@/config";
-import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
+// import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
 
 type NewLinkProps = {
     isOpen: boolean;
@@ -64,7 +64,7 @@ export default function NewLink({
     };
 
     // FORM SUBMISSION
-    const router = useRouter();
+    // const router = useRouter();
     const [readyToPost, setReadyToPost] = useState(false);
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {

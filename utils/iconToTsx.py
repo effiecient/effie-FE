@@ -1,4 +1,4 @@
-filename = "../public/icons/new-folder.svg"
+filename = "../public/icons/new-link-black.svg"
 
 '''
     /* --color-black: #000000;
@@ -120,6 +120,10 @@ for line in lines:
     if (line.startswith('<svg')):
         # Add className
         line = line.replace(">", f' className={{`${{className}}`}}>')
+    if 'fill="white"' in line:
+        line = line.replace('fill="white"', f'className="fill-white" fill="white"')
+    if 'fill="black"' in line:
+        line = line.replace('fill="black"', f'className="fill-black" fill="black"')
     if 'fill="#' in line and not 'className' in line:
         # replace color with colorDict
         color = line.split('fill="#')[1].split('"')[0]

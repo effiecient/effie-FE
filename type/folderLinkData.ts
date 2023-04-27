@@ -16,6 +16,7 @@ export type FolderLinkData = {
     link?: string;
     type: dataType;
     shareConfiguration: ShareConfiguration;
+    color?: string;
 };
 
 export type UpdateFolderReq = {
