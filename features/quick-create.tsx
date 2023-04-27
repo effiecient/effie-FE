@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/ui";
-import DirectoryItemCard from "@/components/directory-item-card";
+// import DirectoryItemCard from "@/components/directory-item-card";
 import { BE_BASE_URL } from "@/config/be-config";
 import Image from "next/image";
 import Head from "next/head";
@@ -69,7 +69,7 @@ export default function QuickCreate() {
     const onURLblur = (e: React.FocusEvent<HTMLInputElement>) => {
         // fetch with header
 
-        const url = "https://www.zoom.us";
+        // const url = "https://www.zoom.us";
 
         // unfurl(url);
 
@@ -104,14 +104,14 @@ export default function QuickCreate() {
                 <link rel="icon" href="/favicon.svg" />
             </Head>
             <Navbar isOnLanding />
-            <div className="flex flex-col px-44 xl:px-[20%] w-full">
+            <div className="flex flex-col px-6 lg:px-44 xl:px-[20%] w-full min-h-fit h-5/6 justify-center">
                 <div>
                     <h3 className="text-neutral-800 mb-8">New Link</h3>
                 </div>
                 <div>
                     <form onSubmit={onSubmit}>
-                        <div className="flex items-center mb-6">
-                            <h4 className="text-neutral-600 mr-2">
+                        <div className="flex flex-col md:flex-row items-start md:items-center mb-6">
+                            <h4 className="text-neutral-600 mr-2 mb-2 md:mb-0">
                                 {USER_BASE_URL}
                             </h4>
                             <input
@@ -120,12 +120,12 @@ export default function QuickCreate() {
                                 id="link-name"
                                 name="link-name"
                                 placeholder="link-name"
-                                className="input text-lg text-primary-500 font-bold flex-grow"
+                                className="input text-lg text-primary-500 font-bold w-full md:flex-grow"
                                 autoFocus
                                 required
                             />
                         </div>
-                        <div className="flex w-full gap-4 mb-6">
+                        <div className="flex flex-col md:flex-row w-full gap-4 mb-6">
                             <input
                                 type="text"
                                 id="link-url"
@@ -170,7 +170,7 @@ export default function QuickCreate() {
                                     type="text"
                                     id="title"
                                     name="title"
-                                    placeholder="Custom Title"
+                                    placeholder="Custom title"
                                     onChange={onTitleChange}
                                     required
                                     className="input"
@@ -179,7 +179,7 @@ export default function QuickCreate() {
                                     type="url"
                                     id="thumbnail-url"
                                     name="thumbnail-url"
-                                    placeholder="Thumbnail URL"
+                                    placeholder="Custom thumbnail URL"
                                     className="input"
                                 />
                             </div>
