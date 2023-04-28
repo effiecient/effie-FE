@@ -6,13 +6,14 @@ import Image from "next/image";
 import loginIcon from "@/public/icons/login.svg";
 import registerIcon from "@/public/icons/register.svg";
 import directoriesIcon from "@/public/icons/directories-white.svg";
-import newLinkIcon from "@/public/icons/new_link.svg";
+// import newLinkIcon from "@/public/icons/new-link.svg";
 import defaultUserImg from "@/public/images/user.png";
 import { useRegister, useRenderingStore, useUserStore } from "@/hooks";
 import Link from "next/link";
 // TODO: update this to import from config only
 import { FE_BASE_URL, FE_FULL_BASE_URL, FE_PROTOCOL } from "@/config/fe-config";
 import RightClickOptionDropdown from "./right-click-option-dropdown";
+import NewLinkIcon from "@/public/icons/new-link-white";
 
 type NavbarProps = {
     isOnLanding?: boolean;
@@ -45,7 +46,6 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
                         <div className="space-x-2">
                             {/* Navbar for logged-in users */}
                             <div className="flex flex-row items-center gap-1.5">
-                                <div className="h-4 bg-neutral-200 rounded-full w-16" />
                                 <>
                                     <Button type="default" pill={true}></Button>
                                 </>
@@ -99,13 +99,7 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
                                     <>
                                         <Button type="default" pill={true}>
                                             <div className="flex flex-row gap-2 items-center">
-                                                {}
-                                                <Image
-                                                    src={newLinkIcon}
-                                                    alt="new link icon"
-                                                    height={20}
-                                                    width={20}
-                                                />
+                                                <NewLinkIcon className="h-5 w-5" />
                                                 New Link
                                             </div>
                                         </Button>

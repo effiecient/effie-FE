@@ -1,13 +1,15 @@
 import { useRef } from "react";
 import CopyIcon from "@/public/icons/copy";
 import Image from "next/image";
-import NewLink from "./create-modal/new-link";
-import NewFolder from "./create-modal/new-folder";
+// import NewLink from "./create-modal/new-link";
+// import NewFolder from "./create-modal/new-folder";
 import { copyToClipboard, stopEventPropagation } from "@/utils";
 import { FE_BASE_URL, FE_PROTOCOL } from "@/config";
 import { useRenderingStore, useUserStore } from "@/hooks";
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 import { FolderLinkData } from "@/type";
+import NewFolderIcon from "@/public/icons/new-folder";
+import NewLinkIcon from "@/public/icons/new-link";
 
 type DirectoryItemCardProps = {
     content:
@@ -102,22 +104,12 @@ export default function DirectoryItemCard({
                 {/* images */}
                 {content === "new folder" ? (
                     <>
-                        <Image
-                            src="/icons/new-folder.svg"
-                            alt="new folder"
-                            width={28}
-                            height={28}
-                        />
+                        <NewFolderIcon className="h-7 w-7" />
                         <h6 className="text-primary-500 ml-2">New folder</h6>
                     </>
                 ) : content === "new link" ? (
                     <>
-                        <Image
-                            src="/icons/new-link.svg"
-                            alt="new link"
-                            width={28}
-                            height={28}
-                        />
+                        <NewLinkIcon className="h-7 w-7" />
                         <h6 className="text-primary-500 ml-2">New link</h6>
                     </>
                 ) : (
@@ -133,8 +125,8 @@ export default function DirectoryItemCard({
                             </div>
                         ) : (
                             <div
-                                className={`absolute left-[0px] top-0 h-full w-3 rounded-l-[10px]`}
-                                style={{ backgroundColor: "#FFF" }}
+                                className={`absolute left-0 top-0 h-full w-1 rounded-l-[10px]`}
+                                style={{ backgroundColor: DirectoryItemData?.color }}
                             />
                         )}
                         {/* link or folder data */}

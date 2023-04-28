@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useUserStore } from "@/hooks";
 import React, { useEffect, useRef } from "react";
+import ThemeIcon from "@/public/icons/theme";
 
 type RightClickOptionDropdownProps = {
     userImg: string;
@@ -39,24 +40,24 @@ export default function RightClickOptionDropdown({userImg, setIsModalOpen, profi
                 "#FFC212",
             ]
         },
-        // {
-        //     name: "Classic Light",
-        //     value: "classic-light",
-        //     colors: [
-        //         "#8895A7",
-        //         "#B8C4CE",
-        //         "#F8F9FA",
-        //     ]
-        // },
-        // {
-        //     name: "Classic Dark",
-        //     value: "classic-dark",
-        //     colors: [
-        //         "#000000",
-        //         "#434D5A",
-        //         "#667181",
-        //     ]
-        // }
+        {
+            name: "Classic Light",
+            value: "classic-light",
+            colors: [
+                "#8895A7",
+                "#B8C4CE",
+                "#F8F9FA",
+            ]
+        },
+        {
+            name: "Classic Dark",
+            value: "classic-dark",
+            colors: [
+                "#000000",
+                "#434D5A",
+                "#667181",
+            ]
+        }
     ]
         
     return (
@@ -78,12 +79,7 @@ export default function RightClickOptionDropdown({userImg, setIsModalOpen, profi
             <div className="px-5 py-3 border-b border-neutral-100">
                 {/* TITLE */}
                 <div className="flex gap-2 items-center mb-3">
-                    <Image
-                        src="/icons/theme.svg"
-                        alt="theme icon"
-                        width={24}
-                        height={24}
-                    />
+                    <ThemeIcon className="h-6 w-6" />
                     <p className="text-neutral-900">Theme</p>
                 </div>
                 {/* CONTENT */}

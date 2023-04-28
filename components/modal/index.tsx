@@ -51,7 +51,7 @@ export default function Modal({
             onClick={onOutsideClick}
         >
             <div
-                className={`${styles.modal} relative`}
+                className={`${styles.modal} relative bg-white`}
                 onClick={stopEventPropagation}
             >
                 {withCloseButton && (

@@ -13,6 +13,7 @@ import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
 import Page404 from "../page404";
 import { BrowserBreadcrumb } from "./browser-breadcrumb";
 import { LoadingAnimation } from "@/ui";
+import InfoIcon from "@/public/icons/info";
 
 export default function Browser() {
     let pathname: any;
@@ -354,13 +355,7 @@ export default function Browser() {
                                     );
                                 }}
                             >
-                                <Image
-                                    width={20}
-                                    height={20}
-                                    src="/icons/info.svg"
-                                    alt="info"
-                                    className="h-8 w-8"
-                                />
+                                <InfoIcon className="h-8 w-8" aria-label="Info" />
                             </button>
                         </div>
                     </div>
