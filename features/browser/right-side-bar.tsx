@@ -22,7 +22,7 @@ export const RightSideBar = ({
                     isOpen ? "w-[20vw]" : "w-6"
                 }`}
             >
-                <div className={`${className} w-[20vw] p-6 fixed`}>
+                <div className={`${className} w-[20vw] p-6 fixed flex flex-col justify-between`}>
                     {children}
                 </div>
             </div>
