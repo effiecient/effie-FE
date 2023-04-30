@@ -389,14 +389,14 @@ export default function Browser() {
                             {/* GRID */}
                                 <button
                                     onClick={() => setView("grid")}
-                                    className={`${view === "grid" ? "bg-neutral-300" : "hover:bg-neutral-200"} p-1 rounded-md duration-100`}
+                                    className={`${view === "grid" ? "bg-primary-100" : "hover:bg-primary-50"} p-1 rounded-md duration-100`}
                                 >
                                     <GridIcon />
                                 </button>
                                 {/* LIST */}
                                 <button
                                     onClick={() => setView("list")}
-                                    className={`${view === "list" ? "bg-neutral-300" : "hover:bg-neutral-200"} p-1  rounded-md duration-100`}
+                                    className={`${view === "list" ? "bg-primary-100" : "hover:bg-primary-50"} p-1  rounded-md duration-100`}
                                 >
                                     <ListIcon />
                                 </button>
