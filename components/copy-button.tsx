@@ -5,9 +5,10 @@ import { copyToClipboard, stopEventPropagation } from "@/utils";
 type copyButtonProps = {
     effieURL: string;
     link: string | undefined;
+    view: string;
 };
 
-export default function CopyButton({ effieURL, link }: copyButtonProps) {
+export default function CopyButton({ effieURL, link, view }: copyButtonProps) {
     const copySuccessRef = useRef<HTMLDivElement>(null);
 
     const copyEffieUrl = (e: any) => {
@@ -39,10 +40,10 @@ export default function CopyButton({ effieURL, link }: copyButtonProps) {
     return (
         <div>
             <button
-                className={`group-hover:opacity-100 opacity-0 translate-x-1 group-hover:translate-x-0 absolute right-0 bottom-0 flex items-end h-full bg-white duration-100 rounded-r-xl p-1`}
+                className={`${view === "grid" ? "group-hover:opacity-100 opacity-0 translate-x-1 group-hover:translate-x-0 absolute right-0 bottom-0 bg-white rounded-r-xl p-1" : ""}   flex items-end h-full duration-100`}
                 onClick={copyEffieUrl}
             >
-                <CopyIcon className="duration-100 h-7 w-7" />
+                <CopyIcon className="duration-100 h-6 w-6" />
             </button>
             {/* Copy success notif */}
             <div

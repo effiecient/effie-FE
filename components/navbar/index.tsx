@@ -5,7 +5,7 @@ import { Button } from "@/ui";
 import Image from "next/image";
 import loginIcon from "@/public/icons/login.svg";
 import registerIcon from "@/public/icons/register.svg";
-import directoriesIcon from "@/public/icons/directories-white.svg";
+import DirectoriesWhiteIcon from "@/public/icons/directories-white";
 // import newLinkIcon from "@/public/icons/new-link.svg";
 import defaultUserImg from "@/public/images/user.png";
 import { useRegister, useRenderingStore, useUserStore } from "@/hooks";
@@ -83,14 +83,8 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
                                         >
                                             <Button type="default" pill={true}>
                                                 <div className="flex flex-row gap-2 items-center">
-                                                    {}
-                                                    <Image
-                                                        src={directoriesIcon}
-                                                        alt="register icon"
-                                                        height={20}
-                                                        width={20}
-                                                    />
-                                                    My Directories
+                                                    <DirectoriesWhiteIcon className="h-6 w-6" />
+                                                    My directories
                                                 </div>
                                             </Button>
                                         </Link>
@@ -99,8 +93,8 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
                                     <>
                                         <Button type="default" pill={true}>
                                             <div className="flex flex-row gap-2 items-center">
-                                                <NewLinkIcon className="h-5 w-5" />
-                                                New Link
+                                                <NewLinkIcon className="h-6 w-6" />
+                                                New link
                                             </div>
                                         </Button>
                                     </>

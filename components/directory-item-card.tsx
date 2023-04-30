@@ -9,6 +9,9 @@ import { FolderLinkData } from "@/type";
 import NewFolderIcon from "@/public/icons/new-folder";
 import NewLinkIcon from "@/public/icons/new-link";
 import CopyButton from "./copy-button";
+import PinIcon from "@/public/icons/pin";
+import DirectoriesIcon from "@/public/icons/directories";
+import LinkIcon from "@/public/icons/link";
 
 type DirectoryItemCardProps = {
     content:
@@ -44,7 +47,6 @@ export default function DirectoryItemCard({
         pathname = pathname + "/";
     }
     const effieURL = `${FE_PROTOCOL}://${subdomain}.${FE_BASE_URL}${pathname}${relativePath}`;
-    const copySuccessRef = useRef<HTMLDivElement>(null);
 
     
 
@@ -79,7 +81,7 @@ export default function DirectoryItemCard({
                 ${view === "grid" ? 
                     "bg-white border-2 w-[32vw] md:w-[44vw] lg:w-[20vw] max-w-[16rem] min-w-[8rem] min-h-[4rem] rounded-xl focus:border-primary-500 pt-3 pb-2 px-5 flex" 
                 : 
-                    "py-2 grid grid-cols-[repeat(3,1fr)] border-b-2 !border-neutral-200 border-dashed"}
+                    "py-2 grid grid-cols-[24px_1fr_3fr_12rem_60px] items-center gap-4 border-b-2 !border-neutral-200 border-dashed"}
                 group relative`}
             >
                 {/* images */}
@@ -125,26 +127,35 @@ export default function DirectoryItemCard({
                                     {DirectoryItemData?.link && DirectoryItemData?.link?.slice(8)}
                                 </a>
                                 {(content === "link" || content === "folder") && (
-                                    <CopyButton effieURL={effieURL} link={DirectoryItemData?.link} />
+                                    <CopyButton effieURL={effieURL} link={DirectoryItemData?.link} view={view} />
                                 )}
                             </div>
                             {DirectoryItemData?.isPinned && (
-                                <Image
-                                    src="/icons/pin.svg"
-                                    alt="link"
-                                    width={28}
-                                    height={28}
-                                    className="absolute top-1 right-1 z-0"
-                                />
+                                <PinIcon className="absolute top-1 right-1 z-0 h-6 w-6" />
                             )}
                         </div>
                     ) : ( // list view
                         <>
-                            <p>{DirectoryItemData?.title}</p>
-                            <p>{DirectoryItemData?.link}</p>
-                            <p>{!DirectoryItemData?.shareConfiguration.isShared ? "Private" : DirectoryItemData.shareConfiguration.sharedPrivilege === "read" ? "Public (viewer)" : "Public (editor)"}</p>
-                            <div>
-
+                            { DirectoryItemData?.type === "folder" ? (
+                                <DirectoriesIcon className="h-7 w-7" />
+                            ) : (
+                                <LinkIcon className="h-7 w-7" />
+                            )}
+                            <p className="font-bold text-neutral-900">{DirectoryItemData?.title}</p>
+                            <a
+                                href={DirectoryItemData?.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={`hover:text-primary-500 text-neutral-600 un hover:decoration-primary-500 inline-block max-w-full whitespace-nowrap overflow-hidden overflow-ellipsis`}
+                            >
+                                {DirectoryItemData?.link && DirectoryItemData?.link?.slice(8)}
+                            </a>
+                            <p className="text-neutral-600 whitespace-nowrap">{!DirectoryItemData?.shareConfiguration.isShared ? "Private" : DirectoryItemData.shareConfiguration.sharedPrivilege === "read" ? "Public (viewer)" : "Public (editor)"}</p>
+                            <div className="flex gap-2 justify-end items-center">
+                                {DirectoryItemData?.isPinned && (
+                                    <PinIcon className="z-0 h-6 w-6 mb-1" />
+                                )}
+                                <CopyButton effieURL={effieURL} link={DirectoryItemData?.link} view={view} />
                             </div>
                         </>
                     )
