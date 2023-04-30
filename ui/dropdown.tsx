@@ -50,7 +50,7 @@ export default function Dropdown({ options, selectedOption, setSelectedOption }:
                                 key={option}
                                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-neutral-50 hover:text-gray-900 w-full text-left font-normal"
                                 role="menuitem"
-                                onClick={() => setSelectedOption(option)}
+                                onClick={() => setSelectedOption(option.replace(/ /g, "-").toLowerCase())}
                             >
                                 {option}
                             </button>
