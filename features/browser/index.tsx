@@ -24,6 +24,7 @@ export default function Browser() {
     );
 
     const [sortOption, setSortOption] = useState<string>("name");
+    const [isSortAsc, setIsSortAsc] = useState<boolean>(true);
     const [isNewLinkModalOpen, setIsNewLinkModalOpen] = useState(false);
     const [isNewFolderModalOpen, setIsNewFolderModalOpen] = useState(false);
     const [isKeyboardShortcutsModalOpen, setIsKeyboardShortcutsModalOpen] =
@@ -213,7 +214,7 @@ export default function Browser() {
     }
 
     const { dataChildrenFolders, dataChildrenLinks } =
-        sortDataToFolderAndLink(responseData, sortOption, true);
+        sortDataToFolderAndLink(responseData, sortOption, isSortAsc);
     return (
         <>
             <Head>
@@ -360,8 +361,15 @@ export default function Browser() {
                                 selectedOption={sortOption.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())}
                                 setSelectedOption={setSortOption}
                             />
+                            {/* ASC DESC */}
+                            <button className="text-neutral-700 py-1 rounded-full hover:text-neutral-900 font-normal" onClick={() => setIsSortAsc(!isSortAsc)}>
+                                {isSortAsc ? 
+                                    "A → Z" : "Z → A"
+                                }
+                            </button>
                             {/* INFO */}
                             <button
+                                className="ml-4"
                                 onClick={() => {
                                     setIsSideBarPropertiesOpen(
                                         !isSideBarPropertiesOpen
