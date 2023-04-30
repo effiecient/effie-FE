@@ -180,7 +180,7 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                         isInEditMode ? (
                             // folder in edit mode
                             <>
-                                <div className="mt-6 lg:mt-16 h-full">
+                                <div className="mt-6 lg:mt-16 h-full overflow-auto lg:mb-4">
                                     <div className="flex flex-col break-words gap-8 p-1">
                                         <Input
                                             type="text"
@@ -296,7 +296,7 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                             </>
                         ) : (
                             // folder not in edit mode
-                            <div className="mt-6 lg:mt-16 h-full">
+                            <div className="mt-6 lg:mt-16 h-full overflow-auto lg:mb-4">
                                 <div className="flex flex-col break-words gap-8 p-1">
                                     <h4 className="text-neutral-900">
                                         {itemData.title}
@@ -355,7 +355,7 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                     isInEditMode ? (
                         // link in edit mode
                         <>
-                            <div className="mt-6 lg:mt-16 h-full">
+                            <div className="mt-6 lg:mt-16 h-full overflow-auto lg:mb-4">
                                 <div className="flex flex-col break-words gap-8 p-1">
                                     <Input
                                         type="text"
@@ -487,7 +487,7 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                         </>
                     ) : (
                         // link not in edit mode
-                        <div className="mt-6 lg:mt-16 h-full">
+                        <div className="mt-6 lg:mt-16 h-full overflow-auto lg:mb-4">
                             <div className="flex flex-col break-words gap-8 p-1">
                                 <h4 className="text-neutral-900">
                                     {itemData.title}
@@ -544,7 +544,7 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                     )}
 
                     {/* Buttons */}
-                    <div className="sticky bottom-12 w-full flex flex-col gap-4">
+                    <div className="bottom-12 w-full flex flex-col gap-4">
                         {isInEditMode ? (
                             <>
                                 <Button
