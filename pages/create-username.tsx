@@ -30,6 +30,9 @@ export default function CreateUsername() {
 
     function handleUsernameInput(e: any) {
         setIsInputtingUsername(true);
+        e.target.value = e.target.value.replace(/\s/g, "");
+        e.target.value = e.target.value.replace(/[^a-zA-Z0-9\-\_]/g, "");
+        e.target.value = e.target.value.toLowerCase();
         setUsername(e.target.value);
     }
 
@@ -46,6 +49,18 @@ export default function CreateUsername() {
     function handleCreateUsernameOnClick(e: any) {
         // hit register.
         e.preventDefault();
+        // username cannot be www, api, undefined, null, admin
+        if (
+            username === "www" ||
+            username === "api" ||
+            username === "undefined" ||
+            username === "null" ||
+            username === "admin"
+        ) {
+            setIsInputtingUsername(false);
+            setErrorMessage("Username is not allowed");
+            return;
+        }
         const accessToken = localStorage.getItem("accessToken");
         const uid = localStorage.getItem("uid");
         console.log(accessToken, "\n\n\n", uid, "\n\n\n", username);
@@ -76,7 +91,6 @@ export default function CreateUsername() {
                 const photoURL = localStorage.getItem("photoURL");
                 doEffieLogin(accessToken, uid, photoURL);
             } else {
-                // TODO: change this to snackbar
                 setIsInputtingUsername(false);
                 console.error(responseUsername);
                 setErrorMessage(responseUsername.message);
@@ -195,7 +209,7 @@ export default function CreateUsername() {
                             </Button>
                         </form>
                         <div className="h-4 flex mt-2">
-                            {isErrorUsername && !isInputtingUsername && (
+                            {errorMessage !== "" && !isInputtingUsername && (
                                 <p className="text-danger-300">
                                     {errorMessage}
                                 </p>
