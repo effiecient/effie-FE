@@ -12,7 +12,7 @@ import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
 
 import Page404 from "../page404";
 import { BrowserBreadcrumb } from "./browser-breadcrumb";
-import { LoadingAnimation } from "@/ui";
+import { LoadingAnimation, Dropdown } from "@/ui";
 import InfoIcon from "@/public/icons/info";
 
 export default function Browser() {
@@ -23,6 +23,7 @@ export default function Browser() {
         (state: any) => state.setShowSkeleton
     );
 
+    const [sortOption, setSortOption] = useState<string>("name");
     const [isNewLinkModalOpen, setIsNewLinkModalOpen] = useState(false);
     const [isNewFolderModalOpen, setIsNewFolderModalOpen] = useState(false);
     const [isKeyboardShortcutsModalOpen, setIsKeyboardShortcutsModalOpen] =
@@ -347,7 +348,17 @@ export default function Browser() {
                             onBreadcrumbClick={handleBreadcrumbClick}
                         />
                         <div className="flex flex-row items-center gap-2">
+                            {/* LOADING */}
                             {isLoadingRefetch && <SyncingAnimation />}
+                            {/* SORT */}
+                            <p>Sort by</p>
+                            {/* DROPDOWN INPUT */}
+                            <Dropdown
+                                options={["Name", "Date"]}
+                                selectedOption={sortOption}
+                                setSelectedOption={setSortOption}
+                            />
+                            {/* INFO */}
                             <button
                                 onClick={() => {
                                     setIsSideBarPropertiesOpen(
