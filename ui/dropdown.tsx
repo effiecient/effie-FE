@@ -27,7 +27,7 @@ export default function Dropdown({ options, selectedOption, setSelectedOption }:
     return (
         <div className="relative inline-block text-left">
             <button
-                className="flex items-center justify-between w-32 px-3 py-1 text-sm font-medium text-neutral-800 border-2 border-neutral-200 rounded-md hover:bg-neutral-100 duration-100"
+                className="flex items-center justify-between w-24 md:w-32 px-3 py-1 text-sm font-medium text-neutral-800 border-2 border-neutral-200 rounded-md hover:bg-neutral-100 duration-100"
                 id="options-menu"
                 aria-haspopup="true"
                 aria-expanded="true"
@@ -39,7 +39,7 @@ export default function Dropdown({ options, selectedOption, setSelectedOption }:
             
             { isOptionsOpen && (
                 <div
-                    className="origin-top-right absolute right-0 mt-2 w-32 rounded-lg bg-white border border-neutral-200 text-neutral-800"
+                    className="origin-top-right absolute right-0 mt-2 w-24 md:w-32 rounded-lg bg-white border border-neutral-200 text-neutral-800"
                     role="menu"
                     aria-orientation="vertical"
                     aria-labelledby="options-menu"
