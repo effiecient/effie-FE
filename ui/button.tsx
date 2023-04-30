@@ -41,7 +41,7 @@ export default function Button({
         // set on hover
         buttonClassNames += ` ${
             !disabled &&
-            `hover:bg-${type}-${borderMode ? "300" : "500"} hover:text-white`
+            `hover:bg-${type}-${borderMode ? "50" : "500"}`
         }`;
     } else if (type === "default") {
         // set color
@@ -85,8 +85,8 @@ export default function Button({
                       } ${
                           !disabled &&
                           `hover:bg-primary-${
-                              borderMode ? "500" : "700"
-                          } hover:text-white `
+                              borderMode ? "50" : "700"
+                          }`
                       }`
                     : type === "custom"
                     ? ""
@@ -99,8 +99,8 @@ export default function Button({
                       }  ${
                           !disabled &&
                           `hover:bg-${type}-${
-                              borderMode ? "300" : "500"
-                          } hover:text-white`
+                              borderMode ? "50" : "500"
+                          }`
                       }`
             } ${borderMode ? "border-2" : ""}
         ${pill ? "rounded-full" : "rounded-md"} px-3 py-2 duration-200 

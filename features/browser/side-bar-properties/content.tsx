@@ -22,6 +22,7 @@ import drawerImage from "@/public/images/drawer.svg";
 import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
 
 import { getObjectDifferences, checkIfObjectSame } from "@/utils";
+import { ConfirmationModal } from "@/components";
 
 const ShareConfigurationOptions = [
     "Private",
@@ -65,7 +66,6 @@ export function useLegacyState<T>(initialState: any) {
 export const Content = ({ itemData, relativePath, onUpdate }: any) => {
     const subdomain = useUserStore((state: any) => state.subdomain);
     const pathname = useUserStore((state: any) => state.pathname);
-    const username = useUserStore((state: any) => state.username);
 
     const [isInEditMode, setIsInEditMode] = useState(false);
 
@@ -74,6 +74,8 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
         useLegacyState<FolderLinkData>(itemData);
 
     const [isChanged, setIsChanged] = useState(false);
+    const [isConfirmationModalOpen, setIsConfirmationModalOpen] =
+        useState(false);
 
     // reset everything when the itemData is changed
     useEffect(() => {
@@ -161,12 +163,15 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
 
     useEffect(() => {
         if (startDelete) {
+            console.log(pathname)
             fetcher({
-                url: `${BE_BASE_URL}/directory/${subdomain}/${pathname + relativePath}`,
+                url: `${BE_BASE_URL}/directory/${subdomain}/${
+                    pathname === "" ? "" : pathname + "/"
+                }${relativePath}`,
                 method: "DELETE",
                 body: {
                     username: subdomain,
-                    path: "/" + pathname + relativePath,
+                    path: "/" + pathname + "/" + relativePath,
                 },
             });
         }
@@ -191,7 +196,12 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
     }
 
     function handleDeleteButtonClick() {
+        setIsConfirmationModalOpen(true);
+    }
+
+    function handleDeleteConfirm() {
         setStartDelete(true);
+        setIsConfirmationModalOpen(false);
     }
 
     return (
@@ -655,6 +665,14 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                         )}
                     </div>
                 </>
+            )}
+            {isConfirmationModalOpen && (
+                <ConfirmationModal
+                    name={relativePath}
+                    isOpen={isConfirmationModalOpen}
+                    onClose={() => setIsConfirmationModalOpen(false)}
+                    onConfirm={handleDeleteConfirm}
+                />
             )}
         </>
     );

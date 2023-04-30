@@ -19,6 +19,7 @@ export default function Browser() {
     let pathname: any;
 
     const subdomain = useUserStore((state: any) => state.subdomain);
+    const setPathname = useUserStore((state: any) => state.setPathname);
     const setShowSkeleton = useRenderingStore(
         (state: any) => state.setShowSkeleton
     );
@@ -83,6 +84,7 @@ export default function Browser() {
             if (pathname[0] === "/") {
                 pathname = pathname.slice(1);
             }
+            setPathname(pathname)
         }
     };
     updatePathname();
