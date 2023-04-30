@@ -259,11 +259,21 @@ export default function Browser() {
                         isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
                     }`}
                 >
-                    <div className="p-6">
+                    <div className="p-6 relative">
                         { view === "grid" && (
-                            <h5 className="text-neutral-400 relative z-10 pb-2">
-                                Folders
-                            </h5>
+                            // header
+                            <div className="flex justify-between items-center">
+                                <h5 className="text-neutral-400 relative z-10 pb-2">
+                                    Folders
+                                </h5>
+                            </div>
+                        )}
+                        { view === "list" && (
+                            <div className="py-3 grid grid-cols-[24px_1fr_1fr_60px] md:grid-cols-[24px_1fr_3fr_8rem_60px] items-center gap-4 border-b-2 !border-neutral-200 border-dashed sticky top-44 md:top-32 bg-neutral-50 z-30">
+                                <p className="font-bold text-neutral-900 col-start-2">Name</p>
+                                <p className="font-bold text-neutral-900">Link</p>
+                                <p className="hidden md:block font-bold text-neutral-900">Access</p>
+                            </div>
                         )}
                         <section
                             className={`${view === "grid" ? "flex-row" : "flex-col"} flex gap-4 w-full flex-wrap pb-4`}
@@ -353,7 +363,7 @@ export default function Browser() {
                         <BrowserBreadcrumb
                             onBreadcrumbClick={handleBreadcrumbClick}
                         />
-                        <div className="flex flex-row items-center justify-between md:justify-end gap-2">
+                        <div className="flex flex-row items-center justify-between md:justify-end gap-2 w-full">
                             {/* LOADING */}
                             {isLoadingRefetch && <SyncingAnimation />}
                             {/* SORT */}
@@ -473,9 +483,9 @@ function sortDataToFolderAndLink(input: any, sortOption: string, asc: boolean) {
     // sort based on isPinned and then title alphabetically
     dataChildrenFolders.sort((a: any, b: any) => {
         if (a.data.isPinned === b.data.isPinned) {
-            if (sortOption === "name" && asc) {
+            if ((sortOption === "name" || sortOption === "link") && asc) {
                 return a.data.title.localeCompare(b.data.title);
-            } else if (sortOption === "name" && !asc) {
+            } else if ((sortOption === "name" || sortOption === "link") && !asc) {
                 return b.data.title.localeCompare(a.data.title);
             } 
         }
