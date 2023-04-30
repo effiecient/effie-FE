@@ -253,29 +253,28 @@ export default function Browser() {
                     <Background />
                 </div>
 
-                {/* content */}
+                {/* CONTENT*/}
                 <div
                     className={`z-0 absolute lg:ml-20 top-32 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
                         isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
                     }`}
                 >
                     <div className="p-6">
-                        <h5 className="text-neutral-400 relative z-10  pb-2">
-                            Folders
-                        </h5>
+                        { view === "grid" && (
+                            <h5 className="text-neutral-400 relative z-10 pb-2">
+                                Folders
+                            </h5>
+                        )}
                         <section
-                            className="flex gap-4 w-full flex-wrap"
-                            onClick={() => {
-                                // reset focused item
-                                // setFocusedItemData(undefined);
-                                // setFocusedItemName("");
-                            }}
+                            className={`${view === "grid" ? "flex-row" : "flex-col"} flex gap-4 w-full flex-wrap pb-4`}
                         >
-                            <DirectoryItemCard
-                                content="new folder"
-                                onClick={handleNewFolderClick}
-                                view={view}
-                            />
+                            { view === "grid" && (
+                                <DirectoryItemCard
+                                    content="new folder"
+                                    onClick={handleNewFolderClick}
+                                    view={view}
+                                />
+                            )}
                             {dataChildrenFolders.map(
                                 (folder: any, index: any) => {
                                     let child = folder.key;
@@ -303,22 +302,26 @@ export default function Browser() {
                             )}
                         </section>
 
-                        <h5 className="text-neutral-400 relative z-10 pt-6 pb-2">
-                            Links
-                        </h5>
+                        { view === "grid" && (
+                            <h5 className="text-neutral-400 relative z-10 pt-2 pb-2">
+                                Links
+                            </h5>
+                        )}
                         <section
-                            className="flex gap-4 w-full flex-wrap"
+                            className={`${view === "grid" ? "flex-row" : "flex-col"} flex gap-4 w-full flex-wrap`}
                             onClick={() => {
                                 // reset focused item
                                 // setFocusedItemData(undefined);
                                 // setFocusedItemName("");
                             }}
                         >
-                            <DirectoryItemCard
-                                content="new link"
-                                onClick={handleNewLinkClick}
-                                view={view}
-                            />
+                            { view === "grid" && (
+                                <DirectoryItemCard
+                                    content="new link"
+                                    onClick={handleNewLinkClick}
+                                    view={view}
+                                />
+                            )}
                             {dataChildrenLinks.map((link: any, index: any) => {
                                 let child = link.key;
                                 let data = link.data;
