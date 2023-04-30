@@ -309,11 +309,6 @@ export default function Browser() {
                         )}
                         <section
                             className={`${view === "grid" ? "flex-row" : "flex-col"} flex gap-4 w-full flex-wrap`}
-                            onClick={() => {
-                                // reset focused item
-                                // setFocusedItemData(undefined);
-                                // setFocusedItemName("");
-                            }}
                         >
                             { view === "grid" && (
                                 <DirectoryItemCard
