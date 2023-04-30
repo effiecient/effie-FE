@@ -134,7 +134,7 @@ export default function NewLink({
                 </div>
                 <div className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
                     <input
-                        type="text"
+                        type="url"
                         id="link-url"
                         name="link-url"
                         placeholder="Paste link here"
