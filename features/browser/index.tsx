@@ -363,7 +363,7 @@ export default function Browser() {
                         <BrowserBreadcrumb
                             onBreadcrumbClick={handleBreadcrumbClick}
                         />
-                        <div className="flex flex-row items-center justify-between md:justify-end gap-2 w-full">
+                        <div className="flex flex-row items-center justify-between md:justify-end gap-2 w-full md:w-auto">
                             {/* LOADING */}
                             {isLoadingRefetch && <SyncingAnimation />}
                             {/* SORT */}
