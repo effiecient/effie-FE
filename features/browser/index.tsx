@@ -259,7 +259,7 @@ export default function Browser() {
                         isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
                     }`}
                 >
-                    <div className="p-6 relative">
+                    <div className="pb-24 lg:pb-6 p-6 relative">
                         { view === "grid" && (
                             // header
                             <div className="flex justify-between items-center">
