@@ -175,7 +175,7 @@ export default function Browser() {
                     </div>
                     {/* content */}
                     <div
-                        className={`z-0 absolute lg:ml-20 top-32 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
+                        className={`z-0 absolute lg:ml-20 top-44 md:top-32 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
                             isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
                         }`}
                     >
@@ -253,9 +253,9 @@ export default function Browser() {
                     <Background />
                 </div>
 
-                {/* CONTENT*/}
+                {/* CONTENT */}
                 <div
-                    className={`z-0 absolute lg:ml-20 top-32 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
+                    className={`z-0 absolute lg:ml-20 top-44 md:top-32 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
                         isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
                     }`}
                 >
@@ -349,15 +349,15 @@ export default function Browser() {
                         isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
                     }`}
                 >
-                    <div className="p-6 flex justify-between items-center">
+                    <div className="p-6 flex flex-col md:flex-row justify-between items-start md:items-center max-w-full gap-4 md:gap-0">
                         <BrowserBreadcrumb
                             onBreadcrumbClick={handleBreadcrumbClick}
                         />
-                        <div className="flex flex-row items-center gap-2">
+                        <div className="flex flex-row items-center justify-between md:justify-end gap-2">
                             {/* LOADING */}
                             {isLoadingRefetch && <SyncingAnimation />}
                             {/* SORT */}
-                            <p className="text-neutral-700">Sort by</p>
+                            <p className="hidden md:block text-neutral-700">Sort by</p>
                             {/* DROPDOWN INPUT */}
                             <Dropdown
                                 options={["Name", "Link"]}

@@ -81,7 +81,7 @@ export default function DirectoryItemCard({
                 ${view === "grid" ? 
                     "bg-white border-2 w-[32vw] md:w-[44vw] lg:w-[20vw] max-w-[16rem] min-w-[8rem] min-h-[4rem] rounded-xl focus:border-primary-500 pt-3 pb-2 px-5 flex" 
                 : 
-                    "py-2 grid grid-cols-[24px_1fr_1fr_60px] md:grid-cols-[24px_1fr_3fr_12rem_60px] items-center gap-4 border-b-2 !border-neutral-200 border-dashed"}
+                    "py-2 grid grid-cols-[24px_1fr_1fr_60px] md:grid-cols-[24px_1fr_3fr_8rem_60px] items-center gap-4 border-b-2 !border-neutral-200 border-dashed"}
                 group relative`}
             >
                 {/* images */}
@@ -150,7 +150,7 @@ export default function DirectoryItemCard({
                             >
                                 {DirectoryItemData?.link && DirectoryItemData?.link?.slice(8)}
                             </a>
-                            <p className="text-neutral-600 whitespace-nowrap hidden mb:block">{!DirectoryItemData?.shareConfiguration.isShared ? "Private" : DirectoryItemData.shareConfiguration.sharedPrivilege === "read" ? "Public (viewer)" : "Public (editor)"}</p>
+                            <p className="text-neutral-600 whitespace-nowrap hidden md:block">{!DirectoryItemData?.shareConfiguration.isShared ? "Private" : DirectoryItemData.shareConfiguration.sharedPrivilege === "read" ? "Public (viewer)" : "Public (editor)"}</p>
                             <div className="flex gap-2 justify-end items-center">
                                 {DirectoryItemData?.isPinned && (
                                     <PinIcon className="z-0 h-6 w-6 mb-1" />
