@@ -14,6 +14,8 @@ import Page404 from "../page404";
 import { BrowserBreadcrumb } from "./browser-breadcrumb";
 import { LoadingAnimation } from "@/ui";
 import InfoIcon from "@/public/icons/info";
+import GridIcon from "@/public/icons/grid";
+import ListIcon from "@/public/icons/list";
 
 export default function Browser() {
     let pathname: any;
@@ -22,6 +24,8 @@ export default function Browser() {
     const setShowSkeleton = useRenderingStore(
         (state: any) => state.setShowSkeleton
     );
+
+    const [view, setView] = useState<string>("grid");
 
     const [isNewLinkModalOpen, setIsNewLinkModalOpen] = useState(false);
     const [isNewFolderModalOpen, setIsNewFolderModalOpen] = useState(false);
@@ -179,8 +183,8 @@ export default function Browser() {
                                 <p className="bg-neutral-200 w-12 rounded-full h-5 pb-2 relative" />
                             </h5>
                             <section className="flex gap-4 w-full flex-wrap">
-                                <DirectoryItemCard content="new folder" />
-                                <DirectoryItemCard content="new folder" />
+                                <DirectoryItemCard content="new folder" view={view} />
+                                <DirectoryItemCard content="new folder" view={view} />
                             </section>
                         </div>
                     </div>
@@ -269,6 +273,7 @@ export default function Browser() {
                             <DirectoryItemCard
                                 content="new folder"
                                 onClick={handleNewFolderClick}
+                                view={view}
                             />
                             {dataChildrenFolders.map(
                                 (folder: any, index: any) => {
@@ -290,6 +295,7 @@ export default function Browser() {
                                             isFocused={
                                                 focusedItemName === child
                                             }
+                                            view={view}
                                         />
                                     );
                                 }
@@ -310,6 +316,7 @@ export default function Browser() {
                             <DirectoryItemCard
                                 content="new link"
                                 onClick={handleNewLinkClick}
+                                view={view}
                             />
                             {dataChildrenLinks.map((link: any, index: any) => {
                                 let child = link.key;
@@ -329,6 +336,7 @@ export default function Browser() {
                                             setFocusedItemName(child);
                                         }}
                                         isFocused={focusedItemName === child}
+                                        view="list"
                                     />
                                 );
                             })}
@@ -348,6 +356,10 @@ export default function Browser() {
                         />
                         <div className="flex flex-row items-center gap-2">
                             {isLoadingRefetch && <SyncingAnimation />}
+                            {/* VIEW */}
+                            {/* GRID */}
+                            <GridIcon />
+                            <ListIcon />
                             <button
                                 onClick={() => {
                                     setIsSideBarPropertiesOpen(

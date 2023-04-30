@@ -1,4 +1,16 @@
-filename = "../public/icons/info.svg"
+# TAKE FILE NAME AS ARGUMENT
+# python3 iconToTsx.py info.svg
+
+import sys
+import os
+import re
+
+defaultPath = "../public/icons/"
+if len(sys.argv) > 1:
+    filename = defaultPath + sys.argv[1]
+else:
+    print("No filename given, using default")
+    filename = "../public/icons/info.svg"
 
 '''
     /* --color-black: #000000;

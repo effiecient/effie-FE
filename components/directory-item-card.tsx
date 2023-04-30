@@ -25,6 +25,7 @@ type DirectoryItemCardProps = {
     className?: string;
     relativePath?: string;
     isFocused?: boolean;
+    view: string;
 };
 
 export default function DirectoryItemCard({
@@ -35,6 +36,7 @@ export default function DirectoryItemCard({
     className,
     relativePath,
     isFocused = false,
+    view,
 }: DirectoryItemCardProps) {
     let pathname = window.location.pathname;
     let subdomain = useUserStore((state: any) => state.username);
@@ -113,84 +115,88 @@ export default function DirectoryItemCard({
                         <h6 className="text-primary-500 ml-2">New link</h6>
                     </>
                 ) : (
-                    <div className={`flex flex-row`}>
-                        {content === "link" || content === "display link" ? (
-                            <div className="mr-2 w-1/5">
+                    view === "grid" ? (
+                        <div className={`flex flex-row`}>
+                            {content === "link" || content === "display link" ? (
+                                <div className="mr-2 w-1/5">
+                                    <Image
+                                        src={`https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${DirectoryItemData?.link}&size=64`}
+                                        alt="link"
+                                        width={28}
+                                        height={28}
+                                    />
+                                </div>
+                            ) : (
+                                <div
+                                    className={`absolute left-0 top-0 h-full w-1 rounded-l-[10px]`}
+                                    style={{ backgroundColor: DirectoryItemData?.color }}
+                                />
+                            )}
+                            {/* link or folder data */}
+                            <div className="overflow-hidden w-[80%]">
+                                <h6 className={`text-neutral-800`}>
+                                    {DirectoryItemData?.title}
+                                </h6>
+                                <a
+                                    href={DirectoryItemData?.link}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={`hover:text-primary-500 text-neutral-600 text-xs un hover:decoration-primary-500 inline-block max-w-full whitespace-nowrap`}
+                                >
+                                    {DirectoryItemData?.link && DirectoryItemData?.link?.slice(8)}
+                                </a>
+                                {(content === "link" || content === "folder") && (
+                                    <div>
+                                        <button
+                                            className={`group-hover:opacity-100 opacity-0 translate-x-1 group-hover:translate-x-0 absolute right-0 bottom-0 flex items-end h-full bg-white duration-100 rounded-r-xl p-1`}
+                                            onClick={copyEffieUrl}
+                                        >
+                                            <CopyIcon className="duration-100 h-7 w-7" />
+                                        </button>
+                                        {/* Copy success notif */}
+                                        <div
+                                            ref={copySuccessRef}
+                                            className={`opacity-0
+                                            -translate-y-1 -z-10 absolute -bottom-12 -right-12 bg-neutral-800 text-white rounded-md py-1 px-2 shadow-lg text-left duration-300 max-w-[12rem]`}
+                                        >
+                                            <p className="text-xs">
+                                                Link copied!
+                                                <br />
+                                                <a
+                                                    className="text-[0.6rem] underline text-neutral-100"
+                                                    href={DirectoryItemData?.link}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    {/* if effieURl > 20 character, show 10 characters with ... */}
+                                                    {effieURL.length > 20
+                                                        ? `${effieURL.slice(
+                                                            0,
+                                                            10
+                                                        )}...${effieURL.slice(
+                                                            effieURL.length - 10,
+                                                            effieURL.length
+                                                        )}`
+                                                        : effieURL}
+                                                </a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                            {DirectoryItemData?.isPinned && (
                                 <Image
-                                    src={`https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${DirectoryItemData?.link}&size=64`}
+                                    src="/icons/pin.svg"
                                     alt="link"
                                     width={28}
                                     height={28}
+                                    className="absolute top-1 right-1 z-0"
                                 />
-                            </div>
-                        ) : (
-                            <div
-                                className={`absolute left-0 top-0 h-full w-1 rounded-l-[10px]`}
-                                style={{ backgroundColor: DirectoryItemData?.color }}
-                            />
-                        )}
-                        {/* link or folder data */}
-                        <div className="overflow-hidden w-[80%]">
-                            <h6 className={`text-neutral-800`}>
-                                {DirectoryItemData?.title}
-                            </h6>
-                            <a
-                                href={DirectoryItemData?.link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className={`hover:text-primary-500 text-neutral-600 text-xs un hover:decoration-primary-500 inline-block max-w-full whitespace-nowrap`}
-                            >
-                                {DirectoryItemData?.link && DirectoryItemData?.link?.slice(8)}
-                            </a>
-                            {(content === "link" || content === "folder") && (
-                                <div>
-                                    <button
-                                        className={`group-hover:opacity-100 opacity-0 translate-x-1 group-hover:translate-x-0 absolute right-0 bottom-0 flex items-end h-full bg-white duration-100 rounded-r-xl p-1`}
-                                        onClick={copyEffieUrl}
-                                    >
-                                        <CopyIcon className="duration-100 h-7 w-7" />
-                                    </button>
-                                    {/* Copy success notif */}
-                                    <div
-                                        ref={copySuccessRef}
-                                        className={`opacity-0
-                                        -translate-y-1 -z-10 absolute -bottom-12 -right-12 bg-neutral-800 text-white rounded-md py-1 px-2 shadow-lg text-left duration-300 max-w-[12rem]`}
-                                    >
-                                        <p className="text-xs">
-                                            Link copied!
-                                            <br />
-                                            <a
-                                                className="text-[0.6rem] underline text-neutral-100"
-                                                href={DirectoryItemData?.link}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                            >
-                                                {/* if effieURl > 20 character, show 10 characters with ... */}
-                                                {effieURL.length > 20
-                                                    ? `${effieURL.slice(
-                                                          0,
-                                                          10
-                                                      )}...${effieURL.slice(
-                                                          effieURL.length - 10,
-                                                          effieURL.length
-                                                      )}`
-                                                    : effieURL}
-                                            </a>
-                                        </p>
-                                    </div>
-                                </div>
                             )}
                         </div>
-                        {DirectoryItemData?.isPinned && (
-                            <Image
-                                src="/icons/pin.svg"
-                                alt="link"
-                                width={28}
-                                height={28}
-                                className="absolute top-1 right-1 z-0"
-                            />
-                        )}
-                    </div>
+                    ) : ( // list view
+                        <>LIST VIEW</>
+                    )
                 )}
             </div>
         </>
