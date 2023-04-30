@@ -65,6 +65,7 @@ export function useLegacyState<T>(initialState: any) {
 export const Content = ({ itemData, relativePath, onUpdate }: any) => {
     const subdomain = useUserStore((state: any) => state.subdomain);
     const pathname = useUserStore((state: any) => state.pathname);
+    const username = useUserStore((state: any) => state.username);
 
     const [isInEditMode, setIsInEditMode] = useState(false);
 
@@ -155,9 +156,44 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
         }
     }, [isLoading, isError, response, fetchStarted]);
 
+    // Handle delete
+    const [startDelete, setStartDelete] = useState(false);
+
+    useEffect(() => {
+        if (startDelete) {
+            fetcher({
+                url: `${BE_BASE_URL}/directory/${subdomain}/${pathname + relativePath}`,
+                method: "DELETE",
+                body: {
+                    username: subdomain,
+                    path: "/" + pathname + relativePath,
+                },
+            });
+        }
+    }, [startDelete]);
+
+    useEffect(() => {
+        if (startDelete) {
+            if (isError) {
+                setStartDelete(false);
+                setIsInEditMode(false);
+            } else if (isLoading || !fetchStarted) {
+            } else {
+                setStartDelete(false);
+                onUpdate();
+                setIsInEditMode(false);
+            }
+        }
+    }, [isLoading, isError, response, fetchStarted]);
+
     function handleSaveButtonClick() {
         setStartUpdate(true);
     }
+
+    function handleDeleteButtonClick() {
+        setStartDelete(true);
+    }
+
     return (
         <>
             {itemData === undefined ? (
@@ -605,6 +641,7 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                     className="w-full flex justify-center items-center gap-1 h-12"
                                     type="danger"
                                     borderMode
+                                    onClick={handleDeleteButtonClick}
                                 >
                                     <Image
                                         src={trashIcon}
