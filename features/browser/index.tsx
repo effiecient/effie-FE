@@ -367,36 +367,40 @@ export default function Browser() {
                             {/* LOADING */}
                             {isLoadingRefetch && <SyncingAnimation />}
                             {/* SORT */}
-                            <p className="hidden md:block text-neutral-700">Sort by</p>
-                            {/* DROPDOWN INPUT */}
-                            <Dropdown
-                                options={["Name", "Link"]}
-                                // Set first letter to uppercase and replace '-' to ' '
-                                // TODO: I don't think this is necessary, might convert back
-                                selectedOption={sortOption.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())}
-                                setSelectedOption={setSortOption}
-                            />
-                            {/* ASC DESC */}
-                            <button className="text-neutral-700 py-1 rounded-full hover:text-neutral-900 font-normal mr-6" onClick={() => setIsSortAsc(!isSortAsc)}>
-                                {isSortAsc ? 
-                                    "A → Z" : "Z → A"
-                                }
-                            </button>
+                            <div className="flex gap-2 items-center">
+                                <p className="hidden md:block text-neutral-700">Sort by</p>
+                                {/* DROPDOWN INPUT */}
+                                <Dropdown
+                                    options={["Name", "Link"]}
+                                    // Set first letter to uppercase and replace '-' to ' '
+                                    // TODO: I don't think this is necessary, might convert back
+                                    selectedOption={sortOption.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())}
+                                    setSelectedOption={setSortOption}
+                                />
+                                {/* ASC DESC */}
+                                <button className="text-neutral-700 py-1 rounded-full hover:text-neutral-900 font-normal mr-6" onClick={() => setIsSortAsc(!isSortAsc)}>
+                                    {isSortAsc ? 
+                                        "A → Z" : "Z → A"
+                                    }
+                                </button>
+                            </div>
                             {/* VIEW */}
+                            <div className="flex gap-2">
                             {/* GRID */}
-                            <button
-                                onClick={() => setView("grid")}
-                                className={`${view === "grid" ? "bg-neutral-300" : "hover:bg-neutral-200"} p-1 rounded-md duration-100`}
-                            >
-                                <GridIcon />
-                            </button>
-                            {/* LIST */}
-                            <button
-                                onClick={() => setView("list")}
-                                className={`${view === "list" ? "bg-neutral-300" : "hover:bg-neutral-200"} p-1  rounded-md duration-100`}
-                            >
-                                <ListIcon />
-                            </button>
+                                <button
+                                    onClick={() => setView("grid")}
+                                    className={`${view === "grid" ? "bg-neutral-300" : "hover:bg-neutral-200"} p-1 rounded-md duration-100`}
+                                >
+                                    <GridIcon />
+                                </button>
+                                {/* LIST */}
+                                <button
+                                    onClick={() => setView("list")}
+                                    className={`${view === "list" ? "bg-neutral-300" : "hover:bg-neutral-200"} p-1  rounded-md duration-100`}
+                                >
+                                    <ListIcon />
+                                </button>
+                            </div>
                             {/* INFO */}
                             <button
                                 className="ml-4"
