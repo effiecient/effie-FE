@@ -14,6 +14,8 @@ import Page404 from "../page404";
 import { BrowserBreadcrumb } from "./browser-breadcrumb";
 import { LoadingAnimation, Dropdown } from "@/ui";
 import InfoIcon from "@/public/icons/info";
+import GridIcon from "@/public/icons/grid";
+import ListIcon from "@/public/icons/list";
 
 export default function Browser() {
     let pathname: any;
@@ -24,6 +26,7 @@ export default function Browser() {
         (state: any) => state.setShowSkeleton
     );
 
+    const [view, setView] = useState<string>("grid");
     const [sortOption, setSortOption] = useState<string>("name");
     const [isSortAsc, setIsSortAsc] = useState<boolean>(true);
     const [isNewLinkModalOpen, setIsNewLinkModalOpen] = useState(false);
@@ -174,7 +177,7 @@ export default function Browser() {
                     </div>
                     {/* content */}
                     <div
-                        className={`z-0 absolute lg:ml-20 top-32 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
+                        className={`z-0 absolute lg:ml-20 top-44 md:top-32 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
                             isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
                         }`}
                     >
@@ -183,8 +186,8 @@ export default function Browser() {
                                 <p className="bg-neutral-200 w-12 rounded-full h-5 pb-2 relative" />
                             </h5>
                             <section className="flex gap-4 w-full flex-wrap">
-                                <DirectoryItemCard content="new folder" />
-                                <DirectoryItemCard content="new folder" />
+                                <DirectoryItemCard content="new folder" view={view} />
+                                <DirectoryItemCard content="new folder" view={view} />
                             </section>
                         </div>
                     </div>
@@ -252,28 +255,38 @@ export default function Browser() {
                     <Background />
                 </div>
 
-                {/* content */}
+                {/* CONTENT */}
                 <div
-                    className={`z-0 absolute lg:ml-20 top-32 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
+                    className={`z-0 absolute lg:ml-20 top-44 md:top-32 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
                         isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
                     }`}
                 >
-                    <div className="p-6">
-                        <h5 className="text-neutral-400 relative z-10  pb-2">
-                            Folders
-                        </h5>
+                    <div className="pb-24 lg:pb-6 p-6 relative">
+                        { view === "grid" && (
+                            // header
+                            <div className="flex justify-between items-center">
+                                <h5 className="text-neutral-400 relative z-10 pb-2">
+                                    Folders
+                                </h5>
+                            </div>
+                        )}
+                        { view === "list" && (
+                            <div className="py-3 grid grid-cols-[24px_1fr_1fr_60px] md:grid-cols-[24px_1fr_3fr_8rem_60px] items-center gap-4 border-b-2 !border-neutral-200 border-dashed sticky top-44 md:top-32 bg-neutral-50 z-30">
+                                <p className="font-bold text-neutral-900 col-start-2">Name</p>
+                                <p className="font-bold text-neutral-900">Link</p>
+                                <p className="hidden md:block font-bold text-neutral-900">Access</p>
+                            </div>
+                        )}
                         <section
-                            className="flex gap-4 w-full flex-wrap"
-                            onClick={() => {
-                                // reset focused item
-                                // setFocusedItemData(undefined);
-                                // setFocusedItemName("");
-                            }}
+                            className={`${view === "grid" ? "flex-row" : "flex-col"} flex gap-4 w-full flex-wrap pb-4`}
                         >
-                            <DirectoryItemCard
-                                content="new folder"
-                                onClick={handleNewFolderClick}
-                            />
+                            { view === "grid" && (
+                                <DirectoryItemCard
+                                    content="new folder"
+                                    onClick={handleNewFolderClick}
+                                    view={view}
+                                />
+                            )}
                             {dataChildrenFolders.map(
                                 (folder: any, index: any) => {
                                     let child = folder.key;
@@ -294,27 +307,28 @@ export default function Browser() {
                                             isFocused={
                                                 focusedItemName === child
                                             }
+                                            view={view}
                                         />
                                     );
                                 }
                             )}
                         </section>
 
-                        <h5 className="text-neutral-400 relative z-10 pt-6 pb-2">
-                            Links
-                        </h5>
+                        { view === "grid" && (
+                            <h5 className="text-neutral-400 relative z-10 pt-2 pb-2">
+                                Links
+                            </h5>
+                        )}
                         <section
-                            className="flex gap-4 w-full flex-wrap"
-                            onClick={() => {
-                                // reset focused item
-                                // setFocusedItemData(undefined);
-                                // setFocusedItemName("");
-                            }}
+                            className={`${view === "grid" ? "flex-row" : "flex-col"} flex gap-4 w-full flex-wrap`}
                         >
-                            <DirectoryItemCard
-                                content="new link"
-                                onClick={handleNewLinkClick}
-                            />
+                            { view === "grid" && (
+                                <DirectoryItemCard
+                                    content="new link"
+                                    onClick={handleNewLinkClick}
+                                    view={view}
+                                />
+                            )}
                             {dataChildrenLinks.map((link: any, index: any) => {
                                 let child = link.key;
                                 let data = link.data;
@@ -333,6 +347,7 @@ export default function Browser() {
                                             setFocusedItemName(child);
                                         }}
                                         isFocused={focusedItemName === child}
+                                        view={view}
                                     />
                                 );
                             })}
@@ -346,29 +361,48 @@ export default function Browser() {
                         isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
                     }`}
                 >
-                    <div className="p-6 flex justify-between items-center">
+                    <div className="p-6 flex flex-col md:flex-row justify-between items-start md:items-center max-w-full gap-4 md:gap-0">
                         <BrowserBreadcrumb
                             onBreadcrumbClick={handleBreadcrumbClick}
                         />
-                        <div className="flex flex-row items-center gap-2">
+                        <div className="flex flex-row items-center justify-between md:justify-end gap-2 w-full md:w-auto">
                             {/* LOADING */}
                             {isLoadingRefetch && <SyncingAnimation />}
                             {/* SORT */}
-                            <p className="text-neutral-700">Sort by</p>
-                            {/* DROPDOWN INPUT */}
-                            <Dropdown
-                                options={["Name", "Link"]}
-                                // Set first letter to uppercase and replace '-' to ' '
-                                // TODO: I don't think this is necessary, might convert back
-                                selectedOption={sortOption.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())}
-                                setSelectedOption={setSortOption}
-                            />
-                            {/* ASC DESC */}
-                            <button className="text-neutral-700 py-1 rounded-full hover:text-neutral-900 font-normal" onClick={() => setIsSortAsc(!isSortAsc)}>
-                                {isSortAsc ? 
-                                    "A → Z" : "Z → A"
-                                }
-                            </button>
+                            <div className="flex gap-2 items-center">
+                                <p className="hidden md:block text-neutral-700">Sort by</p>
+                                {/* DROPDOWN INPUT */}
+                                <Dropdown
+                                    options={["Name", "Link"]}
+                                    // Set first letter to uppercase and replace '-' to ' '
+                                    // TODO: I don't think this is necessary, might convert back
+                                    selectedOption={sortOption.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())}
+                                    setSelectedOption={setSortOption}
+                                />
+                                {/* ASC DESC */}
+                                <button className="text-neutral-700 py-1 rounded-full hover:text-neutral-900 font-normal mr-6" onClick={() => setIsSortAsc(!isSortAsc)}>
+                                    {isSortAsc ? 
+                                        "A → Z" : "Z → A"
+                                    }
+                                </button>
+                            </div>
+                            {/* VIEW */}
+                            <div className="flex gap-2">
+                            {/* GRID */}
+                                <button
+                                    onClick={() => setView("grid")}
+                                    className={`${view === "grid" ? "bg-primary-100" : "hover:bg-primary-50"} p-1 rounded-md duration-100`}
+                                >
+                                    <GridIcon />
+                                </button>
+                                {/* LIST */}
+                                <button
+                                    onClick={() => setView("list")}
+                                    className={`${view === "list" ? "bg-primary-100" : "hover:bg-primary-50"} p-1  rounded-md duration-100`}
+                                >
+                                    <ListIcon />
+                                </button>
+                            </div>
                             {/* INFO */}
                             <button
                                 className="ml-4"
@@ -455,9 +489,9 @@ function sortDataToFolderAndLink(input: any, sortOption: string, asc: boolean) {
     // sort based on isPinned and then title alphabetically
     dataChildrenFolders.sort((a: any, b: any) => {
         if (a.data.isPinned === b.data.isPinned) {
-            if (sortOption === "name" && asc) {
+            if ((sortOption === "name" || sortOption === "link") && asc) {
                 return a.data.title.localeCompare(b.data.title);
-            } else if (sortOption === "name" && !asc) {
+            } else if ((sortOption === "name" || sortOption === "link") && !asc) {
                 return b.data.title.localeCompare(a.data.title);
             } 
         }

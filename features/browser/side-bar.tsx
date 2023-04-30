@@ -1,9 +1,9 @@
 // import { useState } from "react";
-import Image from "next/image";
-import directoriesIcon from "@/public/icons/directories.svg";
-import newDirIcon from "@/public/icons/new-folder-black.svg";
-import newLinkIcon from "@/public/icons/new-link-black.svg";
-import timedIcon from "@/public/icons/timed.svg";
+// import Image from "next/image";
+// import directoriesIcon from "@/public/icons/directories.svg";
+// import newDirIcon from "@/public/icons/new-folder-black.svg";
+// import newLinkIcon from "@/public/icons/new-link-black.svg";
+// import timedIcon from "@/public/icons/timed.svg";
 import { useRenderingStore } from "@/hooks";
 import NewFolderBlackIcon from "@/public/icons/new-folder-black";
 import NewLinkBlackIcon from "@/public/icons/new-link-black";
