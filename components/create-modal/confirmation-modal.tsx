@@ -1,10 +1,13 @@
 import { Button, Modal } from "@/ui";
+import Image from "next/image";
+import trashIcon from "@/public/icons/trash.svg";
 
 type ConfirmationModalProps = {
     isOpen: boolean;
     onClose: () => void;
     onConfirm: () => void;
     title?: string;
+    name?: string;
     confirmText?: string;
     cancelText?: string;
     confirmButtonClassName?: string;
@@ -18,25 +21,44 @@ export default function ConfirmationModal({
     title,
     confirmText,
     cancelText,
+    name,
     confirmButtonClassName,
     cancelButtonClassName,
 }: ConfirmationModalProps) {
+    const closeModal = () => {
+        onClose();
+    };
     return (
-        <Modal isOpen={isOpen} onClose={onClose}>
-            <div className="flex flex-col items-center justify-center gap-4 p-4">
-                <h1 className="text-2xl font-bold">
-                    {title ?? "Are you sure?"}
-                </h1>
+        <Modal isOpen={isOpen} onClose={onClose} onOutsideClick={closeModal}>
+            <div className="flex flex-col justify-center gap-4 p-4 max-w-full">
+                <h3 className="text-neutral-800 text-left break-words">
+                    {title ?? `Delete ${name ?? "item"}?`}
+                </h3>
+                <p className="text-neutral-800 text-left">
+                    This item will be permanently deleted. Anyone who has access
+                    to it will no longer be able to access it.
+                </p>
                 <div className="flex items-center justify-center gap-4">
                     <Button
-                        onClick={onConfirm}
-                        type="custom"
-                        className={`btn btn-primary ${confirmButtonClassName ? confirmButtonClassName : "bg-primary-500 text-white hover:bg-primary-700"} hover:bg-danger-300 border-danger-300 border-2 text-danger-300 hover:text-black`}
+                        onClick={onClose}
+                        className="w-full flex justify-center items-center gap-1 h-12"
+                        borderMode
                     >
-                        {confirmText ?? "Confirm"}
+                        {cancelText ?? "No, cancel"}
                     </Button>
-                    <Button onClick={onClose} className={`btn btn-secondary ${cancelButtonClassName ? cancelButtonClassName : "bg-primary-500 text-white hover:bg-primary-700"}`}>
-                        {cancelText ?? "Cancel"}
+                    <Button
+                        className="w-full flex justify-center items-center gap-1 h-12"
+                        type="danger"
+                        borderMode
+                        onClick={onConfirm}
+                    >
+                        <Image
+                            src={trashIcon}
+                            alt="trash icon"
+                            height={24}
+                            width={24}
+                        />
+                        Yes, delete it
                     </Button>
                 </div>
             </div>

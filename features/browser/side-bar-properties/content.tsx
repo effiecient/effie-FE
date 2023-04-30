@@ -22,6 +22,7 @@ import drawerImage from "@/public/images/drawer.svg";
 import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
 
 import { getObjectDifferences, checkIfObjectSame } from "@/utils";
+import { ConfirmationModal } from "@/components";
 
 const ShareConfigurationOptions = [
     "Private",
@@ -73,6 +74,8 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
         useLegacyState<FolderLinkData>(itemData);
 
     const [isChanged, setIsChanged] = useState(false);
+    const [isConfirmationModalOpen, setIsConfirmationModalOpen] =
+        useState(false);
 
     // reset everything when the itemData is changed
     useEffect(() => {
@@ -155,9 +158,52 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
         }
     }, [isLoading, isError, response, fetchStarted]);
 
+    // Handle delete
+    const [startDelete, setStartDelete] = useState(false);
+
+    useEffect(() => {
+        if (startDelete) {
+            console.log(pathname)
+            fetcher({
+                url: `${BE_BASE_URL}/directory/${subdomain}/${
+                    pathname === "" ? "" : pathname + "/"
+                }${relativePath}`,
+                method: "DELETE",
+                body: {
+                    username: subdomain,
+                    path: "/" + pathname + "/" + relativePath,
+                },
+            });
+        }
+    }, [startDelete]);
+
+    useEffect(() => {
+        if (startDelete) {
+            if (isError) {
+                setStartDelete(false);
+                setIsInEditMode(false);
+            } else if (isLoading || !fetchStarted) {
+            } else {
+                setStartDelete(false);
+                onUpdate();
+                setIsInEditMode(false);
+            }
+        }
+    }, [isLoading, isError, response, fetchStarted]);
+
     function handleSaveButtonClick() {
         setStartUpdate(true);
     }
+
+    function handleDeleteButtonClick() {
+        setIsConfirmationModalOpen(true);
+    }
+
+    function handleDeleteConfirm() {
+        setStartDelete(true);
+        setIsConfirmationModalOpen(false);
+    }
+
     return (
         <>
             {itemData === undefined ? (
@@ -605,6 +651,7 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                     className="w-full flex justify-center items-center gap-1 h-12"
                                     type="danger"
                                     borderMode
+                                    onClick={handleDeleteButtonClick}
                                 >
                                     <Image
                                         src={trashIcon}
@@ -618,6 +665,14 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                         )}
                     </div>
                 </>
+            )}
+            {isConfirmationModalOpen && (
+                <ConfirmationModal
+                    name={relativePath}
+                    isOpen={isConfirmationModalOpen}
+                    onClose={() => setIsConfirmationModalOpen(false)}
+                    onConfirm={handleDeleteConfirm}
+                />
             )}
         </>
     );
