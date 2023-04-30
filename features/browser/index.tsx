@@ -12,7 +12,7 @@ import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
 
 import Page404 from "../page404";
 import { BrowserBreadcrumb } from "./browser-breadcrumb";
-import { LoadingAnimation } from "@/ui";
+import { LoadingAnimation, Dropdown } from "@/ui";
 import InfoIcon from "@/public/icons/info";
 
 export default function Browser() {
@@ -23,6 +23,8 @@ export default function Browser() {
         (state: any) => state.setShowSkeleton
     );
 
+    const [sortOption, setSortOption] = useState<string>("name");
+    const [isSortAsc, setIsSortAsc] = useState<boolean>(true);
     const [isNewLinkModalOpen, setIsNewLinkModalOpen] = useState(false);
     const [isNewFolderModalOpen, setIsNewFolderModalOpen] = useState(false);
     const [isKeyboardShortcutsModalOpen, setIsKeyboardShortcutsModalOpen] =
@@ -212,7 +214,7 @@ export default function Browser() {
     }
 
     const { dataChildrenFolders, dataChildrenLinks } =
-        sortDataToFolderAndLink(responseData);
+        sortDataToFolderAndLink(responseData, sortOption, isSortAsc);
     return (
         <>
             <Head>
@@ -347,8 +349,27 @@ export default function Browser() {
                             onBreadcrumbClick={handleBreadcrumbClick}
                         />
                         <div className="flex flex-row items-center gap-2">
+                            {/* LOADING */}
                             {isLoadingRefetch && <SyncingAnimation />}
+                            {/* SORT */}
+                            <p className="text-neutral-700">Sort by</p>
+                            {/* DROPDOWN INPUT */}
+                            <Dropdown
+                                options={["Name", "Link"]}
+                                // Set first letter to uppercase and replace '-' to ' '
+                                // TODO: I don't think this is necessary, might convert back
+                                selectedOption={sortOption.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())}
+                                setSelectedOption={setSortOption}
+                            />
+                            {/* ASC DESC */}
+                            <button className="text-neutral-700 py-1 rounded-full hover:text-neutral-900 font-normal" onClick={() => setIsSortAsc(!isSortAsc)}>
+                                {isSortAsc ? 
+                                    "A → Z" : "Z → A"
+                                }
+                            </button>
+                            {/* INFO */}
                             <button
+                                className="ml-4"
                                 onClick={() => {
                                     setIsSideBarPropertiesOpen(
                                         !isSideBarPropertiesOpen
@@ -404,7 +425,8 @@ const Background = () => {
     );
 };
 
-function sortDataToFolderAndLink(input: any) {
+function sortDataToFolderAndLink(input: any, sortOption: string, asc: boolean) {
+    console.log(input);
     let data: FolderLinkDataArray = input;
     // setup dataChildren as array
     let dataChildrenFolders: any = [];
@@ -431,7 +453,11 @@ function sortDataToFolderAndLink(input: any) {
     // sort based on isPinned and then title alphabetically
     dataChildrenFolders.sort((a: any, b: any) => {
         if (a.data.isPinned === b.data.isPinned) {
-            return a.data.title.localeCompare(b.data.title);
+            if (sortOption === "name" && asc) {
+                return a.data.title.localeCompare(b.data.title);
+            } else if (sortOption === "name" && !asc) {
+                return b.data.title.localeCompare(a.data.title);
+            } 
         }
         if (a.data.isPinned) {
             return -1;
@@ -440,7 +466,15 @@ function sortDataToFolderAndLink(input: any) {
     });
     dataChildrenLinks.sort((a: any, b: any) => {
         if (a.data.isPinned === b.data.isPinned) {
-            return a.data.title.localeCompare(b.data.title);
+            if (sortOption === "name" && asc) {
+                return a.data.title.localeCompare(b.data.title);
+            } else if (sortOption === "name" && !asc) {
+                return b.data.title.localeCompare(a.data.title);
+            } else if (sortOption === "link" && asc) {
+                return a.data.link.localeCompare(b.data.link);
+            } else if (sortOption === "link" && !asc) {
+                return b.data.link.localeCompare(a.data.link);
+            }
         }
         if (a.data.isPinned) {
             return -1;
