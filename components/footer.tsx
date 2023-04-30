@@ -14,9 +14,7 @@ export default function Footer() {
             alt="All your links in one place"
         />
       </div>
-      <div id="b">
-        <a href="https://www.effie.boo/donate">Donate</a>
-        <label> | </label>
+      <div id="b" className="shrink">
         <a href="mailto:13520004@std.stei.itb.ac.id">Contact Us</a>   
       </div> 
       <div id="d" className="mr-8">
