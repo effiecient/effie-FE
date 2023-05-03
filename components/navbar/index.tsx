@@ -26,7 +26,6 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
     const [showLogout, setShowLogout] = useState(false);
     const isLoggedIn = useUserStore((state: any) => state.isLoggedIn);
     const username = useUserStore((state: any) => state.username);
-    const hasPhotoURL = useUserStore((state: any) => state.hasPhotoURL);
     const photoURL = useUserStore((state: any) => state.photoURL);
     const profileRef = useRef<HTMLImageElement>(null);
 
@@ -102,11 +101,7 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
                                 <div className="relative">
                                     <Image
                                         ref={profileRef}
-                                        src={
-                                            hasPhotoURL
-                                                ? photoURL
-                                                : defaultUserImg
-                                        }
+                                        src={photoURL}
                                         alt="user image"
                                         width={36}
                                         height={36}
@@ -116,7 +111,11 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
                                         className={`cursor-pointer rounded-full border border-neutral-200`}
                                     />
                                     {showLogout && (
-                                        <RightClickOptionDropdown userImg={hasPhotoURL ? photoURL : defaultUserImg} setIsModalOpen={setShowLogout} profileRef={profileRef} />
+                                        <RightClickOptionDropdown
+                                            userImg={photoURL}
+                                            setIsModalOpen={setShowLogout}
+                                            profileRef={profileRef}
+                                        />
                                     )}
                                 </div>
                             </div>

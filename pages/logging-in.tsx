@@ -26,7 +26,7 @@ export default function LoggingIn() {
 
             if (accessToken !== "" && uid !== "" && photoURL !== "") {
                 fetcher({
-                    url: `${BE_BASE_URL}/user/login`,
+                    url: `${BE_BASE_URL}/user/login-google`,
                     method: "POST",
                     auth: accessToken,
                     body: { uid, photoURL },

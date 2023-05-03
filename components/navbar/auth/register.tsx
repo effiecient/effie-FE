@@ -39,7 +39,7 @@ export default function Register({ isOpen, onClose }: RegisterProps) {
                 const body = {
                     uid: result.user.uid,
                 };
-                const res = await fetch(`${BE_BASE_URL}/user/check`, {
+                const res = await fetch(`${BE_BASE_URL}/user/check-google`, {
                     method: "POST",
                     body: JSON.stringify(body),
                     headers: {

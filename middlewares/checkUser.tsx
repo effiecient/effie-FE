@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
 import { getEffieAuthTokenFromCookie } from "@/helpers";
 import LoadingPage from "@/components/loading-page";
+import Link from "next/link";
+import { Button } from "@/ui";
 
 // used to set isLoggedIn, username, isSubdomain, subdomain
 export default function CheckUser({ children }: any) {
@@ -16,7 +18,6 @@ export default function CheckUser({ children }: any) {
     const setIsSubdomain = useUserStore((state: any) => state.setIsSubdomain);
     const setSubdomain = useUserStore((state: any) => state.setSubdomain);
     const setPhotoURL = useUserStore((state: any) => state.setPhotoURL);
-    const setHasPhotoURL = useUserStore((state: any) => state.setHasPhotoURL);
     const setPathname = useUserStore((state: any) => state.setPathname);
     const [effieAuthToken, setEffieAuthToken] = useState<any>(null);
     let pathname;
@@ -62,6 +63,7 @@ export default function CheckUser({ children }: any) {
     const [{ isLoading, isError, response, fetchStarted }, fetcher] =
         useFetchEffieBENew();
 
+    // trigger fetch
     useEffect(() => {
         if (effieAuthToken !== "" && effieAuthToken !== null) {
             fetcher({
@@ -74,8 +76,11 @@ export default function CheckUser({ children }: any) {
 
     // short circuit
     // if /logout, return children
-    if (pathname === "/logout") {
-        return children;
+    if (typeof window !== "undefined") {
+        if (window.location.pathname === "/logout") {
+            setIsLoggedIn(false);
+            return children;
+        }
     }
 
     if (effieAuthToken === "") {
@@ -88,7 +93,9 @@ export default function CheckUser({ children }: any) {
             return (
                 <>
                     <div>error: {response.message}</div>
-                    TODO: add logout button
+                    <Button>
+                        <Link href="/logout">Logout</Link>
+                    </Button>
                 </>
             );
         }
@@ -96,14 +103,9 @@ export default function CheckUser({ children }: any) {
         if (isLoading || !fetchStarted) {
             return <LoadingPage />;
         } else {
-            setUsername(response.username);
+            setUsername(response.data.username);
             setIsLoggedIn(true);
-            if (response.photoURL !== undefined) {
-                setPhotoURL(response.photoURL);
-                setHasPhotoURL(true);
-            } else {
-                setHasPhotoURL(false);
-            }
+            setPhotoURL(response.data.photoURL);
 
             return children;
         }

@@ -51,11 +51,7 @@ export default function Login({ isOpen, onClose }: LoginProps) {
                 console.log(result);
                 // set user to local storage
 
-                doEffieLogin(
-                    result.user.accessToken,
-                    result.user.uid,
-                    result.user.photoURL
-                );
+                doEffieLogin(result.user.accessToken, result.user.uid);
                 setDoneGoogleLogin(true);
             })
             .catch((error) => {
@@ -63,12 +59,12 @@ export default function Login({ isOpen, onClose }: LoginProps) {
             });
     }
 
-    function doEffieLogin(accessToken: any, uid: any, photoURL: any) {
+    function doEffieLogin(accessToken: any, uid: any) {
         fetcher({
-            url: `${BE_BASE_URL}/user/login`,
+            url: `${BE_BASE_URL}/user/login-google`,
             method: "POST",
             auth: accessToken,
-            body: { uid, photoURL },
+            body: { uid },
         });
     }
     if (doneGoogleLogin) {
@@ -76,7 +72,8 @@ export default function Login({ isOpen, onClose }: LoginProps) {
         if (isError) {
             return (
                 <SideModal isOpen={isOpen} onClose={onClose}>
-                    <h1>Error{JSON.stringify(response)}</h1>
+                    <h1>Error</h1>
+                    {response.message}
                 </SideModal>
             );
         } else if (isLoading || !fetchStarted) {
@@ -88,20 +85,20 @@ export default function Login({ isOpen, onClose }: LoginProps) {
         } else {
             // set token to local storage
             if (typeof localStorage !== "undefined") {
-                localStorage.setItem(EFFIE_AUTH_TOKEN, response.token);
+                localStorage.setItem(EFFIE_AUTH_TOKEN, response.data.token);
             }
             // set to cookie to be used accross subdomains. expire in 1 year
             document.cookie = `${EFFIE_AUTH_TOKEN}=${
-                response.token
+                response.data.token
             }; path=/; domain=${FE_DOMAIN}.${FE_TOP_LEVEL_DOMAIN};expires=${new Date(
                 new Date().getTime() + 365 * 24 * 60 * 60 * 1000
             ).toUTCString()};`;
 
             // if login in landing, redirect to dashboard. if not, reload page
-            onClose();
+            // onClose();
             if (window.location.pathname === "/") {
                 router.push(
-                    `${FE_PROTOCOL}://${response.username}.${FE_BASE_URL}`
+                    `${FE_PROTOCOL}://${response.data.username}.${FE_BASE_URL}`
                 );
             } else {
                 router.reload();
