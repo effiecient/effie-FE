@@ -163,7 +163,6 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
 
     useEffect(() => {
         if (startDelete) {
-            console.log(pathname)
             fetcher({
                 url: `${BE_BASE_URL}/directory/${subdomain}/${
                     pathname === "" ? "" : pathname + "/"
@@ -204,6 +203,7 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
         setIsConfirmationModalOpen(false);
     }
 
+    console.log(itemData);
     return (
         <>
             {itemData === undefined ? (

@@ -87,7 +87,7 @@ export default function Browser() {
             if (pathname[0] === "/") {
                 pathname = pathname.slice(1);
             }
-            setPathname(pathname)
+            setPathname(pathname);
         }
     };
     updatePathname();
@@ -129,10 +129,10 @@ export default function Browser() {
         if (!isLoadingRefetch && fetchStartedRefetch) {
             // update focused item data
             let focusedItemData = undefined;
-            if (responseRefetch?.data?.childrens !== undefined) {
-                if (focusedItemName in responseRefetch.data.childrens) {
+            if (responseRefetch?.data?.children !== undefined) {
+                if (focusedItemName in responseRefetch.data.children) {
                     focusedItemData =
-                        responseRefetch.data.childrens[focusedItemName];
+                        responseRefetch.data.children[focusedItemName];
                 }
             }
             if (focusedItemData === undefined) {
@@ -186,8 +186,14 @@ export default function Browser() {
                                 <p className="bg-neutral-200 w-12 rounded-full h-5 pb-2 relative" />
                             </h5>
                             <section className="flex gap-4 w-full flex-wrap">
-                                <DirectoryItemCard content="new folder" view={view} />
-                                <DirectoryItemCard content="new folder" view={view} />
+                                <DirectoryItemCard
+                                    content="new folder"
+                                    view={view}
+                                />
+                                <DirectoryItemCard
+                                    content="new folder"
+                                    view={view}
+                                />
                             </section>
                         </div>
                     </div>
@@ -218,8 +224,11 @@ export default function Browser() {
         responseData = response.data;
     }
 
-    const { dataChildrenFolders, dataChildrenLinks } =
-        sortDataToFolderAndLink(responseData, sortOption, isSortAsc);
+    const { dataChildrenFolders, dataChildrenLinks } = sortDataToFolderAndLink(
+        responseData,
+        sortOption,
+        isSortAsc
+    );
     return (
         <>
             <Head>
@@ -262,7 +271,7 @@ export default function Browser() {
                     }`}
                 >
                     <div className="pb-24 lg:pb-6 p-6 relative">
-                        { view === "grid" && (
+                        {view === "grid" && (
                             // header
                             <div className="flex justify-between items-center">
                                 <h5 className="text-neutral-400 relative z-10 pb-2">
@@ -270,17 +279,25 @@ export default function Browser() {
                                 </h5>
                             </div>
                         )}
-                        { view === "list" && (
+                        {view === "list" && (
                             <div className="py-3 grid grid-cols-[24px_1fr_1fr_60px] md:grid-cols-[24px_1fr_3fr_8rem_60px] items-center gap-4 border-b-2 !border-neutral-200 border-dashed sticky top-44 md:top-32 bg-neutral-50 z-30">
-                                <p className="font-bold text-neutral-900 col-start-2">Name</p>
-                                <p className="font-bold text-neutral-900">Link</p>
-                                <p className="hidden md:block font-bold text-neutral-900">Access</p>
+                                <p className="font-bold text-neutral-900 col-start-2">
+                                    Name
+                                </p>
+                                <p className="font-bold text-neutral-900">
+                                    Link
+                                </p>
+                                <p className="hidden md:block font-bold text-neutral-900">
+                                    Access
+                                </p>
                             </div>
                         )}
                         <section
-                            className={`${view === "grid" ? "flex-row" : "flex-col"} flex gap-4 w-full flex-wrap pb-4`}
+                            className={`${
+                                view === "grid" ? "flex-row" : "flex-col"
+                            } flex gap-4 w-full flex-wrap pb-4`}
                         >
-                            { view === "grid" && (
+                            {view === "grid" && (
                                 <DirectoryItemCard
                                     content="new folder"
                                     onClick={handleNewFolderClick}
@@ -314,15 +331,17 @@ export default function Browser() {
                             )}
                         </section>
 
-                        { view === "grid" && (
+                        {view === "grid" && (
                             <h5 className="text-neutral-400 relative z-10 pt-2 pb-2">
                                 Links
                             </h5>
                         )}
                         <section
-                            className={`${view === "grid" ? "flex-row" : "flex-col"} flex gap-4 w-full flex-wrap`}
+                            className={`${
+                                view === "grid" ? "flex-row" : "flex-col"
+                            } flex gap-4 w-full flex-wrap`}
                         >
-                            { view === "grid" && (
+                            {view === "grid" && (
                                 <DirectoryItemCard
                                     content="new link"
                                     onClick={handleNewLinkClick}
@@ -370,35 +389,50 @@ export default function Browser() {
                             {isLoadingRefetch && <SyncingAnimation />}
                             {/* SORT */}
                             <div className="flex gap-2 items-center">
-                                <p className="hidden md:block text-neutral-700">Sort by</p>
+                                <p className="hidden md:block text-neutral-700">
+                                    Sort by
+                                </p>
                                 {/* DROPDOWN INPUT */}
                                 <Dropdown
                                     options={["Name", "Link"]}
                                     // Set first letter to uppercase and replace '-' to ' '
                                     // TODO: I don't think this is necessary, might convert back
-                                    selectedOption={sortOption.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())}
+                                    selectedOption={sortOption
+                                        .replace(/-/g, " ")
+                                        .replace(/\b\w/g, (l) =>
+                                            l.toUpperCase()
+                                        )}
                                     setSelectedOption={setSortOption}
                                 />
                                 {/* ASC DESC */}
-                                <button className="text-neutral-700 py-1 rounded-full hover:text-neutral-900 font-normal mr-6" onClick={() => setIsSortAsc(!isSortAsc)}>
-                                    {isSortAsc ? 
-                                        "A → Z" : "Z → A"
-                                    }
+                                <button
+                                    className="text-neutral-700 py-1 rounded-full hover:text-neutral-900 font-normal mr-6"
+                                    onClick={() => setIsSortAsc(!isSortAsc)}
+                                >
+                                    {isSortAsc ? "A → Z" : "Z → A"}
                                 </button>
                             </div>
                             {/* VIEW */}
                             <div className="flex gap-2">
-                            {/* GRID */}
+                                {/* GRID */}
                                 <button
                                     onClick={() => setView("grid")}
-                                    className={`${view === "grid" ? "bg-primary-100" : "hover:bg-primary-50"} p-1 rounded-md duration-100`}
+                                    className={`${
+                                        view === "grid"
+                                            ? "bg-primary-100"
+                                            : "hover:bg-primary-50"
+                                    } p-1 rounded-md duration-100`}
                                 >
                                     <GridIcon />
                                 </button>
                                 {/* LIST */}
                                 <button
                                     onClick={() => setView("list")}
-                                    className={`${view === "list" ? "bg-primary-100" : "hover:bg-primary-50"} p-1  rounded-md duration-100`}
+                                    className={`${
+                                        view === "list"
+                                            ? "bg-primary-100"
+                                            : "hover:bg-primary-50"
+                                    } p-1  rounded-md duration-100`}
                                 >
                                     <ListIcon />
                                 </button>
@@ -412,7 +446,10 @@ export default function Browser() {
                                     );
                                 }}
                             >
-                                <InfoIcon className="h-8 w-8" aria-label="Info" />
+                                <InfoIcon
+                                    className="h-8 w-8"
+                                    aria-label="Info"
+                                />
                             </button>
                         </div>
                     </div>
@@ -462,38 +499,39 @@ const Background = () => {
 };
 
 function sortDataToFolderAndLink(input: any, sortOption: string, asc: boolean) {
+    console.log("input");
     console.log(input);
     let data: FolderLinkDataArray = input;
     // setup dataChildren as array
     let dataChildrenFolders: any = [];
     let dataChildrenLinks: any = [];
-    data &&
-        data.childrens &&
-        Object.keys(data.childrens).forEach((child: any) => {
-            if (data?.childrens) {
-                if (data.childrens[child].type === "folder") {
-                    // key value of child and data
-                    dataChildrenFolders.push({
-                        key: child,
-                        data: data.childrens[child],
-                    });
-                }
-                if (data.childrens[child].type === "link") {
-                    dataChildrenLinks.push({
-                        key: child,
-                        data: data.childrens[child],
-                    });
-                }
-            }
-        });
+
+    data?.children?.forEach((child: any) => {
+        if (child.type === "folder") {
+            // key value of child and data
+            dataChildrenFolders.push({
+                key: child,
+                data: child,
+            });
+        }
+        if (child.type === "link") {
+            dataChildrenLinks.push({
+                key: child,
+                data: child,
+            });
+        }
+    });
     // sort based on isPinned and then title alphabetically
     dataChildrenFolders.sort((a: any, b: any) => {
         if (a.data.isPinned === b.data.isPinned) {
             if ((sortOption === "name" || sortOption === "link") && asc) {
                 return a.data.title.localeCompare(b.data.title);
-            } else if ((sortOption === "name" || sortOption === "link") && !asc) {
+            } else if (
+                (sortOption === "name" || sortOption === "link") &&
+                !asc
+            ) {
                 return b.data.title.localeCompare(a.data.title);
-            } 
+            }
         }
         if (a.data.isPinned) {
             return -1;
