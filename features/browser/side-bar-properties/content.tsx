@@ -24,30 +24,7 @@ import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
 import { getObjectDifferences, checkIfObjectSame } from "@/utils";
 import { ConfirmationModal } from "@/components";
 
-const ShareConfigurationOptions = [
-    "Private",
-    "Public (Viewer)",
-    "Public (Editor)",
-];
-const ShareConfigurationOptionsToData = [
-    {
-        shareConfiguration: {
-            isShared: false,
-        },
-    },
-    {
-        shareConfiguration: {
-            isShared: true,
-            sharedPrivilege: "read",
-        },
-    },
-    {
-        shareConfiguration: {
-            isShared: true,
-            sharedPrivilege: "write",
-        },
-    },
-];
+const ShareConfigurationOptions = ["none", "read", "write"];
 
 export function useLegacyState<T>(initialState: any) {
     // for object, only update key that is changed
@@ -294,46 +271,13 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                                     })
                                                 )}
                                                 onChange={(e: any) => {
-                                                    const defaultValue =
-                                                        itemData
-                                                            .shareConfiguration
-                                                            .isShared
-                                                            ? itemData
-                                                                  .shareConfiguration
-                                                                  .sharedPrivilege ===
-                                                              "read"
-                                                                ? 1
-                                                                : 2
-                                                            : 0;
-
-                                                    if (
-                                                        defaultValue ==
-                                                        e.target.value
-                                                    ) {
-                                                        setEditedItemData({
-                                                            shareConfiguration:
-                                                                itemData.shareConfiguration,
-                                                        });
-                                                    } else {
-                                                        // console.log("different");
-
-                                                        setEditedItemData({
-                                                            ...ShareConfigurationOptionsToData[
-                                                                e.target.value
-                                                            ],
-                                                        });
-                                                    }
+                                                    setEditedItemData({
+                                                        publicAccess:
+                                                            e.target.value,
+                                                    });
                                                 }}
                                                 defaultValue={
-                                                    itemData.shareConfiguration
-                                                        .isShared
-                                                        ? itemData
-                                                              .shareConfiguration
-                                                              .sharedPrivilege ===
-                                                          "read"
-                                                            ? 1
-                                                            : 2
-                                                        : 0
+                                                    itemData.publicAccess
                                                 }
                                             />
                                         </div>
@@ -384,14 +328,7 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                             Access
                                         </h5>
                                         <p className="text-neutral-700">
-                                            {itemData.shareConfiguration
-                                                .isShared
-                                                ? itemData.shareConfiguration
-                                                      .sharedPrivilege ===
-                                                  "read"
-                                                    ? ShareConfigurationOptions[1]
-                                                    : ShareConfigurationOptions[2]
-                                                : ShareConfigurationOptions[0]}
+                                            {itemData.publicAccess}
                                         </p>
                                     </div>
                                 </div>
@@ -480,52 +417,18 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                         </h5>
                                         <Select
                                             options={ShareConfigurationOptions.map(
-                                                (option, index) => ({
-                                                    value: index,
+                                                (option) => ({
+                                                    value: option,
                                                     label: option,
                                                 })
                                             )}
                                             onChange={(e: any) => {
-                                                const defaultValue = itemData
-                                                    .shareConfiguration.isShared
-                                                    ? itemData
-                                                          .shareConfiguration
-                                                          .sharedPrivilege ===
-                                                      "read"
-                                                        ? 1
-                                                        : 2
-                                                    : 0;
-
-                                                if (
-                                                    defaultValue ==
-                                                    e.target.value
-                                                ) {
-                                                    // console.log("same");
-                                                    setEditedItemData({
-                                                        shareConfiguration:
-                                                            itemData.shareConfiguration,
-                                                    });
-                                                } else {
-                                                    // console.log("different");
-
-                                                    setEditedItemData({
-                                                        ...ShareConfigurationOptionsToData[
-                                                            e.target.value
-                                                        ],
-                                                    });
-                                                }
+                                                setEditedItemData({
+                                                    publicAccess:
+                                                        e.target.value,
+                                                });
                                             }}
-                                            defaultValue={
-                                                itemData.shareConfiguration
-                                                    .isShared
-                                                    ? itemData
-                                                          .shareConfiguration
-                                                          .sharedPrivilege ===
-                                                      "read"
-                                                        ? 1
-                                                        : 2
-                                                    : 0
-                                            }
+                                            defaultValue={itemData.publicAccess}
                                         />
                                     </div>
                                 </div>
@@ -577,12 +480,7 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                 <div>
                                     <h5 className="text-neutral-800">Access</h5>
                                     <p className="text-neutral-700">
-                                        {itemData.shareConfiguration.isShared
-                                            ? itemData.shareConfiguration
-                                                  .sharedPrivilege === "read"
-                                                ? ShareConfigurationOptions[1]
-                                                : ShareConfigurationOptions[2]
-                                            : ShareConfigurationOptions[0]}
+                                        {itemData.publicAccess}
                                     </p>
                                 </div>
                             </div>

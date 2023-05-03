@@ -305,24 +305,29 @@ export default function Browser() {
                                 />
                             )}
                             {dataChildrenFolders.map(
-                                (folder: any, index: any) => {
-                                    let child = folder.key;
-                                    let data = folder.data;
+                                (folderData: any, index: any) => {
                                     return (
                                         <DirectoryItemCard
                                             key={index}
                                             content="folder"
-                                            relativePath={child}
-                                            DirectoryItemData={data}
+                                            relativePath={
+                                                folderData.relativePath
+                                            }
+                                            DirectoryItemData={folderData}
                                             onDoubleClick={() => {
-                                                handleDirectoryCardClick(child);
+                                                handleDirectoryCardClick(
+                                                    folderData.relativePath
+                                                );
                                             }}
                                             onClick={() => {
-                                                setFocusedItemData(data);
-                                                setFocusedItemName(child);
+                                                setFocusedItemData(folderData);
+                                                setFocusedItemName(
+                                                    folderData.relativePath
+                                                );
                                             }}
                                             isFocused={
-                                                focusedItemName === child
+                                                focusedItemName ===
+                                                folderData.relativePath
                                             }
                                             view={view}
                                         />
@@ -348,28 +353,36 @@ export default function Browser() {
                                     view={view}
                                 />
                             )}
-                            {dataChildrenLinks.map((link: any, index: any) => {
-                                let child = link.key;
-                                let data = link.data;
-                                return (
-                                    <DirectoryItemCard
-                                        key={index}
-                                        content="link"
-                                        relativePath={child}
-                                        DirectoryItemData={data}
-                                        onDoubleClick={() => {
-                                            // open url in new page
-                                            window.open(data.link, "_blank");
-                                        }}
-                                        onClick={() => {
-                                            setFocusedItemData(data);
-                                            setFocusedItemName(child);
-                                        }}
-                                        isFocused={focusedItemName === child}
-                                        view={view}
-                                    />
-                                );
-                            })}
+                            {dataChildrenLinks.map(
+                                (linkData: any, index: any) => {
+                                    return (
+                                        <DirectoryItemCard
+                                            key={index}
+                                            content="link"
+                                            relativePath={linkData.relativePath}
+                                            DirectoryItemData={linkData}
+                                            onDoubleClick={() => {
+                                                // open url in new page
+                                                window.open(
+                                                    linkData.link,
+                                                    "_blank"
+                                                );
+                                            }}
+                                            onClick={() => {
+                                                setFocusedItemData(linkData);
+                                                setFocusedItemName(
+                                                    linkData.relativePath
+                                                );
+                                            }}
+                                            isFocused={
+                                                focusedItemName ===
+                                                linkData.relativePath
+                                            }
+                                            view={view}
+                                        />
+                                    );
+                                }
+                            )}
                         </section>
                     </div>
                 </div>
@@ -499,8 +512,6 @@ const Background = () => {
 };
 
 function sortDataToFolderAndLink(input: any, sortOption: string, asc: boolean) {
-    console.log("input");
-    console.log(input);
     let data: FolderLinkDataArray = input;
     // setup dataChildren as array
     let dataChildrenFolders: any = [];
@@ -509,16 +520,10 @@ function sortDataToFolderAndLink(input: any, sortOption: string, asc: boolean) {
     data?.children?.forEach((child: any) => {
         if (child.type === "folder") {
             // key value of child and data
-            dataChildrenFolders.push({
-                key: child,
-                data: child,
-            });
+            dataChildrenFolders.push(child);
         }
         if (child.type === "link") {
-            dataChildrenLinks.push({
-                key: child,
-                data: child,
-            });
+            dataChildrenLinks.push(child);
         }
     });
     // sort based on isPinned and then title alphabetically
