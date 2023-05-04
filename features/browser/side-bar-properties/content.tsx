@@ -265,8 +265,8 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                             </h5>
                                             <Select
                                                 options={ShareConfigurationOptions.map(
-                                                    (option, index) => ({
-                                                        value: index,
+                                                    (option) => ({
+                                                        value: option,
                                                         label: option,
                                                     })
                                                 )}
