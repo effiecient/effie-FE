@@ -375,9 +375,7 @@ export default function Browser() {
                                                 );
                                             }}
                                             onClick={() => {
-                                                setFocusedItemData(
-                                                    linkData.relativePath
-                                                );
+                                                setFocusedItemData(linkData);
                                                 setFocusedItemName(
                                                     linkData.relativePath
                                                 );
