@@ -55,7 +55,7 @@ export default function CheckUser({ children }: any) {
 
         if (typeof window !== "undefined") {
             pathname = window.location.pathname;
-            console.log(pathname);
+            // console.log(pathname);
             // remove if start with /
             setPathname(pathname.replace(/^\//, ""));
         }

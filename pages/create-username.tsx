@@ -63,7 +63,7 @@ export default function CreateUsername() {
         }
         const accessToken = localStorage.getItem("accessToken");
         const uid = localStorage.getItem("uid");
-        console.log(accessToken, "\n\n\n", uid, "\n\n\n", username);
+        // console.log(accessToken, "\n\n\n", uid, "\n\n\n", username);
         if (!accessToken || !uid || !username) {
             console.error("error");
         } else {

@@ -49,18 +49,17 @@ export default function Browser() {
         setIsNewFolderModalOpen(true);
     };
     const handleDirectoryCardClick = (child: any) => {
-        console.log(window.location.origin);
         let newUrl = window.location.origin;
         //  check if pathame start with /. if not, append / to new url
-        if (pathname[0] !== "/") {
+        if (pathname[0] !== "/" && pathname !== "") {
             newUrl += "/";
         }
         newUrl += `${pathname}/${child}`;
-        console.log("newUrl", newUrl);
+        // console.log("newUrl", newUrl);
 
         // let newUrl = `${pathname}/${child}`;
 
-        console.log("newUrl", newUrl);
+        // console.log("newUrl", newUrl);
 
         // change path without rerendering
         window.history.replaceState(

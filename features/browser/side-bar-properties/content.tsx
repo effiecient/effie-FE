@@ -90,7 +90,7 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
 
     useEffect(() => {
         if (startUpdate) {
-            console.log(editedItemData);
+            // console.log(editedItemData);
             let itemDataDifferences = getObjectDifferences(
                 itemData,
                 editedItemData
@@ -180,7 +180,7 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
         setIsConfirmationModalOpen(false);
     }
 
-    console.log(itemData);
+    // console.log(itemData);
     return (
         <>
             {itemData === undefined ? (
