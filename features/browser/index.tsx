@@ -49,7 +49,19 @@ export default function Browser() {
         setIsNewFolderModalOpen(true);
     };
     const handleDirectoryCardClick = (child: any) => {
-        let newUrl = `${pathname}/${child}`;
+        console.log(window.location.origin);
+        let newUrl = window.location.origin;
+        //  check if pathame start with /. if not, append / to new url
+        if (pathname[0] !== "/") {
+            newUrl += "/";
+        }
+        newUrl += `${pathname}/${child}`;
+        console.log("newUrl", newUrl);
+
+        // let newUrl = `${pathname}/${child}`;
+
+        console.log("newUrl", newUrl);
+
         // change path without rerendering
         window.history.replaceState(
             {
@@ -538,8 +550,8 @@ function sortDataToFolderAndLink(input: any, sortOption: string, asc: boolean) {
             dataChildrenLinks.push(child);
         }
     });
-    console.log("dataChildrenFolders");
-    console.log(dataChildrenFolders);
+    // console.log("dataChildrenFolders");
+    // console.log(dataChildrenFolders);
     // sort based on isPinned and then title alphabetically
     dataChildrenFolders.sort((a: any, b: any) => {
         if (a.isPinned === b.isPinned) {
@@ -581,7 +593,7 @@ function SyncingAnimation() {
     // make the dot animate
     return (
         <h6 className="text-primary-600 animate-pulse">
-            <LoadingAnimation />
+            <LoadingAnimation bg="rgb(var(--color-neutral-900))" />
         </h6>
     );
 }
