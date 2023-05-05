@@ -62,30 +62,14 @@ export default function Browser() {
         // console.log("newUrl", newUrl);
 
         // change path without rerendering
-        window.history.replaceState(
-            {
-                ...window.history.state,
-                as: newUrl,
-                url: newUrl,
-            },
-            "",
-            newUrl
-        );
+        window.history.replaceState(null, "", newUrl);
         updatePathname();
-
+        setFocusedItemName("");
         setIsSomethingChanged(true);
     };
     const handleBreadcrumbClick = (newUrl: any) => {
         // change path without rerendering
-        window.history.replaceState(
-            {
-                ...window.history.state,
-                as: newUrl,
-                url: newUrl,
-            },
-            "",
-            newUrl
-        );
+        window.history.replaceState(null, "", newUrl);
         updatePathname();
 
         setIsSomethingChanged(true);
@@ -141,10 +125,11 @@ export default function Browser() {
             // update focused item data
             let focusedItemData = undefined;
             if (responseRefetch?.data?.children !== undefined) {
-                if (focusedItemName in responseRefetch.data.children) {
-                    focusedItemData =
-                        responseRefetch.data.children[focusedItemName];
-                }
+                responseRefetch.data.children.forEach((child: any) => {
+                    if (child.relativePath === focusedItemName) {
+                        focusedItemData = child;
+                    }
+                });
             }
             if (focusedItemData === undefined) {
                 setFocusedItemName("");
@@ -390,7 +375,9 @@ export default function Browser() {
                                                 );
                                             }}
                                             onClick={() => {
-                                                setFocusedItemData(linkData);
+                                                setFocusedItemData(
+                                                    linkData.relativePath
+                                                );
                                                 setFocusedItemName(
                                                     linkData.relativePath
                                                 );

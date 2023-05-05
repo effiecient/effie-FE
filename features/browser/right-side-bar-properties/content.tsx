@@ -261,7 +261,7 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                         </div>
                                         <div>
                                             <h5 className="text-neutral-800">
-                                                Access
+                                                Public Access
                                             </h5>
                                             <Select
                                                 options={ShareConfigurationOptions.map(
@@ -325,7 +325,7 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
 
                                     <div>
                                         <h5 className="text-neutral-800">
-                                            Access
+                                            Public Access
                                         </h5>
                                         <p className="text-neutral-700">
                                             {itemData.publicAccess}
@@ -413,7 +413,7 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                     </div>
                                     <div>
                                         <h5 className="text-neutral-800">
-                                            Access
+                                            Public Access
                                         </h5>
                                         <Select
                                             options={ShareConfigurationOptions.map(
@@ -476,7 +476,9 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                     </Link>
                                 </div>
                                 <div>
-                                    <h5 className="text-neutral-800">Access</h5>
+                                    <h5 className="text-neutral-800">
+                                        Public Access
+                                    </h5>
                                     <p className="text-neutral-700">
                                         {itemData.publicAccess}
                                     </p>
