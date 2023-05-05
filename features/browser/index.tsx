@@ -1,12 +1,12 @@
 import Head from "next/head";
 import DirectoryItemCard from "@/components/directory-item-card";
 import Image from "next/image";
-import SideBar from "./side-bar";
+import LeftSideBar from "./left-side-bar";
 import { BE_BASE_URL } from "@/config/be-config";
 import { useRenderingStore, useUserStore } from "@/hooks";
 import { useState, useEffect } from "react";
 import { KeyboardShortcuts, NewLink, NewFolder, Navbar } from "@/components";
-import SideBarProperties from "./side-bar-properties";
+import RightSideBarProperties from "./right-side-bar-properties";
 import { FolderLinkDataArray } from "@/type";
 import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
 
@@ -34,7 +34,7 @@ export default function Browser() {
     const [isKeyboardShortcutsModalOpen, setIsKeyboardShortcutsModalOpen] =
         useState(false);
 
-    const [isSideBarPropertiesOpen, setIsSideBarPropertiesOpen] =
+    const [isRightSideBarPropertiesOpen, setIsRightSideBarPropertiesOpen] =
         useState(false);
 
     const [focusedItemData, setFocusedItemData] = useState<any>(undefined);
@@ -163,14 +163,16 @@ export default function Browser() {
                 <main className="bg-white w-full h-full">
                     <Navbar />
                     {/* left sidebar */}
-                    <SideBar
+                    <LeftSideBar
                         handleNewLinkClick={handleNewLinkClick}
                         handleNewFolderClick={handleNewFolderClick}
                     />
                     {/* background */}
                     <div
                         className={`z-0 h-full fixed bg-neutral-50 lg:ml-20 bottom-0 lg:top-16 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
-                            isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
+                            isRightSideBarPropertiesOpen
+                                ? "lg:mr-[20vw]"
+                                : "lg:mr-6"
                         }`}
                     >
                         <Background />
@@ -178,7 +180,9 @@ export default function Browser() {
                     {/* content */}
                     <div
                         className={`z-0 absolute lg:ml-20 top-44 md:top-32 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
-                            isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
+                            isRightSideBarPropertiesOpen
+                                ? "lg:mr-[20vw]"
+                                : "lg:mr-6"
                         }`}
                     >
                         <div className="p-6">
@@ -200,7 +204,9 @@ export default function Browser() {
                     {/* header */}
                     <div
                         className={`z-0 fixed bg-neutral-50 lg:ml-20 lg:top-[63px] left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
-                            isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
+                            isRightSideBarPropertiesOpen
+                                ? "lg:mr-[20vw]"
+                                : "lg:mr-6"
                         }`}
                     >
                         <div className="p-6 flex justify-between items-center">
@@ -246,14 +252,16 @@ export default function Browser() {
             <main className="bg-white w-full h-full">
                 <Navbar />
                 {/* left sidebar */}
-                <SideBar
+                <LeftSideBar
                     handleNewLinkClick={handleNewLinkClick}
                     handleNewFolderClick={handleNewFolderClick}
                 />
                 {/* background */}
                 <div
                     className={`z-0 h-full fixed bg-neutral-50 lg:ml-20 bottom-0 lg:top-16 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
-                        isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
+                        isRightSideBarPropertiesOpen
+                            ? "lg:mr-[20vw]"
+                            : "lg:mr-6"
                     }`}
                     onClick={() => {
                         // reset focused item
@@ -267,7 +275,9 @@ export default function Browser() {
                 {/* CONTENT */}
                 <div
                     className={`z-0 absolute lg:ml-20 top-44 md:top-32 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
-                        isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
+                        isRightSideBarPropertiesOpen
+                            ? "lg:mr-[20vw]"
+                            : "lg:mr-6"
                     }`}
                 >
                     <div className="pb-24 lg:pb-6 p-6 relative">
@@ -390,7 +400,9 @@ export default function Browser() {
                 {/* header */}
                 <div
                     className={`z-0 fixed bg-neutral-50 lg:ml-20 lg:top-[63px] left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
-                        isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
+                        isRightSideBarPropertiesOpen
+                            ? "lg:mr-[20vw]"
+                            : "lg:mr-6"
                     }`}
                 >
                     <div className="p-6 flex flex-col md:flex-row justify-between items-start md:items-center max-w-full gap-4 md:gap-0">
@@ -454,8 +466,8 @@ export default function Browser() {
                             <button
                                 className="ml-4"
                                 onClick={() => {
-                                    setIsSideBarPropertiesOpen(
-                                        !isSideBarPropertiesOpen
+                                    setIsRightSideBarPropertiesOpen(
+                                        !isRightSideBarPropertiesOpen
                                     );
                                 }}
                             >
@@ -468,9 +480,9 @@ export default function Browser() {
                     </div>
                 </div>
                 {/* right sidebar */}
-                <SideBarProperties
-                    onClose={() => setIsSideBarPropertiesOpen(false)}
-                    isOpen={isSideBarPropertiesOpen}
+                <RightSideBarProperties
+                    onClose={() => setIsRightSideBarPropertiesOpen(false)}
+                    isOpen={isRightSideBarPropertiesOpen}
                     itemData={focusedItemData}
                     relativePath={focusedItemName}
                     onUpdate={() => setIsSomethingChanged(true)}
@@ -526,36 +538,38 @@ function sortDataToFolderAndLink(input: any, sortOption: string, asc: boolean) {
             dataChildrenLinks.push(child);
         }
     });
+    console.log("dataChildrenFolders");
+    console.log(dataChildrenFolders);
     // sort based on isPinned and then title alphabetically
     dataChildrenFolders.sort((a: any, b: any) => {
-        if (a.data.isPinned === b.data.isPinned) {
+        if (a.isPinned === b.isPinned) {
             if ((sortOption === "name" || sortOption === "link") && asc) {
-                return a.data.title.localeCompare(b.data.title);
+                return a.title.localeCompare(b.title);
             } else if (
                 (sortOption === "name" || sortOption === "link") &&
                 !asc
             ) {
-                return b.data.title.localeCompare(a.data.title);
+                return b.title.localeCompare(a.title);
             }
         }
-        if (a.data.isPinned) {
+        if (a.isPinned) {
             return -1;
         }
         return 1;
     });
     dataChildrenLinks.sort((a: any, b: any) => {
-        if (a.data.isPinned === b.data.isPinned) {
+        if (a.isPinned === b.isPinned) {
             if (sortOption === "name" && asc) {
-                return a.data.title.localeCompare(b.data.title);
+                return a.title.localeCompare(b.title);
             } else if (sortOption === "name" && !asc) {
-                return b.data.title.localeCompare(a.data.title);
+                return b.title.localeCompare(a.title);
             } else if (sortOption === "link" && asc) {
-                return a.data.link.localeCompare(b.data.link);
+                return a.link.localeCompare(b.link);
             } else if (sortOption === "link" && !asc) {
-                return b.data.link.localeCompare(a.data.link);
+                return b.link.localeCompare(a.link);
             }
         }
-        if (a.data.isPinned) {
+        if (a.isPinned) {
             return -1;
         }
         return 1;

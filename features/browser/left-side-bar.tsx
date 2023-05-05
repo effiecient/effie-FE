@@ -13,7 +13,7 @@ type SideBarProps = {
     handleNewFolderClick: () => void;
 };
 
-export default function SideBar({
+export default function LeftSideBar({
     handleNewLinkClick,
     handleNewFolderClick,
 }: SideBarProps) {

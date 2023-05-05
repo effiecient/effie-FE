@@ -7,8 +7,8 @@ import NewLink from "./create-modal/new-link";
 import Footer from "./footer";
 import DirectoryItemCard from "./directory-item-card";
 import Navbar from "./navbar";
-import SideBarProperties from "../features/browser/side-bar-properties";
-import SideBar from "../features/browser/side-bar";
+import SideBarProperties from "../features/browser/right-side-bar-properties";
+import SideBar from "../features/browser/left-side-bar";
 
 export {
     KeyboardShortcuts,
