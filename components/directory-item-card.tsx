@@ -162,12 +162,13 @@ export default function DirectoryItemCard({
                                 DirectoryItemData?.link?.slice(8)}
                         </a>
                         <p className="text-neutral-600 whitespace-nowrap hidden md:block">
-                            {!DirectoryItemData?.shareConfiguration.isShared
+                            {DirectoryItemData?.publicAccess === "none"
                                 ? "Private"
-                                : DirectoryItemData.shareConfiguration
-                                      .sharedPrivilege === "read"
+                                : DirectoryItemData?.publicAccess === "read"
                                 ? "Public (viewer)"
-                                : "Public (editor)"}
+                                : DirectoryItemData?.publicAccess === "write"
+                                ? "Public (editor)"
+                                : "Error fetching access level"}
                         </p>
                         <div className="flex gap-2 justify-end items-center">
                             {DirectoryItemData?.isPinned && (
