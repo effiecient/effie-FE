@@ -300,8 +300,8 @@ export default function Browser() {
                         )}
                         <section
                             className={`${
-                                view === "grid" ? "flex-row" : "flex-col"
-                            } flex gap-4 w-full flex-wrap pb-4`}
+                                view === "grid" ? "flex-row gap-4 pb-4" : "flex-col"
+                            } flex w-full flex-wrap`}
                         >
                             {view === "grid" && (
                                 <DirectoryItemCard
@@ -349,8 +349,8 @@ export default function Browser() {
                         )}
                         <section
                             className={`${
-                                view === "grid" ? "flex-row" : "flex-col"
-                            } flex gap-4 w-full flex-wrap`}
+                                view === "grid" ? "flex-row gap-4" : "flex-col"
+                            } flex w-full flex-wrap`}
                         >
                             {view === "grid" && (
                                 <DirectoryItemCard
