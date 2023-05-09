@@ -1,5 +1,7 @@
 type dataType = "folder" | "link";
 
+type accessType = "none" | "read" | "write";
+
 export type ShareConfiguration = {
     isShared: boolean;
     sharedPrivilege?: string; // "read" | "write"
@@ -11,12 +13,19 @@ export type FolderLinkDataArray = {
 };
 
 export type FolderLinkData = {
+    id: string;
     title: string;
     isPinned: boolean;
     link?: string;
     type: dataType;
-    shareConfiguration: ShareConfiguration;
+    publicAccess: accessType;
+    personalAccess: string[];
     color?: string;
+    createdAt: string;
+    lastModifiedBy: string;
+    lastModified: string;
+    linkCount?: number;
+    folderCount?: number;
 };
 
 export type UpdateFolderReq = {

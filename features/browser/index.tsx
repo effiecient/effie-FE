@@ -276,7 +276,7 @@ export default function Browser() {
                             : "lg:mr-6"
                     }`}
                 >
-                    <div className="pb-24 lg:pb-6 p-6 relative">
+                    <div className={`${view === "grid" ? "pt-6" : "pt-0"} pb-24 lg:pb-6 px-6 relative`}>
                         {view === "grid" && (
                             // header
                             <div className="flex justify-between items-center">
@@ -300,8 +300,8 @@ export default function Browser() {
                         )}
                         <section
                             className={`${
-                                view === "grid" ? "flex-row" : "flex-col"
-                            } flex gap-4 w-full flex-wrap pb-4`}
+                                view === "grid" ? "flex-row gap-4 pb-4" : "flex-col"
+                            } flex w-full flex-wrap`}
                         >
                             {view === "grid" && (
                                 <DirectoryItemCard
@@ -349,8 +349,8 @@ export default function Browser() {
                         )}
                         <section
                             className={`${
-                                view === "grid" ? "flex-row" : "flex-col"
-                            } flex gap-4 w-full flex-wrap`}
+                                view === "grid" ? "flex-row gap-4" : "flex-col"
+                            } flex w-full flex-wrap`}
                         >
                             {view === "grid" && (
                                 <DirectoryItemCard
@@ -409,54 +409,56 @@ export default function Browser() {
                             {/* LOADING */}
                             {isLoadingRefetch && <SyncingAnimation />}
                             {/* SORT */}
-                            <div className="flex gap-2 items-center">
-                                <p className="hidden md:block text-neutral-700">
-                                    Sort by
-                                </p>
-                                {/* DROPDOWN INPUT */}
-                                <Dropdown
-                                    options={["Name", "Link"]}
-                                    // Set first letter to uppercase and replace '-' to ' '
-                                    // TODO: I don't think this is necessary, might convert back
-                                    selectedOption={sortOption
-                                        .replace(/-/g, " ")
-                                        .replace(/\b\w/g, (l) =>
-                                            l.toUpperCase()
-                                        )}
-                                    setSelectedOption={setSortOption}
-                                />
-                                {/* ASC DESC */}
-                                <button
-                                    className="text-neutral-700 py-1 rounded-full hover:text-neutral-900 font-normal mr-6"
-                                    onClick={() => setIsSortAsc(!isSortAsc)}
-                                >
-                                    {isSortAsc ? "A → Z" : "Z → A"}
-                                </button>
-                            </div>
-                            {/* VIEW */}
-                            <div className="flex gap-2">
-                                {/* GRID */}
-                                <button
-                                    onClick={() => setView("grid")}
-                                    className={`${
-                                        view === "grid"
-                                            ? "bg-primary-100"
-                                            : "hover:bg-primary-50"
-                                    } p-1 rounded-md duration-100`}
-                                >
-                                    <GridIcon />
-                                </button>
-                                {/* LIST */}
-                                <button
-                                    onClick={() => setView("list")}
-                                    className={`${
-                                        view === "list"
-                                            ? "bg-primary-100"
-                                            : "hover:bg-primary-50"
-                                    } p-1  rounded-md duration-100`}
-                                >
-                                    <ListIcon />
-                                </button>
+                            <div className="flex">
+                                <div className="flex gap-2 items-center">
+                                    <p className="hidden md:block text-neutral-700">
+                                        Sort by
+                                    </p>
+                                    {/* DROPDOWN INPUT */}
+                                    <Dropdown
+                                        options={["Name", "Link"]}
+                                        // Set first letter to uppercase and replace '-' to ' '
+                                        // TODO: I don't think this is necessary, might convert back
+                                        selectedOption={sortOption
+                                            .replace(/-/g, " ")
+                                            .replace(/\b\w/g, (l) =>
+                                                l.toUpperCase()
+                                            )}
+                                        setSelectedOption={setSortOption}
+                                    />
+                                    {/* ASC DESC */}
+                                    <button
+                                        className="text-neutral-700 py-1 rounded-full hover:text-neutral-900 font-normal mr-6"
+                                        onClick={() => setIsSortAsc(!isSortAsc)}
+                                    >
+                                        {isSortAsc ? "A → Z" : "Z → A"}
+                                    </button>
+                                </div>
+                                {/* VIEW */}
+                                <div className="flex gap-2">
+                                    {/* GRID */}
+                                    <button
+                                        onClick={() => setView("grid")}
+                                        className={`${
+                                            view === "grid"
+                                                ? "bg-primary-100"
+                                                : "hover:bg-primary-50"
+                                        } p-1 rounded-md duration-100`}
+                                    >
+                                        <GridIcon />
+                                    </button>
+                                    {/* LIST */}
+                                    <button
+                                        onClick={() => setView("list")}
+                                        className={`${
+                                            view === "list"
+                                                ? "bg-primary-100"
+                                                : "hover:bg-primary-50"
+                                        } p-1  rounded-md duration-100`}
+                                    >
+                                        <ListIcon />
+                                    </button>
+                                </div>
                             </div>
                             {/* INFO */}
                             <button
