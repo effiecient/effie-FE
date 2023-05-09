@@ -40,6 +40,8 @@ export default function DirectoryItemCard({
     isFocused = false,
     view,
 }: DirectoryItemCardProps) {
+    // console.log("DirectoryItemData");
+    // console.log(DirectoryItemData);
     let pathname = window.location.pathname;
     let subdomain = useUserStore((state: any) => state.subdomain);
     // add / in the back if doesn't exist
@@ -47,8 +49,6 @@ export default function DirectoryItemCard({
         pathname = pathname + "/";
     }
     const effieURL = `${FE_PROTOCOL}://${subdomain}.${FE_BASE_URL}${pathname}${relativePath}`;
-
-    
 
     const showSkeleton = useRenderingStore((state: any) => state.showSkeleton);
 
@@ -78,10 +78,11 @@ export default function DirectoryItemCard({
                                   : "hover:border-neutral-200 border-white"
                           } cursor-pointer`
                 } 
-                ${view === "grid" ? 
-                    "bg-white border-2 w-[32vw] md:w-[44vw] lg:w-[20vw] max-w-[16rem] min-w-[8rem] min-h-[4rem] rounded-xl focus:border-primary-500 pt-3 pb-2 px-5 flex" 
-                : 
-                    "py-2 grid grid-cols-[24px_1fr_1fr_60px] md:grid-cols-[24px_1fr_3fr_8rem_60px] items-center gap-4 border-b-2 !border-neutral-200 border-dashed"}
+                ${
+                    view === "grid"
+                        ? "bg-white border-2 w-[32vw] md:w-[44vw] lg:w-[20vw] max-w-[16rem] min-w-[8rem] min-h-[4rem] rounded-xl focus:border-primary-500 pt-3 pb-2 px-5 flex"
+                        : "py-2 grid grid-cols-[24px_1fr_1fr_60px] md:grid-cols-[24px_1fr_3fr_8rem_60px] items-center gap-4 border-b-2 !border-neutral-200 border-dashed"
+                }
                 group relative`}
             >
                 {/* images */}
@@ -95,70 +96,90 @@ export default function DirectoryItemCard({
                         <NewLinkIcon className="h-7 w-7" />
                         <h6 className="text-primary-500 ml-2">New link</h6>
                     </>
-                ) : (
-                    view === "grid" ? (
-                        <div className={`flex flex-row`}>
-                            {content === "link" || content === "display link" ? (
-                                <div className="mr-2 w-1/5">
-                                    <Image
-                                        src={`https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${DirectoryItemData?.link}&size=64`}
-                                        alt="link"
-                                        width={28}
-                                        height={28}
-                                    />
-                                </div>
-                            ) : (
-                                <div
-                                    className={`absolute left-0 top-0 h-full w-1 rounded-l-[10px]`}
-                                    style={{ backgroundColor: DirectoryItemData?.color }}
+                ) : view === "grid" ? (
+                    <div className={`flex flex-row`}>
+                        {content === "link" || content === "display link" ? (
+                            <div className="mr-2 w-1/5">
+                                <Image
+                                    src={`https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${DirectoryItemData?.link}&size=64`}
+                                    alt="link"
+                                    width={28}
+                                    height={28}
                                 />
-                            )}
-                            {/* link or folder data */}
-                            <div className="overflow-hidden w-[80%]">
-                                <h6 className={`text-neutral-800`}>
-                                    {DirectoryItemData?.title}
-                                </h6>
-                                <a
-                                    href={DirectoryItemData?.link}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className={`hover:text-primary-500 text-neutral-600 text-xs un hover:decoration-primary-500 inline-block max-w-full whitespace-nowrap`}
-                                >
-                                    {DirectoryItemData?.link && DirectoryItemData?.link?.slice(8)}
-                                </a>
-                                {(content === "link" || content === "folder") && (
-                                    <CopyButton effieURL={effieURL} link={DirectoryItemData?.link} view={view} />
-                                )}
                             </div>
-                            {DirectoryItemData?.isPinned && (
-                                <PinIcon className="absolute top-1 right-1 z-0 h-6 w-6" />
-                            )}
-                        </div>
-                    ) : ( // list view
-                        <>
-                            { DirectoryItemData?.type === "folder" ? (
-                                <DirectoriesIcon className="h-7 w-7" />
-                            ) : (
-                                <LinkIcon className="h-7 w-7" />
-                            )}
-                            <p className="font-bold text-neutral-900">{DirectoryItemData?.title}</p>
+                        ) : (
+                            <div
+                                className={`absolute left-0 top-0 h-full w-1 rounded-l-[10px]`}
+                                style={{
+                                    backgroundColor: DirectoryItemData?.color,
+                                }}
+                            />
+                        )}
+                        {/* link or folder data */}
+                        <div className="overflow-hidden w-[80%]">
+                            <h6 className={`text-neutral-800`}>
+                                {DirectoryItemData?.title}
+                            </h6>
                             <a
                                 href={DirectoryItemData?.link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className={`hover:text-primary-500 text-neutral-600 un hover:decoration-primary-500 inline-block max-w-full whitespace-nowrap overflow-hidden overflow-ellipsis`}
+                                className={`hover:text-primary-500 text-neutral-600 text-xs un hover:decoration-primary-500 inline-block max-w-full whitespace-nowrap`}
                             >
-                                {DirectoryItemData?.link && DirectoryItemData?.link?.slice(8)}
+                                {DirectoryItemData?.link &&
+                                    DirectoryItemData?.link?.slice(8)}
                             </a>
-                            <p className="text-neutral-600 whitespace-nowrap hidden md:block">{!DirectoryItemData?.shareConfiguration.isShared ? "Private" : DirectoryItemData.shareConfiguration.sharedPrivilege === "read" ? "Public (viewer)" : "Public (editor)"}</p>
-                            <div className="flex gap-2 justify-end items-center">
-                                {DirectoryItemData?.isPinned && (
-                                    <PinIcon className="z-0 h-6 w-6 mb-1" />
-                                )}
-                                <CopyButton effieURL={effieURL} link={DirectoryItemData?.link} view={view} />
-                            </div>
-                        </>
-                    )
+                            {(content === "link" || content === "folder") && (
+                                <CopyButton
+                                    effieURL={effieURL}
+                                    link={DirectoryItemData?.link}
+                                    view={view}
+                                />
+                            )}
+                        </div>
+                        {DirectoryItemData?.isPinned && (
+                            <PinIcon className="absolute top-1 right-1 z-0 h-6 w-6" />
+                        )}
+                    </div>
+                ) : (
+                    // list view
+                    <>
+                        {DirectoryItemData?.type === "folder" ? (
+                            <DirectoriesIcon className="h-7 w-7" />
+                        ) : (
+                            <LinkIcon className="h-7 w-7" />
+                        )}
+                        <p className="font-bold text-neutral-900">
+                            {DirectoryItemData?.title}
+                        </p>
+                        <a
+                            href={DirectoryItemData?.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={`hover:text-primary-500 text-neutral-600 un hover:decoration-primary-500 inline-block max-w-full whitespace-nowrap overflow-hidden overflow-ellipsis`}
+                        >
+                            {DirectoryItemData?.link &&
+                                DirectoryItemData?.link?.slice(8)}
+                        </a>
+                        <p className="text-neutral-600 whitespace-nowrap hidden md:block">
+                            {!DirectoryItemData?.shareConfiguration.isShared
+                                ? "Private"
+                                : DirectoryItemData.shareConfiguration
+                                      .sharedPrivilege === "read"
+                                ? "Public (viewer)"
+                                : "Public (editor)"}
+                        </p>
+                        <div className="flex gap-2 justify-end items-center">
+                            {DirectoryItemData?.isPinned && (
+                                <PinIcon className="z-0 h-6 w-6 mb-1" />
+                            )}
+                            <CopyButton
+                                effieURL={effieURL}
+                                link={DirectoryItemData?.link}
+                                view={view}
+                            />
+                        </div>
+                    </>
                 )}
             </div>
         </>

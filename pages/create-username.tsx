@@ -63,12 +63,12 @@ export default function CreateUsername() {
         }
         const accessToken = localStorage.getItem("accessToken");
         const uid = localStorage.getItem("uid");
-        console.log(accessToken, "\n\n\n", uid, "\n\n\n", username);
+        // console.log(accessToken, "\n\n\n", uid, "\n\n\n", username);
         if (!accessToken || !uid || !username) {
             console.error("error");
         } else {
             fetcherUsername({
-                url: `${BE_BASE_URL}/user/register`,
+                url: `${BE_BASE_URL}/user/register-google`,
                 method: "POST",
                 auth: accessToken,
                 body: { uid, username },
@@ -103,7 +103,7 @@ export default function CreateUsername() {
         useFetchEffieBENew();
     function doEffieLogin(accessToken: any, uid: any, photoURL: any) {
         fetcher({
-            url: `${BE_BASE_URL}/user/login`,
+            url: `${BE_BASE_URL}/user/login-google`,
             method: "POST",
             auth: accessToken,
             body: { uid, photoURL },
@@ -168,7 +168,13 @@ export default function CreateUsername() {
                 {/* <Modal isOpen={isModalOpen} onClose={handleModalClose}> */}
                 <div className="flex flex-col lg:flex-row items-center lg:items-start h-fit w-full lg:w-[52rem] gap-8">
                     <div>
-                        <Image src={Icon} alt="create username icon" height={240} width={240} className="object-contain" />
+                        <Image
+                            src={Icon}
+                            alt="create username icon"
+                            height={240}
+                            width={240}
+                            className="object-contain"
+                        />
                     </div>
                     <div className="w-full">
                         <h1 className="text-2xl md:text-3xl text-neutral-900">
@@ -176,8 +182,8 @@ export default function CreateUsername() {
                         </h1>
                         <div className="flex flex-col my-6 gap-1 text-neutral-700">
                             <p className="text-neutra-900">
-                                Here&apos;s the cool part! Your Effie username will be used in your 
-                                personal shareable link.
+                                Here&apos;s the cool part! Your Effie username
+                                will be used in your personal shareable link.
                             </p>
                             <p className="text-danger-200">
                                 This username is permanent and cannot be changed
@@ -203,9 +209,11 @@ export default function CreateUsername() {
                                 className="p-3 flex items-center justify-center disabled:bg-neutral-500"
                                 disabled={isLoadingUsername || username === ""}
                             >
-                                {isLoadingUsername
-                                    ? <LoadingAnimation />
-                                    : "Create Username"}
+                                {isLoadingUsername ? (
+                                    <LoadingAnimation />
+                                ) : (
+                                    "Create Username"
+                                )}
                             </Button>
                         </form>
                         <div className="h-4 flex mt-2">

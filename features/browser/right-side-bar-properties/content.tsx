@@ -203,7 +203,7 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                         isInEditMode ? (
                             // folder in edit mode
                             <>
-                                <div className="mt-6 lg:mt-16 h-full">
+                                <div className="mt-6 lg:mt-16 h-full overflow-auto lg:mb-4">
                                     <div className="flex flex-col break-words gap-8 p-1">
                                         <Input
                                             type="text"
@@ -261,7 +261,7 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                         </div>
                                         <div>
                                             <h5 className="text-neutral-800">
-                                                Access
+                                                Public Access
                                             </h5>
                                             <Select
                                                 options={ShareConfigurationOptions.map(
@@ -286,7 +286,7 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                             </>
                         ) : (
                             // folder not in edit mode
-                            <div className="mt-6 lg:mt-16 h-full">
+                            <div className="mt-6 lg:mt-16 h-full overflow-auto lg:mb-4">
                                 <div className="flex flex-col break-words gap-8 p-1">
                                     <h4 className="text-neutral-900">
                                         {itemData.title}
@@ -325,7 +325,7 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
 
                                     <div>
                                         <h5 className="text-neutral-800">
-                                            Access
+                                            Public Access
                                         </h5>
                                         <p className="text-neutral-700">
                                             {itemData.publicAccess}
@@ -338,7 +338,7 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                     isInEditMode ? (
                         // link in edit mode
                         <>
-                            <div className="mt-6 lg:mt-16 h-full">
+                            <div className="mt-6 lg:mt-16 h-full overflow-auto lg:mb-4">
                                 <div className="flex flex-col break-words gap-8 p-1">
                                     <Input
                                         type="text"
@@ -413,7 +413,7 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                     </div>
                                     <div>
                                         <h5 className="text-neutral-800">
-                                            Access
+                                            Public Access
                                         </h5>
                                         <Select
                                             options={ShareConfigurationOptions.map(
@@ -436,7 +436,7 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                         </>
                     ) : (
                         // link not in edit mode
-                        <div className="mt-6 lg:mt-16 h-full">
+                        <div className="mt-6 lg:mt-16 h-full overflow-auto lg:mb-4">
                             <div className="flex flex-col break-words gap-8 p-1">
                                 <h4 className="text-neutral-900">
                                     {itemData.title}
@@ -455,30 +455,30 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                 </div>
                                 <div>
                                     <h5 className="text-neutral-800">Link</h5>
-                                    <a
+                                    <Link
                                         className="underline text-neutral-700 hover:text-neutral-900"
-                                        href={`${FE_PROTOCOL}://${subdomain}.${FE_BASE_URL}${
-                                            pathname === ""
-                                                ? ""
-                                                : `/${pathname}`
-                                        }/${relativePath}`}
+                                        href={itemData.link}
+                                        target="_blank"
                                     >{`${FE_PROTOCOL}://${subdomain}.${FE_BASE_URL}${
                                         pathname === "" ? "" : `/${pathname}`
-                                    }/${relativePath}`}</a>
+                                    }/${relativePath}`}</Link>
                                 </div>
                                 <div>
                                     <h5 className="text-neutral-800">
                                         Redirects to
                                     </h5>
-                                    <a
+                                    <Link
                                         href={itemData.link}
                                         className="underline text-neutral-700 hover:text-neutral-900"
+                                        target="_blank"
                                     >
                                         {itemData.link}
-                                    </a>
+                                    </Link>
                                 </div>
                                 <div>
-                                    <h5 className="text-neutral-800">Access</h5>
+                                    <h5 className="text-neutral-800">
+                                        Public Access
+                                    </h5>
                                     <p className="text-neutral-700">
                                         {itemData.publicAccess}
                                     </p>
@@ -488,7 +488,7 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                     )}
 
                     {/* Buttons */}
-                    <div className="sticky bottom-12 w-full flex flex-col gap-4">
+                    <div className="bottom-12 w-full flex flex-col gap-4">
                         {isInEditMode ? (
                             <>
                                 <Button

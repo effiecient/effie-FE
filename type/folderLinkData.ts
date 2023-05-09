@@ -7,7 +7,7 @@ export type ShareConfiguration = {
 
 export type FolderLinkDataArray = {
     type: string;
-    childrens?: FolderLinkData[];
+    children?: FolderLinkData[];
 };
 
 export type FolderLinkData = {

@@ -28,7 +28,7 @@ import drawerImage from "@/public/images/drawer.svg";
 import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
 
 import { Content } from "./content";
-type SideBarPropertiesProps = {
+type RightSideBarPropertiesProps = {
     isOpen: boolean;
     itemData: FolderLinkData;
     className?: string;
@@ -37,14 +37,14 @@ type SideBarPropertiesProps = {
     onUpdate: () => void;
 };
 
-export default function SideBarProperties({
+export default function RightSideBarProperties({
     onClose = () => {},
     isOpen = false,
     itemData,
     className,
     relativePath,
     onUpdate = () => {},
-}: SideBarPropertiesProps) {
+}: RightSideBarPropertiesProps) {
     // use modal when screen size is small
     const { width = 976 } = useWindowSize();
     const isSmallScreen = width < 976;

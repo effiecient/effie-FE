@@ -1,12 +1,12 @@
 import Head from "next/head";
 import DirectoryItemCard from "@/components/directory-item-card";
 import Image from "next/image";
-import SideBar from "./side-bar";
+import LeftSideBar from "./left-side-bar";
 import { BE_BASE_URL } from "@/config/be-config";
 import { useRenderingStore, useUserStore } from "@/hooks";
 import { useState, useEffect } from "react";
 import { KeyboardShortcuts, NewLink, NewFolder, Navbar } from "@/components";
-import SideBarProperties from "./side-bar-properties";
+import RightSideBarProperties from "./right-side-bar-properties";
 import { FolderLinkDataArray } from "@/type";
 import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
 
@@ -34,7 +34,7 @@ export default function Browser() {
     const [isKeyboardShortcutsModalOpen, setIsKeyboardShortcutsModalOpen] =
         useState(false);
 
-    const [isSideBarPropertiesOpen, setIsSideBarPropertiesOpen] =
+    const [isRightSideBarPropertiesOpen, setIsRightSideBarPropertiesOpen] =
         useState(false);
 
     const [focusedItemData, setFocusedItemData] = useState<any>(undefined);
@@ -49,32 +49,27 @@ export default function Browser() {
         setIsNewFolderModalOpen(true);
     };
     const handleDirectoryCardClick = (child: any) => {
-        let newUrl = `${pathname}/${child}`;
-        // change path without rerendering
-        window.history.replaceState(
-            {
-                ...window.history.state,
-                as: newUrl,
-                url: newUrl,
-            },
-            "",
-            newUrl
-        );
-        updatePathname();
+        let newUrl = window.location.origin;
+        //  check if pathame start with /. if not, append / to new url
+        if (pathname[0] !== "/" && pathname !== "") {
+            newUrl += "/";
+        }
+        newUrl += `${pathname}/${child}`;
+        // console.log("newUrl", newUrl);
 
+        // let newUrl = `${pathname}/${child}`;
+
+        // console.log("newUrl", newUrl);
+
+        // change path without rerendering
+        window.history.replaceState(null, "", newUrl);
+        updatePathname();
+        setFocusedItemName("");
         setIsSomethingChanged(true);
     };
     const handleBreadcrumbClick = (newUrl: any) => {
         // change path without rerendering
-        window.history.replaceState(
-            {
-                ...window.history.state,
-                as: newUrl,
-                url: newUrl,
-            },
-            "",
-            newUrl
-        );
+        window.history.replaceState(null, "", newUrl);
         updatePathname();
 
         setIsSomethingChanged(true);
@@ -87,7 +82,7 @@ export default function Browser() {
             if (pathname[0] === "/") {
                 pathname = pathname.slice(1);
             }
-            setPathname(pathname)
+            setPathname(pathname);
         }
     };
     updatePathname();
@@ -129,11 +124,12 @@ export default function Browser() {
         if (!isLoadingRefetch && fetchStartedRefetch) {
             // update focused item data
             let focusedItemData = undefined;
-            if (responseRefetch?.data?.childrens !== undefined) {
-                if (focusedItemName in responseRefetch.data.childrens) {
-                    focusedItemData =
-                        responseRefetch.data.childrens[focusedItemName];
-                }
+            if (responseRefetch?.data?.children !== undefined) {
+                responseRefetch.data.children.forEach((child: any) => {
+                    if (child.relativePath === focusedItemName) {
+                        focusedItemData = child;
+                    }
+                });
             }
             if (focusedItemData === undefined) {
                 setFocusedItemName("");
@@ -163,14 +159,16 @@ export default function Browser() {
                 <main className="bg-white w-full h-full">
                     <Navbar />
                     {/* left sidebar */}
-                    <SideBar
+                    <LeftSideBar
                         handleNewLinkClick={handleNewLinkClick}
                         handleNewFolderClick={handleNewFolderClick}
                     />
                     {/* background */}
                     <div
                         className={`z-0 h-full fixed bg-neutral-50 lg:ml-20 bottom-0 lg:top-16 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
-                            isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
+                            isRightSideBarPropertiesOpen
+                                ? "lg:mr-[20vw]"
+                                : "lg:mr-6"
                         }`}
                     >
                         <Background />
@@ -178,7 +176,9 @@ export default function Browser() {
                     {/* content */}
                     <div
                         className={`z-0 absolute lg:ml-20 top-44 md:top-32 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
-                            isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
+                            isRightSideBarPropertiesOpen
+                                ? "lg:mr-[20vw]"
+                                : "lg:mr-6"
                         }`}
                     >
                         <div className="p-6">
@@ -186,15 +186,23 @@ export default function Browser() {
                                 <p className="bg-neutral-200 w-12 rounded-full h-5 pb-2 relative" />
                             </h5>
                             <section className="flex gap-4 w-full flex-wrap">
-                                <DirectoryItemCard content="new folder" view={view} />
-                                <DirectoryItemCard content="new folder" view={view} />
+                                <DirectoryItemCard
+                                    content="new folder"
+                                    view={view}
+                                />
+                                <DirectoryItemCard
+                                    content="new folder"
+                                    view={view}
+                                />
                             </section>
                         </div>
                     </div>
                     {/* header */}
                     <div
                         className={`z-0 fixed bg-neutral-50 lg:ml-20 lg:top-[63px] left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
-                            isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
+                            isRightSideBarPropertiesOpen
+                                ? "lg:mr-[20vw]"
+                                : "lg:mr-6"
                         }`}
                     >
                         <div className="p-6 flex justify-between items-center">
@@ -218,8 +226,11 @@ export default function Browser() {
         responseData = response.data;
     }
 
-    const { dataChildrenFolders, dataChildrenLinks } =
-        sortDataToFolderAndLink(responseData, sortOption, isSortAsc);
+    const { dataChildrenFolders, dataChildrenLinks } = sortDataToFolderAndLink(
+        responseData,
+        sortOption,
+        isSortAsc
+    );
     return (
         <>
             <Head>
@@ -237,14 +248,16 @@ export default function Browser() {
             <main className="bg-white w-full h-full">
                 <Navbar />
                 {/* left sidebar */}
-                <SideBar
+                <LeftSideBar
                     handleNewLinkClick={handleNewLinkClick}
                     handleNewFolderClick={handleNewFolderClick}
                 />
                 {/* background */}
                 <div
                     className={`z-0 h-full fixed bg-neutral-50 lg:ml-20 bottom-0 lg:top-16 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
-                        isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
+                        isRightSideBarPropertiesOpen
+                            ? "lg:mr-[20vw]"
+                            : "lg:mr-6"
                     }`}
                     onClick={() => {
                         // reset focused item
@@ -258,11 +271,13 @@ export default function Browser() {
                 {/* CONTENT */}
                 <div
                     className={`z-0 absolute lg:ml-20 top-44 md:top-32 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
-                        isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
+                        isRightSideBarPropertiesOpen
+                            ? "lg:mr-[20vw]"
+                            : "lg:mr-6"
                     }`}
                 >
                     <div className="pb-24 lg:pb-6 p-6 relative">
-                        { view === "grid" && (
+                        {view === "grid" && (
                             // header
                             <div className="flex justify-between items-center">
                                 <h5 className="text-neutral-400 relative z-10 pb-2">
@@ -270,17 +285,25 @@ export default function Browser() {
                                 </h5>
                             </div>
                         )}
-                        { view === "list" && (
+                        {view === "list" && (
                             <div className="py-3 grid grid-cols-[24px_1fr_1fr_60px] md:grid-cols-[24px_1fr_3fr_8rem_60px] items-center gap-4 border-b-2 !border-neutral-200 border-dashed sticky top-44 md:top-32 bg-neutral-50 z-30">
-                                <p className="font-bold text-neutral-900 col-start-2">Name</p>
-                                <p className="font-bold text-neutral-900">Link</p>
-                                <p className="hidden md:block font-bold text-neutral-900">Access</p>
+                                <p className="font-bold text-neutral-900 col-start-2">
+                                    Name
+                                </p>
+                                <p className="font-bold text-neutral-900">
+                                    Link
+                                </p>
+                                <p className="hidden md:block font-bold text-neutral-900">
+                                    Access
+                                </p>
                             </div>
                         )}
                         <section
-                            className={`${view === "grid" ? "flex-row" : "flex-col"} flex gap-4 w-full flex-wrap pb-4`}
+                            className={`${
+                                view === "grid" ? "flex-row" : "flex-col"
+                            } flex gap-4 w-full flex-wrap pb-4`}
                         >
-                            { view === "grid" && (
+                            {view === "grid" && (
                                 <DirectoryItemCard
                                     content="new folder"
                                     onClick={handleNewFolderClick}
@@ -288,24 +311,29 @@ export default function Browser() {
                                 />
                             )}
                             {dataChildrenFolders.map(
-                                (folder: any, index: any) => {
-                                    let child = folder.key;
-                                    let data = folder.data;
+                                (folderData: any, index: any) => {
                                     return (
                                         <DirectoryItemCard
                                             key={index}
                                             content="folder"
-                                            relativePath={child}
-                                            DirectoryItemData={data}
+                                            relativePath={
+                                                folderData.relativePath
+                                            }
+                                            DirectoryItemData={folderData}
                                             onDoubleClick={() => {
-                                                handleDirectoryCardClick(child);
+                                                handleDirectoryCardClick(
+                                                    folderData.relativePath
+                                                );
                                             }}
                                             onClick={() => {
-                                                setFocusedItemData(data);
-                                                setFocusedItemName(child);
+                                                setFocusedItemData(folderData);
+                                                setFocusedItemName(
+                                                    folderData.relativePath
+                                                );
                                             }}
                                             isFocused={
-                                                focusedItemName === child
+                                                focusedItemName ===
+                                                folderData.relativePath
                                             }
                                             view={view}
                                         />
@@ -314,43 +342,53 @@ export default function Browser() {
                             )}
                         </section>
 
-                        { view === "grid" && (
+                        {view === "grid" && (
                             <h5 className="text-neutral-400 relative z-10 pt-2 pb-2">
                                 Links
                             </h5>
                         )}
                         <section
-                            className={`${view === "grid" ? "flex-row" : "flex-col"} flex gap-4 w-full flex-wrap`}
+                            className={`${
+                                view === "grid" ? "flex-row" : "flex-col"
+                            } flex gap-4 w-full flex-wrap`}
                         >
-                            { view === "grid" && (
+                            {view === "grid" && (
                                 <DirectoryItemCard
                                     content="new link"
                                     onClick={handleNewLinkClick}
                                     view={view}
                                 />
                             )}
-                            {dataChildrenLinks.map((link: any, index: any) => {
-                                let child = link.key;
-                                let data = link.data;
-                                return (
-                                    <DirectoryItemCard
-                                        key={index}
-                                        content="link"
-                                        relativePath={child}
-                                        DirectoryItemData={data}
-                                        onDoubleClick={() => {
-                                            // open url in new page
-                                            window.open(data.link, "_blank");
-                                        }}
-                                        onClick={() => {
-                                            setFocusedItemData(data);
-                                            setFocusedItemName(child);
-                                        }}
-                                        isFocused={focusedItemName === child}
-                                        view={view}
-                                    />
-                                );
-                            })}
+                            {dataChildrenLinks.map(
+                                (linkData: any, index: any) => {
+                                    return (
+                                        <DirectoryItemCard
+                                            key={index}
+                                            content="link"
+                                            relativePath={linkData.relativePath}
+                                            DirectoryItemData={linkData}
+                                            onDoubleClick={() => {
+                                                // open url in new page
+                                                window.open(
+                                                    linkData.link,
+                                                    "_blank"
+                                                );
+                                            }}
+                                            onClick={() => {
+                                                setFocusedItemData(linkData);
+                                                setFocusedItemName(
+                                                    linkData.relativePath
+                                                );
+                                            }}
+                                            isFocused={
+                                                focusedItemName ===
+                                                linkData.relativePath
+                                            }
+                                            view={view}
+                                        />
+                                    );
+                                }
+                            )}
                         </section>
                     </div>
                 </div>
@@ -358,7 +396,9 @@ export default function Browser() {
                 {/* header */}
                 <div
                     className={`z-0 fixed bg-neutral-50 lg:ml-20 lg:top-[63px] left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
-                        isSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
+                        isRightSideBarPropertiesOpen
+                            ? "lg:mr-[20vw]"
+                            : "lg:mr-6"
                     }`}
                 >
                     <div className="p-6 flex flex-col md:flex-row justify-between items-start md:items-center max-w-full gap-4 md:gap-0">
@@ -370,35 +410,50 @@ export default function Browser() {
                             {isLoadingRefetch && <SyncingAnimation />}
                             {/* SORT */}
                             <div className="flex gap-2 items-center">
-                                <p className="hidden md:block text-neutral-700">Sort by</p>
+                                <p className="hidden md:block text-neutral-700">
+                                    Sort by
+                                </p>
                                 {/* DROPDOWN INPUT */}
                                 <Dropdown
                                     options={["Name", "Link"]}
                                     // Set first letter to uppercase and replace '-' to ' '
                                     // TODO: I don't think this is necessary, might convert back
-                                    selectedOption={sortOption.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())}
+                                    selectedOption={sortOption
+                                        .replace(/-/g, " ")
+                                        .replace(/\b\w/g, (l) =>
+                                            l.toUpperCase()
+                                        )}
                                     setSelectedOption={setSortOption}
                                 />
                                 {/* ASC DESC */}
-                                <button className="text-neutral-700 py-1 rounded-full hover:text-neutral-900 font-normal mr-6" onClick={() => setIsSortAsc(!isSortAsc)}>
-                                    {isSortAsc ? 
-                                        "A → Z" : "Z → A"
-                                    }
+                                <button
+                                    className="text-neutral-700 py-1 rounded-full hover:text-neutral-900 font-normal mr-6"
+                                    onClick={() => setIsSortAsc(!isSortAsc)}
+                                >
+                                    {isSortAsc ? "A → Z" : "Z → A"}
                                 </button>
                             </div>
                             {/* VIEW */}
                             <div className="flex gap-2">
-                            {/* GRID */}
+                                {/* GRID */}
                                 <button
                                     onClick={() => setView("grid")}
-                                    className={`${view === "grid" ? "bg-primary-100" : "hover:bg-primary-50"} p-1 rounded-md duration-100`}
+                                    className={`${
+                                        view === "grid"
+                                            ? "bg-primary-100"
+                                            : "hover:bg-primary-50"
+                                    } p-1 rounded-md duration-100`}
                                 >
                                     <GridIcon />
                                 </button>
                                 {/* LIST */}
                                 <button
                                     onClick={() => setView("list")}
-                                    className={`${view === "list" ? "bg-primary-100" : "hover:bg-primary-50"} p-1  rounded-md duration-100`}
+                                    className={`${
+                                        view === "list"
+                                            ? "bg-primary-100"
+                                            : "hover:bg-primary-50"
+                                    } p-1  rounded-md duration-100`}
                                 >
                                     <ListIcon />
                                 </button>
@@ -407,20 +462,23 @@ export default function Browser() {
                             <button
                                 className="ml-4"
                                 onClick={() => {
-                                    setIsSideBarPropertiesOpen(
-                                        !isSideBarPropertiesOpen
+                                    setIsRightSideBarPropertiesOpen(
+                                        !isRightSideBarPropertiesOpen
                                     );
                                 }}
                             >
-                                <InfoIcon className="h-8 w-8" aria-label="Info" />
+                                <InfoIcon
+                                    className="h-8 w-8"
+                                    aria-label="Info"
+                                />
                             </button>
                         </div>
                     </div>
                 </div>
                 {/* right sidebar */}
-                <SideBarProperties
-                    onClose={() => setIsSideBarPropertiesOpen(false)}
-                    isOpen={isSideBarPropertiesOpen}
+                <RightSideBarProperties
+                    onClose={() => setIsRightSideBarPropertiesOpen(false)}
+                    isOpen={isRightSideBarPropertiesOpen}
                     itemData={focusedItemData}
                     relativePath={focusedItemName}
                     onUpdate={() => setIsSomethingChanged(true)}
@@ -462,57 +520,52 @@ const Background = () => {
 };
 
 function sortDataToFolderAndLink(input: any, sortOption: string, asc: boolean) {
-    console.log(input);
     let data: FolderLinkDataArray = input;
     // setup dataChildren as array
     let dataChildrenFolders: any = [];
     let dataChildrenLinks: any = [];
-    data &&
-        data.childrens &&
-        Object.keys(data.childrens).forEach((child: any) => {
-            if (data?.childrens) {
-                if (data.childrens[child].type === "folder") {
-                    // key value of child and data
-                    dataChildrenFolders.push({
-                        key: child,
-                        data: data.childrens[child],
-                    });
-                }
-                if (data.childrens[child].type === "link") {
-                    dataChildrenLinks.push({
-                        key: child,
-                        data: data.childrens[child],
-                    });
-                }
-            }
-        });
+
+    data?.children?.forEach((child: any) => {
+        if (child.type === "folder") {
+            // key value of child and data
+            dataChildrenFolders.push(child);
+        }
+        if (child.type === "link") {
+            dataChildrenLinks.push(child);
+        }
+    });
+    // console.log("dataChildrenFolders");
+    // console.log(dataChildrenFolders);
     // sort based on isPinned and then title alphabetically
     dataChildrenFolders.sort((a: any, b: any) => {
-        if (a.data.isPinned === b.data.isPinned) {
+        if (a.isPinned === b.isPinned) {
             if ((sortOption === "name" || sortOption === "link") && asc) {
-                return a.data.title.localeCompare(b.data.title);
-            } else if ((sortOption === "name" || sortOption === "link") && !asc) {
-                return b.data.title.localeCompare(a.data.title);
-            } 
+                return a.title.localeCompare(b.title);
+            } else if (
+                (sortOption === "name" || sortOption === "link") &&
+                !asc
+            ) {
+                return b.title.localeCompare(a.title);
+            }
         }
-        if (a.data.isPinned) {
+        if (a.isPinned) {
             return -1;
         }
         return 1;
     });
     dataChildrenLinks.sort((a: any, b: any) => {
-        if (a.data.isPinned === b.data.isPinned) {
+        if (a.isPinned === b.isPinned) {
             if (sortOption === "name" && asc) {
-                return a.data.title.localeCompare(b.data.title);
+                return a.title.localeCompare(b.title);
             } else if (sortOption === "name" && !asc) {
-                return b.data.title.localeCompare(a.data.title);
+                return b.title.localeCompare(a.title);
             } else if (sortOption === "link" && asc) {
-                return a.data.link.localeCompare(b.data.link);
+                return a.link.localeCompare(b.link);
             } else if (sortOption === "link" && !asc) {
-                return b.data.link.localeCompare(a.data.link);
+                return b.link.localeCompare(a.link);
             }
         }
-        if (a.data.isPinned) {
+        if (a.isPinned) {
             return -1;
         }
         return 1;
@@ -524,7 +577,7 @@ function SyncingAnimation() {
     // make the dot animate
     return (
         <h6 className="text-primary-600 animate-pulse">
-            <LoadingAnimation />
+            <LoadingAnimation bg="rgb(var(--color-neutral-900))" />
         </h6>
     );
 }

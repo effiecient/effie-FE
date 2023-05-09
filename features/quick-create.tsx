@@ -53,7 +53,7 @@ export default function QuickCreate() {
             body: JSON.stringify(data),
         }).then((res) => {
             if (res.status === 201) {
-                console.log("success");
+                // console.log("success");
             }
         });
     };
@@ -68,11 +68,8 @@ export default function QuickCreate() {
 
     const onURLblur = (e: React.FocusEvent<HTMLInputElement>) => {
         // fetch with header
-
         // const url = "https://www.zoom.us";
-
         // unfurl(url);
-
         // fetch(e.target.value, {
         //     method: "GET",
         //     headers: {

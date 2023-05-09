@@ -74,7 +74,6 @@ export default function NewLink({
         let path = window.location.pathname;
         const linkUrl = formData.get("link-url");
         const title = formData.get("title") || linkName;
-        const thumbnailURL = formData.get("thumbnail-url");
 
         // TODO: change for a more robust validation
         // check if linkName has space
@@ -83,12 +82,12 @@ export default function NewLink({
             return;
         }
         const data = {
+            path: path,
+            relativePath: linkName,
             username: subdomain,
             link: linkUrl,
             title: title,
             isPinned: false,
-            path: path,
-            relativePath: linkName,
         };
         setBody(data);
         setReadyToPost(true);
@@ -176,13 +175,6 @@ export default function NewLink({
                             name="title"
                             placeholder="Custom Title"
                             onChange={onTitleChange}
-                            className="input"
-                        />
-                        <input
-                            type="url"
-                            id="thumbnail-url"
-                            name="thumbnail-url"
-                            placeholder="Thumbnail URL"
                             className="input"
                         />
                     </div>
