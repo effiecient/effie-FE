@@ -276,7 +276,7 @@ export default function Browser() {
                             : "lg:mr-6"
                     }`}
                 >
-                    <div className="pb-24 lg:pb-6 p-6 relative">
+                    <div className={`${view === "grid" ? "pt-6" : "pt-0"} pb-24 lg:pb-6 px-6 relative`}>
                         {view === "grid" && (
                             // header
                             <div className="flex justify-between items-center">
