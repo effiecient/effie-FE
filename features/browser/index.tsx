@@ -416,7 +416,7 @@ export default function Browser() {
                                     </p>
                                     {/* DROPDOWN INPUT */}
                                     <Dropdown
-                                        options={["Name", "Link"]}
+                                        options={["Name", "Link", "Date"]}
                                         // Set first letter to uppercase and replace '-' to ' '
                                         // TODO: I don't think this is necessary, might convert back
                                         selectedOption={sortOption
@@ -548,6 +548,10 @@ function sortDataToFolderAndLink(input: any, sortOption: string, asc: boolean) {
                 !asc
             ) {
                 return b.title.localeCompare(a.title);
+            } else if (sortOption === "date" && asc) {
+                return a.createdAt.localeCompare(b.createdAt);
+            } else if (sortOption === "date" && !asc) {
+                return b.createdAt.localeCompare(a.createdAt);
             }
         }
         if (a.isPinned) {
@@ -565,6 +569,10 @@ function sortDataToFolderAndLink(input: any, sortOption: string, asc: boolean) {
                 return a.link.localeCompare(b.link);
             } else if (sortOption === "link" && !asc) {
                 return b.link.localeCompare(a.link);
+            } else if (sortOption === "date" && asc) {
+                return a.createdAt.localeCompare(b.createdAt);
+            } else if (sortOption === "date" && !asc) {
+                return b.createdAt.localeCompare(a.createdAt);
             }
         }
         if (a.isPinned) {
