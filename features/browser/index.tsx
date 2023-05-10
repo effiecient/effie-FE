@@ -7,7 +7,7 @@ import { useRenderingStore, useUserStore } from "@/hooks";
 import { useState, useEffect } from "react";
 import { KeyboardShortcuts, NewLink, NewFolder, Navbar } from "@/components";
 import RightSideBarProperties from "./right-side-bar-properties";
-import { FolderLinkDataArray } from "@/type";
+import { FolderLinkData, FolderLinkDataArray } from "@/type";
 import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
 
 import Page404 from "../page404";
@@ -286,12 +286,15 @@ export default function Browser() {
                             </div>
                         )}
                         {view === "list" && (
-                            <div className="py-3 grid grid-cols-[24px_1fr_1fr_60px] md:grid-cols-[24px_1fr_3fr_8rem_60px] items-center gap-4 border-b-2 !border-neutral-200 border-dashed sticky top-44 md:top-32 bg-neutral-50 z-30">
+                            <div className="py-3 grid grid-cols-[24px_1fr_1fr_60px] md:grid-cols-[24px_1fr_3fr_8rem_60px] lg:grid-cols-[24px_1fr_3fr_8rem_8rem_60px] items-center gap-4 border-b-2 !border-neutral-200 border-dashed sticky top-44 md:top-32 bg-neutral-50 z-30">
                                 <p className="font-bold text-neutral-900 col-start-2">
                                     Name
                                 </p>
                                 <p className="font-bold text-neutral-900">
                                     Link
+                                </p>
+                                <p className="hidden lg:block font-bold text-neutral-900">
+                                    Last Modified
                                 </p>
                                 <p className="hidden md:block font-bold text-neutral-900">
                                     Access
@@ -416,7 +419,7 @@ export default function Browser() {
                                     </p>
                                     {/* DROPDOWN INPUT */}
                                     <Dropdown
-                                        options={["Name", "Link", "Date"]}
+                                        options={["Name", "Link", "Last Modified", "Access"]}
                                         // Set first letter to uppercase and replace '-' to ' '
                                         // TODO: I don't think this is necessary, might convert back
                                         selectedOption={sortOption
@@ -539,7 +542,7 @@ function sortDataToFolderAndLink(input: any, sortOption: string, asc: boolean) {
     // console.log("dataChildrenFolders");
     // console.log(dataChildrenFolders);
     // sort based on isPinned and then title alphabetically
-    dataChildrenFolders.sort((a: any, b: any) => {
+    dataChildrenFolders.sort((a: FolderLinkData, b: FolderLinkData) => {
         if (a.isPinned === b.isPinned) {
             if ((sortOption === "name" || sortOption === "link") && asc) {
                 return a.title.localeCompare(b.title);
@@ -552,6 +555,10 @@ function sortDataToFolderAndLink(input: any, sortOption: string, asc: boolean) {
                 return a.createdAt.localeCompare(b.createdAt);
             } else if (sortOption === "date" && !asc) {
                 return b.createdAt.localeCompare(a.createdAt);
+            } else if (sortOption === "access" && asc) {
+                return a.publicAccess.localeCompare(b.publicAccess);
+            } else if (sortOption === "access" && !asc) {
+                return b.publicAccess.localeCompare(a.publicAccess);
             }
         }
         if (a.isPinned) {
@@ -559,20 +566,24 @@ function sortDataToFolderAndLink(input: any, sortOption: string, asc: boolean) {
         }
         return 1;
     });
-    dataChildrenLinks.sort((a: any, b: any) => {
+    dataChildrenLinks.sort((a: FolderLinkData, b: FolderLinkData) => {
         if (a.isPinned === b.isPinned) {
             if (sortOption === "name" && asc) {
                 return a.title.localeCompare(b.title);
             } else if (sortOption === "name" && !asc) {
                 return b.title.localeCompare(a.title);
             } else if (sortOption === "link" && asc) {
-                return a.link.localeCompare(b.link);
+                return a.link!.localeCompare(b.link!);
             } else if (sortOption === "link" && !asc) {
-                return b.link.localeCompare(a.link);
+                return b.link!.localeCompare(a.link!);
             } else if (sortOption === "date" && asc) {
                 return a.createdAt.localeCompare(b.createdAt);
             } else if (sortOption === "date" && !asc) {
                 return b.createdAt.localeCompare(a.createdAt);
+            } else if (sortOption === "access" && asc) {
+                return a.publicAccess.localeCompare(b.publicAccess);
+            } else if (sortOption === "access" && !asc) {
+                return b.publicAccess.localeCompare(a.publicAccess);
             }
         }
         if (a.isPinned) {

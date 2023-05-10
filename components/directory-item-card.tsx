@@ -86,7 +86,7 @@ export default function DirectoryItemCard({
                 ${
                     view === "grid"
                         ? "bg-white border-2 w-[32vw] md:w-[44vw] lg:w-[20vw] max-w-[16rem] min-w-[8rem] min-h-[4rem] rounded-xl focus:border-primary-500 pt-3 pb-2 px-5 flex"
-                        : "py-3 grid grid-cols-[24px_1fr_1fr_60px] md:grid-cols-[24px_1fr_3fr_8rem_60px] items-center gap-4 border-b-2 border-dashed border-neutral-200"
+                        : "py-3 grid grid-cols-[24px_1fr_1fr_60px] md:grid-cols-[24px_1fr_3fr_8rem_60px] lg:grid-cols-[24px_1fr_3fr_8rem_8rem_60px] items-center gap-4 border-b-2 border-dashed border-neutral-200"
                 }
                 group relative`}
             >
@@ -157,6 +157,7 @@ export default function DirectoryItemCard({
                         <p className="font-bold text-neutral-900">
                             {DirectoryItemData?.title}
                         </p>
+                        <p>
                         <a
                             href={DirectoryItemData?.link}
                             target="_blank"
@@ -166,6 +167,20 @@ export default function DirectoryItemCard({
                             {DirectoryItemData?.link &&
                                 DirectoryItemData?.link?.slice(8)}
                         </a>
+                        </p>
+                        <p className="text-neutral-600 whitespace-nowrap hidden lg:block">
+                            {DirectoryItemData?.lastModified && (
+                                <>
+                                    {new Date(
+                                        DirectoryItemData?.lastModified
+                                    ).toLocaleDateString("en-US", {
+                                        year: "numeric",
+                                        month: "short",
+                                        day: "numeric",
+                                    })}
+                                </>
+                            )}
+                        </p>
                         <p className="text-neutral-600 whitespace-nowrap hidden md:block">
                             {DirectoryItemData?.publicAccess === "none"
                                 ? "Private"
