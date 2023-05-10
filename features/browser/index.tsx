@@ -507,7 +507,7 @@ export default function Browser() {
 
 const Background = () => {
     return (
-        <div className="absolute right-0 bottom-16 w-1/2 h-1/2">
+        <div className="select-none absolute right-0 bottom-16 w-1/2 h-1/2">
             <Image
                 src={"/images/background.png"}
                 alt=""
