@@ -122,14 +122,14 @@ export default function DirectoryItemCard({
                         )}
                         {/* link or folder data */}
                         <div className="overflow-hidden w-[80%]">
-                            <h6 className={`text-neutral-800`}>
+                            <h6 className={`text-neutral-800 whitespace-nowrap overflow-hidden overflow-ellipsis`}>
                                 {DirectoryItemData?.title}
                             </h6>
                             <a
                                 href={DirectoryItemData?.link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className={`hover:text-primary-500 text-neutral-600 text-xs un hover:decoration-primary-500 inline-block max-w-full whitespace-nowrap`}
+                                className={`hover:text-primary-500 text-neutral-600 text-xs un hover:decoration-primary-500 inline-block max-w-full whitespace-nowrap overflow-hidden overflow-ellipsis`}
                             >
                                 {DirectoryItemData?.link &&
                                     DirectoryItemData?.link?.slice(8)}
@@ -154,14 +154,14 @@ export default function DirectoryItemCard({
                         ) : (
                             <LinkIcon className="h-7 w-7" />
                         )}
-                        <p className="font-bold text-neutral-900">
+                        <p className="font-bold text-neutral-900 overflow-hidden overflow-ellipsis line-clamp-2">
                             {DirectoryItemData?.title}
                         </p>
                         <a
                             href={DirectoryItemData?.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className={`hover:text-primary-500 text-neutral-600 un hover:decoration-primary-500 inline-block max-w-full whitespace-nowrap overflow-hidden overflow-ellipsis`}
+                            className={`hover:text-primary-500 text-neutral-600 un hover:decoration-primary-500 inline-block max-w-full whitespace-nowrap overflow-hidden overflow-ellipsis line-clamp-2`}
                         >
                             {DirectoryItemData?.link &&
                                 DirectoryItemData?.link?.slice(8)}
