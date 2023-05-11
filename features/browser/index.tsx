@@ -246,7 +246,7 @@ export default function Browser() {
                 <link rel="icon" href="/favicon.svg" />
             </Head>
             <main className="bg-white w-full h-full">
-                <Navbar />
+                <Navbar setIsNewLinkModalOpen={setIsNewLinkModalOpen} />
                 {/* left sidebar */}
                 <LeftSideBar
                     handleNewLinkClick={handleNewLinkClick}

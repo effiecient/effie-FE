@@ -16,10 +16,11 @@ import RightClickOptionDropdown from "./right-click-option-dropdown";
 import NewLinkIcon from "@/public/icons/new-link-white";
 
 type NavbarProps = {
+    setIsNewLinkModalOpen?: (isOpen: boolean) => void;
     isOnLanding?: boolean;
 };
 
-export default function Navbar({ isOnLanding = false }: NavbarProps) {
+export default function Navbar({ isOnLanding = false, setIsNewLinkModalOpen }: NavbarProps) {
     const isRegisterOpen = useRegister((state) => state.isRegisterOpen);
     const setIsRegisterOpen = useRegister((state) => state.setIsRegisterOpen);
     const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -90,7 +91,7 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
                                     </>
                                 ) : (
                                     <>
-                                        <Button type="default" pill={true}>
+                                        <Button type="default" pill={true} onClick={() => setIsNewLinkModalOpen && setIsNewLinkModalOpen(true)}>
                                             <div className="flex flex-row gap-2 items-center">
                                                 <NewLinkIcon className="h-6 w-6" />
                                                 New link
