@@ -1,6 +1,6 @@
 type dataType = "folder" | "link";
 
-type accessType = "none" | "read" | "write";
+type accessType = "none" | "viewer" | "editor";
 
 export type ShareConfiguration = {
     isShared: boolean;
