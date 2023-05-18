@@ -24,7 +24,7 @@ import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
 import { getObjectDifferences, checkIfObjectSame } from "@/utils";
 import { ConfirmationModal } from "@/components";
 
-const ShareConfigurationOptions = ["none", "read", "write"];
+const ShareConfigurationOptions = ["none", "viewer", "editor"];
 
 export function useLegacyState<T>(initialState: any) {
     // for object, only update key that is changed

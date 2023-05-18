@@ -73,14 +73,13 @@ export default function DirectoryItemCard({
                         : content.slice(0, 7) === "display"
                         ? "flex-col gap-1 border-neutral-200"
                         : `flex-col gap-1 ${
-                            view === "grid" ?
-                                (isFocused
-                                ? "border-primary-400"
-                                : "hover:border-neutral-200 border-white")
-                            : 
-                                (isFocused
-                                ? "bg-primary-100/30"
-                                : "hover:bg-neutral-100/50")
+                              view === "grid"
+                                  ? isFocused
+                                      ? "border-primary-400"
+                                      : "hover:border-neutral-200 border-white"
+                                  : isFocused
+                                  ? "bg-primary-100/30"
+                                  : "hover:bg-neutral-100/50"
                           } cursor-pointer`
                 } 
                 ${
@@ -122,7 +121,9 @@ export default function DirectoryItemCard({
                         )}
                         {/* link or folder data */}
                         <div className="overflow-hidden w-[80%]">
-                            <h6 className={`text-neutral-800 whitespace-nowrap overflow-hidden overflow-ellipsis`}>
+                            <h6
+                                className={`text-neutral-800 whitespace-nowrap overflow-hidden overflow-ellipsis`}
+                            >
                                 {DirectoryItemData?.title}
                             </h6>
                             <a
@@ -167,13 +168,7 @@ export default function DirectoryItemCard({
                                 DirectoryItemData?.link?.slice(8)}
                         </a>
                         <p className="text-neutral-600 whitespace-nowrap hidden md:block">
-                            {DirectoryItemData?.publicAccess === "none"
-                                ? "Private"
-                                : DirectoryItemData?.publicAccess === "read"
-                                ? "Public (viewer)"
-                                : DirectoryItemData?.publicAccess === "write"
-                                ? "Public (editor)"
-                                : "Error fetching access level"}
+                            {DirectoryItemData?.publicAccess}
                         </p>
                         <div className="flex gap-2 justify-end items-center">
                             {DirectoryItemData?.isPinned && (
