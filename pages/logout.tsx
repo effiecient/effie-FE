@@ -13,6 +13,7 @@ import {
     FE_TOP_LEVEL_DOMAIN,
 } from "@/config/fe-config";
 import { useEffect } from "react";
+import { removeFromCookie } from "@/helper";
 
 export default function Logout() {
     // Initialize Firebase
@@ -41,7 +42,11 @@ export default function Logout() {
     useEffect(() => {
         // remove EFFIE_AUTH_TOKEN from cookie
         if (typeof window !== "undefined") {
-            document.cookie = `${EFFIE_AUTH_TOKEN}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${FE_DOMAIN}.${FE_TOP_LEVEL_DOMAIN};`;
+            // document.cookie = `${EFFIE_AUTH_TOKEN}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${FE_DOMAIN}.${FE_TOP_LEVEL_DOMAIN};`;
+            removeFromCookie(EFFIE_AUTH_TOKEN);
+            removeFromCookie("theme");
+            removeFromCookie("isSortAsc");
+            removeFromCookie("sortOption");
         }
 
         handleGoogleSignOut();

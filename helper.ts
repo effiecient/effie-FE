@@ -33,3 +33,7 @@ export function saveToCookie(key: string, value: string) {
         new Date().getTime() + 365 * 24 * 60 * 60 * 1000
     ).toUTCString()};`;
 }
+
+export function removeFromCookie(key: string) {
+    document.cookie = `${key}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${FE_DOMAIN}.${FE_TOP_LEVEL_DOMAIN};`;
+}
