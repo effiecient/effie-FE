@@ -1,15 +1,16 @@
 import { BE_BASE_URL } from "@/config";
 
 // TODO: update this to import from config only
-import { FE_DOMAIN } from "@/config/fe-config";
+import { FE_DOMAIN, FE_TOP_LEVEL_DOMAIN } from "@/config/fe-config";
 
 import { useUserStore } from "@/hooks";
 import { useEffect, useState } from "react";
 import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
-import { getEffieAuthTokenFromCookie } from "@/helpers";
 import LoadingPage from "@/components/loading-page";
 import Link from "next/link";
 import { Button } from "@/ui";
+import { getEffieAuthTokenFromCookie } from "@/helper";
+import { EFFIE_AUTH_TOKEN } from "@/constants";
 
 // used to set isLoggedIn, username, isSubdomain, subdomain
 export default function CheckUser({ children }: any) {
@@ -86,7 +87,7 @@ export default function CheckUser({ children }: any) {
     if (effieAuthToken === "") {
         setIsLoggedIn(false);
         return children;
-    } else {
+    } else if (effieAuthToken !== null) {
         if (isError) {
             setIsLoggedIn(false);
 
@@ -101,11 +102,21 @@ export default function CheckUser({ children }: any) {
         }
 
         if (isLoading || !fetchStarted) {
+            console.log("testing");
             return <LoadingPage />;
         } else {
             setUsername(response.data.username);
             setIsLoggedIn(true);
             setPhotoURL(response.data.photoURL);
+            // set new token
+            // set to cookie to be used accross subdomains. expire in 1 year
+            // print new token
+            console.log(response.data.token);
+            document.cookie = `${EFFIE_AUTH_TOKEN}=${
+                response.data.token
+            }; path=/; domain=${FE_DOMAIN}.${FE_TOP_LEVEL_DOMAIN};expires=${new Date(
+                new Date().getTime() + 365 * 24 * 60 * 60 * 1000
+            ).toUTCString()};`;
 
             return children;
         }

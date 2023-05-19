@@ -8,8 +8,6 @@ import { initializeApp } from "firebase/app";
 import { FIREBASE_CONFIG, BE_BASE_URL } from "@/config";
 import { useRouter } from "next/router";
 
-import { setToLocalStorage } from "@/helpers";
-
 type RegisterProps = {
     isOpen: boolean;
     onClose: () => void;
@@ -85,4 +83,10 @@ export default function Register({ isOpen, onClose }: RegisterProps) {
             </SideModal>
         </>
     );
+}
+
+function setToLocalStorage(key: string, value: string) {
+    if (typeof localStorage !== "undefined") {
+        localStorage.setItem(key, value);
+    }
 }

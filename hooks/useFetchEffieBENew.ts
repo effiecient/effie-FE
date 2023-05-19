@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useReducer, useState } from "react";
 import { EFFIE_AUTH_TOKEN } from "@/constants";
 import { BE_STATUS_ERROR } from "@/config";
+import { getEffieAuthTokenFromCookie } from "@/helper";
 
 // in milliseconds
 const FETCH_TIMEOUT = 10000;
@@ -40,19 +41,8 @@ export function useFetchEffieBENew(): [any, any] {
             "Content-Type": "application/json",
             Accept: "application/json",
         };
-        if (auth) {
-            headers["Authorization"] = auth;
-        } else {
-            // get from cookie
-            const cookie = document.cookie;
-            const cookieArr = cookie.split(";");
-            const token = cookieArr.find((item) =>
-                item.includes(EFFIE_AUTH_TOKEN)
-            );
-            if (token) {
-                headers["Authorization"] = token.split("=")[1];
-            }
-        }
+        headers["Authorization"] =
+            auth === undefined ? getEffieAuthTokenFromCookie() : auth;
 
         const options = {
             method,

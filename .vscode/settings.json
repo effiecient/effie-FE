@@ -1,3 +1,4 @@
 {
-    "github-enterprise.uri": "https://gitlab.informatika.org"
+    "github-enterprise.uri": "https://gitlab.informatika.org",
+    "files.autoSave": "afterDelay"
 }

@@ -1,11 +1,5 @@
 import { EFFIE_AUTH_TOKEN } from "@/constants";
 
-export function setToLocalStorage(key: string, value: string) {
-    if (typeof localStorage !== "undefined") {
-        localStorage.setItem(key, value);
-    }
-}
-
 export function getEffieAuthTokenFromCookie() {
     let effieAuthToken = "";
     if (typeof window !== "undefined") {
