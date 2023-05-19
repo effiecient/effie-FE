@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 type DropdownProps = {
     options: string[];
@@ -6,7 +6,11 @@ type DropdownProps = {
     setSelectedOption: (option: string) => void;
 };
 
-export default function Dropdown({ options, selectedOption, setSelectedOption }: DropdownProps) {
+export default function Dropdown({
+    options,
+    selectedOption,
+    setSelectedOption,
+}: DropdownProps) {
     const [isOptionsOpen, setIsOptionsOpen] = useState(false);
 
     // If click outside of dropdown, close dropdown
@@ -23,7 +27,6 @@ export default function Dropdown({ options, selectedOption, setSelectedOption }:
         };
     }, []);
 
-
     return (
         <div className="relative inline-block text-left">
             <button
@@ -34,10 +37,14 @@ export default function Dropdown({ options, selectedOption, setSelectedOption }:
                 onClick={() => setIsOptionsOpen(!isOptionsOpen)}
             >
                 {selectedOption}
-                <img src="/icons/chevron-down.svg" alt="chevron-down" className="ml-3 h-3" />
+                <img
+                    src="/icons/chevron-down.svg"
+                    alt="chevron-down"
+                    className="ml-3 h-3"
+                />
             </button>
-            
-            { isOptionsOpen && (
+
+            {isOptionsOpen && (
                 <div
                     className="origin-top-right absolute right-0 mt-2 w-24 md:w-32 rounded-lg bg-white border border-neutral-200 text-neutral-800"
                     role="menu"
@@ -45,16 +52,25 @@ export default function Dropdown({ options, selectedOption, setSelectedOption }:
                     aria-labelledby="options-menu"
                 >
                     <div className="py-1" role="none">
-                        {options.sort((a, b) => a.localeCompare(b)).map((option) => (
-                            <button
-                                key={option}
-                                className="block px-3 py-2 text-sm text-gray-700 hover:bg-neutral-100 hover:text-gray-900 w-full text-left font-normal"
-                                role="menuitem"
-                                onClick={() => setSelectedOption(option.replace(/ /g, "-").toLowerCase())}
-                            >
-                                {option}
-                            </button>
-                        ))}
+                        {options
+                            .sort((a, b) => a.localeCompare(b))
+                            .map((option) => (
+                                <button
+                                    key={option}
+                                    className="block px-3 py-2 text-sm text-gray-700 hover:bg-neutral-100 hover:text-gray-900 w-full text-left font-normal"
+                                    role="menuitem"
+                                    onClick={() => {
+                                        setSelectedOption(
+                                            option
+                                                .replace(/ /g, "-")
+                                                .toLowerCase()
+                                        );
+                                        setIsOptionsOpen(false);
+                                    }}
+                                >
+                                    {option}
+                                </button>
+                            ))}
                     </div>
                 </div>
             )}

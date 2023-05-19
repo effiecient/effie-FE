@@ -16,6 +16,7 @@ import { LoadingAnimation, Dropdown } from "@/ui";
 import InfoIcon from "@/public/icons/info";
 import GridIcon from "@/public/icons/grid";
 import ListIcon from "@/public/icons/list";
+import { saveToCookie } from "@/helper";
 
 export default function Browser() {
     let pathname: any;
@@ -26,9 +27,16 @@ export default function Browser() {
         (state: any) => state.setShowSkeleton
     );
 
-    const [view, setView] = useState<string>("grid");
-    const [sortOption, setSortOption] = useState<string>("name");
-    const [isSortAsc, setIsSortAsc] = useState<boolean>(true);
+    const view = useUserStore((state: any) => state.view);
+    const setView = useUserStore((state: any) => state.setView);
+
+    const sortOption = useUserStore((state: any) => state.sortOption);
+    const setSortOption = useUserStore((state: any) => state.setSortOption);
+
+    const isSortAsc = useUserStore((state: any) => state.isSortAsc);
+    const setIsSortAsc = useUserStore((state: any) => state.setIsSortAsc);
+
+    // browser state
     const [isNewLinkModalOpen, setIsNewLinkModalOpen] = useState(false);
     const [isNewFolderModalOpen, setIsNewFolderModalOpen] = useState(false);
     const [isKeyboardShortcutsModalOpen, setIsKeyboardShortcutsModalOpen] =
@@ -433,15 +441,24 @@ export default function Browser() {
                                         // TODO: I don't think this is necessary, might convert back
                                         selectedOption={sortOption
                                             .replace(/-/g, " ")
-                                            .replace(/\b\w/g, (l) =>
+                                            .replace(/\b\w/g, (l: any) =>
                                                 l.toUpperCase()
                                             )}
-                                        setSelectedOption={setSortOption}
+                                        setSelectedOption={(option: any) => {
+                                            setSortOption(option);
+                                            saveToCookie("sortOption", option);
+                                        }}
                                     />
                                     {/* ASC DESC */}
                                     <button
                                         className="text-neutral-700 py-1 rounded-full hover:text-neutral-900 font-normal mr-6"
-                                        onClick={() => setIsSortAsc(!isSortAsc)}
+                                        onClick={() => {
+                                            setIsSortAsc(!isSortAsc);
+                                            saveToCookie(
+                                                "isSortAsc",
+                                                String(!isSortAsc)
+                                            );
+                                        }}
                                     >
                                         {isSortAsc ? "A → Z" : "Z → A"}
                                     </button>
@@ -450,7 +467,10 @@ export default function Browser() {
                                 <div className="flex gap-2">
                                     {/* GRID */}
                                     <button
-                                        onClick={() => setView("grid")}
+                                        onClick={() => {
+                                            setView("grid");
+                                            saveToCookie("view", "grid");
+                                        }}
                                         className={`${
                                             view === "grid"
                                                 ? "bg-primary-100"
@@ -461,7 +481,10 @@ export default function Browser() {
                                     </button>
                                     {/* LIST */}
                                     <button
-                                        onClick={() => setView("list")}
+                                        onClick={() => {
+                                            setView("list");
+                                            saveToCookie("view", "list");
+                                        }}
                                         className={`${
                                             view === "list"
                                                 ? "bg-primary-100"
