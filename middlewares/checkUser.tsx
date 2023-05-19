@@ -102,7 +102,6 @@ export default function CheckUser({ children }: any) {
         }
 
         if (isLoading || !fetchStarted) {
-            console.log("testing");
             return <LoadingPage />;
         } else {
             setUsername(response.data.username);
@@ -110,8 +109,6 @@ export default function CheckUser({ children }: any) {
             setPhotoURL(response.data.photoURL);
             // set new token
             // set to cookie to be used accross subdomains. expire in 1 year
-            // print new token
-            console.log(response.data.token);
             document.cookie = `${EFFIE_AUTH_TOKEN}=${
                 response.data.token
             }; path=/; domain=${FE_DOMAIN}.${FE_TOP_LEVEL_DOMAIN};expires=${new Date(
