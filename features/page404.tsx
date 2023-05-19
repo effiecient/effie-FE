@@ -22,7 +22,7 @@ export default function Page404() {
             <main className="px-6 xl:px-44 py-12 xl:py-28 flex items-center justify-center h-screen w-screen">
                 <Navbar />
                 <div className="flex flex-col xl:flex-row items-center justify-center h-screen w-screen">
-                    <div className="relative flex justify-center w-3/5 h-3/5">
+                    <div className="relative flex justify-center w-3/5 h-3/5 select-none">
                         <Image
                             // grow image
                             fill={true}
