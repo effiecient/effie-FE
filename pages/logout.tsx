@@ -13,6 +13,7 @@ import {
     FE_TOP_LEVEL_DOMAIN,
 } from "@/config/fe-config";
 import { useEffect } from "react";
+import { removeFromCookie } from "@/helper";
 
 export default function Logout() {
     // Initialize Firebase
@@ -41,12 +42,14 @@ export default function Logout() {
     useEffect(() => {
         // remove EFFIE_AUTH_TOKEN from cookie
         if (typeof window !== "undefined") {
-            document.cookie = `${EFFIE_AUTH_TOKEN}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${FE_DOMAIN}.${FE_TOP_LEVEL_DOMAIN};`;
+            // document.cookie = `${EFFIE_AUTH_TOKEN}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${FE_DOMAIN}.${FE_TOP_LEVEL_DOMAIN};`;
+            removeFromCookie(EFFIE_AUTH_TOKEN);
+            removeFromCookie("theme");
+            removeFromCookie("isSortAsc");
+            removeFromCookie("sortOption");
+            removeFromCookie("view");
         }
-        // remove EFFIE_AUTH_TOKEN from local storage
-        if (typeof localStorage !== "undefined") {
-            localStorage.removeItem(EFFIE_AUTH_TOKEN);
-        }
+
         handleGoogleSignOut();
         window.location.href = FE_FULL_BASE_URL;
     }, []);

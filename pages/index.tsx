@@ -5,10 +5,7 @@ import { useUserStore } from "@/hooks";
 export default function Index() {
     const isLoggedIn = useUserStore((state: any) => state.isLoggedIn);
     const isSubdomain = useUserStore((state: any) => state.isSubdomain);
-    console.log("NEXT_PUBLIC_VERCEL_ENV");
-    console.log(process.env.NEXT_PUBLIC_VERCEL_ENV);
-    console.log("NEXT_PUBLIC_ENV_TYPE");
-    console.log(process.env.NEXT_PUBLIC_ENV_TYPE);
+
     if (isSubdomain) {
         return (
             <div className="flex h-full w-full flex-col">

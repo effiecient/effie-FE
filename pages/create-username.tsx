@@ -143,16 +143,14 @@ export default function CreateUsername() {
                 </div>
             );
         }
-        // set token to local storage
-        if (typeof localStorage !== "undefined") {
-            localStorage.setItem(EFFIE_AUTH_TOKEN, response.token);
-        }
+
         // set to cookie to be used accross subdomains. expire in 1 year
         document.cookie = `${EFFIE_AUTH_TOKEN}=${
-            response.token
+            response.data.token
         }; path=/; domain=${FE_DOMAIN}.${FE_TOP_LEVEL_DOMAIN};expires=${new Date(
             new Date().getTime() + 365 * 24 * 60 * 60 * 1000
         ).toUTCString()};`;
+
         router.push(`${FE_PROTOCOL}://${username}.${FE_BASE_URL}`);
         return (
             <div className="h-screen w-screen flex flex-col items-center justify-center">
