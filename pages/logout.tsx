@@ -47,6 +47,7 @@ export default function Logout() {
             removeFromCookie("theme");
             removeFromCookie("isSortAsc");
             removeFromCookie("sortOption");
+            removeFromCookie("view");
         }
 
         handleGoogleSignOut();
