@@ -140,18 +140,24 @@ export default function Browser() {
         }
     }, [isLoadingRefetch, fetchStartedRefetch]);
 
+    // show skeleton
+    setShowSkeleton(true);
+
     // return
     if (isError) {
+        setShowSkeleton(false);
+
+        console.log("isError");
         console.error(response.message);
         return <Page404 />;
     }
     if (isErrorRefetch) {
+        setShowSkeleton(false);
+
+        console.log("isErrorRefetch");
         console.error(responseRefetch.message);
         return <Page404 />;
     }
-
-    // show skeleton
-    setShowSkeleton(true);
 
     if (isLoading || !fetchStarted) {
         return (
@@ -276,7 +282,11 @@ export default function Browser() {
                             : "lg:mr-6"
                     }`}
                 >
-                    <div className={`${view === "grid" ? "pt-6" : "pt-0"} pb-24 lg:pb-6 px-6 relative`}>
+                    <div
+                        className={`${
+                            view === "grid" ? "pt-6" : "pt-0"
+                        } pb-24 lg:pb-6 px-6 relative`}
+                    >
                         {view === "grid" && (
                             // header
                             <div className="flex justify-between items-center">
@@ -300,7 +310,9 @@ export default function Browser() {
                         )}
                         <section
                             className={`${
-                                view === "grid" ? "flex-row gap-4 pb-4" : "flex-col"
+                                view === "grid"
+                                    ? "flex-row gap-4 pb-4"
+                                    : "flex-col"
                             } flex w-full flex-wrap`}
                         >
                             {view === "grid" && (
