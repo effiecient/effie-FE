@@ -7,12 +7,15 @@ import LP1 from "../public/images/lp1.png";
 import LP2 from "../public/images/lp2.png";
 import LP3 from "../public/images/lp3.png";
 import { useRegister, useWindowSize } from "@/hooks";
-import { Navbar } from "@/components";
+import { Navbar, Snackbar } from "@/components";
+import { useState } from "react";
 
 export default function Landing() {
     const isRegisterOpen = useRegister((state) => state.isRegisterOpen);
     const setIsRegisterOpen = useRegister((state) => state.setIsRegisterOpen);
     const { width } = useWindowSize();
+
+    const [isShowing, setIsShowing] = useState(true);
     return (
         <>
             <Head>
@@ -30,6 +33,15 @@ export default function Landing() {
 
             <Navbar />
             <main className="px-16 md:px-44 xl:px-[20%] py-16">
+                <Snackbar
+                    type="info"
+                    title="title!"
+                    message="mesage"
+                    isShowing={isShowing}
+                    onClose={() => {
+                        setIsShowing(false);
+                    }}
+                />
                 <div className="grid grid-cols-1 md:grid-cols-2 md:grid-rows-3 gap-y-16 md:gap-y-24 md:gap-x-20 items-center justify-center">
                     {width ? (
                         width <= 768 && (

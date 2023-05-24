@@ -9,7 +9,7 @@ import DirectoryItemCard from "./directory-item-card";
 import Navbar from "./navbar";
 import SideBarProperties from "../features/browser/right-side-bar-properties";
 import SideBar from "../features/browser/left-side-bar";
-
+import Snackbar from "./snackbar";
 export {
     KeyboardShortcuts,
     Login,
@@ -22,4 +22,5 @@ export {
     Navbar,
     SideBarProperties,
     SideBar,
+    Snackbar,
 };
