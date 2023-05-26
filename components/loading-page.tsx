@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import LoadingSVG from "@/components/loading-svg";
 
 export default function LoadingPage() {
