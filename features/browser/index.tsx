@@ -5,7 +5,13 @@ import LeftSideBar from "./left-side-bar";
 import { BE_BASE_URL } from "@/config/be-config";
 import { useRenderingStore, useUserStore } from "@/hooks";
 import { useState, useEffect } from "react";
-import { KeyboardShortcuts, NewLink, NewFolder, Navbar } from "@/components";
+import {
+    KeyboardShortcuts,
+    NewLink,
+    NewFolder,
+    Navbar,
+    Snackbar,
+} from "@/components";
 import RightSideBarProperties from "./right-side-bar-properties";
 import { FolderLinkDataArray } from "@/type";
 import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
@@ -41,6 +47,7 @@ export default function Browser() {
     const [isNewFolderModalOpen, setIsNewFolderModalOpen] = useState(false);
     const [isKeyboardShortcutsModalOpen, setIsKeyboardShortcutsModalOpen] =
         useState(false);
+    const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
 
     const [isRightSideBarPropertiesOpen, setIsRightSideBarPropertiesOpen] =
         useState(false);
@@ -63,13 +70,7 @@ export default function Browser() {
             newUrl += "/";
         }
         newUrl += `${pathname}/${child}`;
-        // console.log("newUrl", newUrl);
 
-        // let newUrl = `${pathname}/${child}`;
-
-        // console.log("newUrl", newUrl);
-
-        // change path without rerendering
         window.history.replaceState(null, "", newUrl);
         updatePathname();
         setFocusedItemName("");
@@ -281,7 +282,6 @@ export default function Browser() {
                 >
                     <Background />
                 </div>
-
                 {/* CONTENT */}
                 <div
                     className={`z-0 absolute lg:ml-20 top-44 md:top-32 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
@@ -412,7 +412,6 @@ export default function Browser() {
                         </section>
                     </div>
                 </div>
-
                 {/* header */}
                 <div
                     className={`z-0 fixed bg-neutral-50 lg:ml-20 lg:top-[63px] left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
@@ -535,6 +534,7 @@ export default function Browser() {
                     isOpen={isKeyboardShortcutsModalOpen}
                     onClose={() => setIsKeyboardShortcutsModalOpen(false)}
                 />
+                <Snackbar className="z-50" />
             </main>
         </>
     );

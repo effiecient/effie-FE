@@ -1,14 +1,10 @@
-// IMPORTS
 import { useState, useEffect, useRef } from "react";
-import { Button, Modal } from "@/ui";
-// import DirectoryItemCard from "../directory-item-card";
+import { Button, LoadingAnimation, Modal } from "@/ui";
 import { BE_BASE_URL } from "@/config/be-config";
-import { useFetchEffieBE, useUserStore } from "@/hooks";
-// import { unfurl } from 'unfurl.js'
+import { useFetchEffieBE, useRenderingStore, useUserStore } from "@/hooks";
 import Image from "next/image";
-// import { useRouter } from "next/router";
 import { FE_BASE_URL } from "@/config";
-// import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
+import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
 
 type NewLinkProps = {
     isOpen: boolean;
@@ -32,8 +28,10 @@ export default function NewLink({
     // USER INTERFACE CONFIGURATIONS
     const linkNameRef = useRef<HTMLInputElement>(null);
     const [isMoreOptionsOpen, setIsMoreOptionsOpen] = useState(false);
-    const [title, setTitle] = useState<string>("");
-    const [body, setBody] = useState<any>({});
+    const [isSubmitted, setIsSubmitted] = useState(false);
+
+    const [{ isLoading, isError, response, fetchStarted }, fetcher] =
+        useFetchEffieBENew();
 
     useEffect(() => {
         const input = document.getElementById("link-name");
@@ -48,14 +46,6 @@ export default function NewLink({
         }
     };
 
-    const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.value !== "") {
-            setTitle(e.target.value);
-        } else {
-            setTitle(linkNameRef.current?.value || "");
-        }
-    };
-
     const onURLblur = (e: React.FocusEvent<HTMLInputElement>) => {};
 
     const closeModal = () => {
@@ -64,8 +54,6 @@ export default function NewLink({
     };
 
     // FORM SUBMISSION
-    // const router = useRouter();
-    const [readyToPost, setReadyToPost] = useState(false);
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -75,12 +63,6 @@ export default function NewLink({
         const linkUrl = formData.get("link-url");
         const title = formData.get("title") || linkName;
 
-        // TODO: change for a more robust validation
-        // check if linkName has space
-        if (linkName && linkName.includes(" ")) {
-            alert("Link name cannot have space");
-            return;
-        }
         const data = {
             path: path,
             relativePath: linkName,
@@ -89,22 +71,42 @@ export default function NewLink({
             title: title,
             isPinned: false,
         };
-        setBody(data);
-        setReadyToPost(true);
+
+        fetcher({
+            url: `${BE_BASE_URL}/directory/link`,
+            method: "POST",
+            body: data,
+        });
+        setIsSubmitted(true);
     };
 
-    const { isLoading, isError, response } = useFetchEffieBE({
-        url: readyToPost ? `${BE_BASE_URL}/directory/link` : "",
-        method: "POST",
-        body: body,
-    });
+    const setShowSnackbar = useRenderingStore(
+        (state: any) => state.setShowSnackbar
+    );
+    const setSsnackbarType = useRenderingStore(
+        (state: any) => state.setSnackbarType
+    );
+    const setSnackbarTitle = useRenderingStore(
+        (state: any) => state.setSnackbarTitle
+    );
+    const setSnackbarMessage = useRenderingStore(
+        (state: any) => state.setSnackbarMessage
+    );
 
-    if (readyToPost && !isLoading && !isError && response) {
-        onNewItemCreated();
-        onClose();
-        setReadyToPost(false);
+    if (isSubmitted) {
+        if (isError) {
+            setShowSnackbar(true);
+            setSsnackbarType("error");
+            setSnackbarTitle("create new link error!");
+            setSnackbarMessage(response.message);
+            setIsSubmitted(false);
+        } else if (isLoading || !fetchStarted) {
+            console.log("Loading...");
+        } else {
+            onNewItemCreated();
+            onClose();
+        }
     }
-
     return (
         <Modal isOpen={isOpen} onClose={closeModal} onOutsideClick={closeModal}>
             <h3 className="text-neutral-800 mb-8">New Link</h3>
@@ -141,7 +143,16 @@ export default function NewLink({
                         className="input flex-grow"
                         onBlur={onURLblur}
                     />
-                    <Button className="min-h-full">Save link</Button>
+                    <Button
+                        className="h-8 w-24"
+                        disabled={isSubmitted && (isLoading || !fetchStarted)}
+                    >
+                        {isSubmitted && (isLoading || !fetchStarted) ? (
+                            <LoadingAnimation bg="rgb(var(--color-neutral-100))" />
+                        ) : (
+                            "Save Link"
+                        )}
+                    </Button>
                 </div>
                 <div
                     role="button"
@@ -174,19 +185,9 @@ export default function NewLink({
                             id="title"
                             name="title"
                             placeholder="Custom Title"
-                            onChange={onTitleChange}
                             className="input"
                         />
                     </div>
-                    {/* TODO: adapt to the new directory item card */}
-
-                    {/* <DirectoryItemCard
-                        content="display link"
-                        title={title}
-                        url={linkNameRef.current?.value || ""}
-                        effieUrl=""
-                        className="h-fit"
-                    /> */}
                 </div>
             </form>
         </Modal>

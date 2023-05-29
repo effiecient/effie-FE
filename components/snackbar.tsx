@@ -4,53 +4,82 @@ import errorIcon from "@/public/icons/error_red.svg";
 import successIcon from "@/public/icons/success_green.svg";
 import Image from "next/image";
 import CrossIcon from "@/public/icons/cross";
-import { useEffect } from "react";
+import { use, useEffect, useRef } from "react";
+import { useRenderingStore } from "@/hooks";
 type SnackbarProps = {
-    type: "success" | "error" | "warning" | "info";
-    title: string;
-    message: string;
-    isShowing: boolean;
-    onClose: () => void;
+    className?: string;
 };
 
-export default function Snackbar({
-    type,
-    title,
-    message,
-    isShowing,
-    onClose,
-}: SnackbarProps) {
+export default function Snackbar({ className }: SnackbarProps) {
+    const showSnackbar = useRenderingStore((state: any) => state.showSnackbar);
+    const setShowSnackbar = useRenderingStore(
+        (state: any) => state.setShowSnackbar
+    );
+
+    const snackbarType = useRenderingStore((state: any) => state.snackbarType);
+    const snackbarTitle = useRenderingStore(
+        (state: any) => state.snackbarTitle
+    );
+    const snackbarMessage = useRenderingStore(
+        (state: any) => state.snackbarMessage
+    );
+
+    const hideSnackbarTimer = useRef<any>(null);
+    const showSnackbarTimer = useRef<any>(null);
+
+    const onClose = () => {
+        setShowSnackbar(false);
+    };
     useEffect(() => {
-        if (!isShowing) return;
+        if (!showSnackbar) return;
         // start a timer to close the snackbar
-        const timer = setTimeout(() => {
+        hideSnackbarTimer.current = setTimeout(() => {
             onClose();
         }, 5000);
-        return () => clearTimeout(timer);
-    }, [isShowing]);
+        return () => clearTimeout(hideSnackbarTimer.current);
+    }, [showSnackbar]);
+
+    // remove the previous snackbar on title, message, or type change
+    useEffect(() => {
+        if (showSnackbar) {
+            onClose();
+            showSnackbarTimer.current = setTimeout(() => {
+                setShowSnackbar(true);
+            }, 100);
+            return () => clearTimeout(showSnackbarTimer.current);
+        }
+    }, [snackbarTitle, snackbarMessage, snackbarType]);
     return (
         // bg EFF8FF opacity 80%
         <div
-            className={`fixed bottom-4 right-4 border-2 p-4 rounded-xl w-[20rem] opacity-80 max-h-[10rem] overflow-y-clip hover:opacity-100 transition-all duration-500
-            ${isShowing ? "translate-y-0" : "translate-y-96"}
+            className={`${className} fixed bottom-4 right-4 border-2 p-4 rounded-xl w-[20rem] opacity-80 max-h-[10rem] overflow-y-clip hover:opacity-100 transition-all duration-500
+            ${showSnackbar ? "translate-y-0" : "translate-y-96"}
             ${
-                type === "success"
+                snackbarType === "success"
                     ? "border-success-500 bg-[#E3FCEC] text-success-500"
-                    : type === "error"
+                    : snackbarType === "error"
                     ? "border-danger-500 bg-[#F8E5E5] text-danger-500"
-                    : type === "warning"
+                    : snackbarType === "warning"
                     ? "border-warning-500 bg-[#FFFCF4] text-warning-500"
                     : "border-info-500 bg-[#EFF8FF] text-info-500"
             }`}
+            onMouseEnter={() => clearTimeout(hideSnackbarTimer.current)}
+            onMouseLeave={() => {
+                if (showSnackbar) {
+                    hideSnackbarTimer.current = setTimeout(() => {
+                        onClose();
+                    }, 3000);
+                }
+            }}
         >
             <div className="flex items-center">
                 <Image
                     src={
-                        type === "success"
+                        snackbarType === "success"
                             ? successIcon
-                            : type === "error"
+                            : snackbarType === "error"
                             ? errorIcon
-                            : type === "warning"
+                            : snackbarType === "warning"
                             ? warningIcon
                             : infoIcon
                     }
@@ -58,10 +87,10 @@ export default function Snackbar({
                     height={28}
                     width={28}
                 />
-                <p className="font-bold text-lg ml-2">{title}</p>
+                <p className="font-bold text-lg ml-2">{snackbarTitle}</p>
             </div>
             <div className="ml-9 break-words">
-                <p>{message}</p>
+                <p>{snackbarMessage}</p>
             </div>
             <button className="absolute top-2 right-2" onClick={onClose}>
                 <CrossIcon />

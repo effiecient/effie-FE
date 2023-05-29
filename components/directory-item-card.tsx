@@ -126,15 +126,12 @@ export default function DirectoryItemCard({
                             >
                                 {DirectoryItemData?.title}
                             </h6>
-                            <a
-                                href={DirectoryItemData?.link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className={`hover:text-primary-500 text-neutral-600 text-xs un hover:decoration-primary-500 inline-block max-w-full whitespace-nowrap overflow-hidden overflow-ellipsis`}
+                            <p
+                                className={`text-neutral-600 text-xs inline-block max-w-full whitespace-nowrap overflow-hidden overflow-ellipsis`}
                             >
                                 {DirectoryItemData?.link &&
                                     DirectoryItemData?.link?.slice(8)}
-                            </a>
+                            </p>
                             {(content === "link" || content === "folder") && (
                                 <CopyButton
                                     effieURL={effieURL}
