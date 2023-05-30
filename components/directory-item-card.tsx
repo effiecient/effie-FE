@@ -42,8 +42,6 @@ export default function DirectoryItemCard({
     view,
     disabled = false,
 }: DirectoryItemCardProps) {
-    // console.log("DirectoryItemData");
-    // console.log(DirectoryItemData);
     let pathname = window.location.pathname;
     let subdomain = useUserStore((state: any) => state.subdomain);
     // add / in the back if doesn't exist
