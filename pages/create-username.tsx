@@ -204,7 +204,7 @@ export default function CreateUsername() {
                             />
                             <Button
                                 onClick={handleCreateUsernameOnClick}
-                                className="p-3 flex items-center justify-center disabled:bg-neutral-500"
+                                className="w-full h-8 md:h-12 md:w-36 p-3 flex items-center justify-center disabled:bg-neutral-500"
                                 disabled={isLoadingUsername || username === ""}
                             >
                                 {isLoadingUsername ? (

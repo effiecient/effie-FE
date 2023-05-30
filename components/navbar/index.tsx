@@ -20,7 +20,10 @@ type NavbarProps = {
     isOnLanding?: boolean;
 };
 
-export default function Navbar({ isOnLanding = false, setIsNewLinkModalOpen }: NavbarProps) {
+export default function Navbar({
+    isOnLanding = false,
+    setIsNewLinkModalOpen,
+}: NavbarProps) {
     const isRegisterOpen = useRegister((state) => state.isRegisterOpen);
     const setIsRegisterOpen = useRegister((state) => state.setIsRegisterOpen);
     const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -91,9 +94,16 @@ export default function Navbar({ isOnLanding = false, setIsNewLinkModalOpen }: N
                                     </>
                                 ) : (
                                     <>
-                                        <Button type="default" pill={true} onClick={() => setIsNewLinkModalOpen && setIsNewLinkModalOpen(true)}>
+                                        <Button
+                                            type="default"
+                                            pill={true}
+                                            onClick={() =>
+                                                setIsNewLinkModalOpen &&
+                                                setIsNewLinkModalOpen(true)
+                                            }
+                                        >
                                             <div className="flex flex-row gap-2 items-center">
-                                                <NewLinkIcon className="h-6 w-6" />
+                                                <NewLinkIcon className="h-6 w-6 text-primary-500" />
                                                 New link
                                             </div>
                                         </Button>

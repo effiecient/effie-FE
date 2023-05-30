@@ -6,7 +6,7 @@ import { initializeApp } from "firebase/app";
 import { useState } from "react";
 
 import { BE_BASE_URL, FIREBASE_CONFIG } from "@/config";
-import { useUserStore } from "@/hooks";
+import { useRenderingStore, useUserStore } from "@/hooks";
 import { useRouter } from "next/router";
 
 // TODO: update this to import from config only
@@ -35,13 +35,20 @@ export default function Login({ isOpen, onClose }: LoginProps) {
     const username = useUserStore((state: any) => state.username);
 
     const router = useRouter();
-
+    const setShowSnackbar = useRenderingStore(
+        (state: any) => state.setShowSnackbar
+    );
+    const setSsnackbarType = useRenderingStore(
+        (state: any) => state.setSnackbarType
+    );
+    const setSnackbarTitle = useRenderingStore(
+        (state: any) => state.setSnackbarTitle
+    );
+    const setSnackbarMessage = useRenderingStore(
+        (state: any) => state.setSnackbarMessage
+    );
     const [{ isLoading, isError, response, fetchStarted }, fetcher] =
         useFetchEffieBENew();
-
-    function handleSignOut() {
-        router.push("/logout");
-    }
 
     const [doneGoogleLogin, setDoneGoogleLogin] = useState(false);
 
@@ -50,38 +57,32 @@ export default function Login({ isOpen, onClose }: LoginProps) {
             .then((result: any) => {
                 console.log(result);
                 // set user to local storage
-
-                doEffieLogin(result.user.accessToken, result.user.uid);
+                fetcher({
+                    url: `${BE_BASE_URL}/user/login-google`,
+                    method: "POST",
+                    auth: result.user.accessToken,
+                    body: { uid: result.user.uid },
+                });
                 setDoneGoogleLogin(true);
             })
             .catch((error) => {
                 console.error(error);
+                setShowSnackbar(true);
+                setSsnackbarType("error");
+                setSnackbarTitle("google login error!");
+                setSnackbarMessage(error.message);
             });
     }
 
-    function doEffieLogin(accessToken: any, uid: any) {
-        fetcher({
-            url: `${BE_BASE_URL}/user/login-google`,
-            method: "POST",
-            auth: accessToken,
-            body: { uid },
-        });
-    }
     if (doneGoogleLogin) {
         // return
         if (isError) {
-            return (
-                <SideModal isOpen={isOpen} onClose={onClose}>
-                    <h1>Error</h1>
-                    {response.message}
-                </SideModal>
-            );
+            setShowSnackbar(true);
+            setSsnackbarType("error");
+            setSnackbarTitle("login error!");
+            setSnackbarMessage(response.message);
+            setDoneGoogleLogin(false);
         } else if (isLoading || !fetchStarted) {
-            return (
-                <SideModal isOpen={isOpen} onClose={onClose}>
-                    <h1>Loading</h1>
-                </SideModal>
-            );
         } else {
             // set token to local storage
             if (typeof localStorage !== "undefined") {
@@ -103,28 +104,24 @@ export default function Login({ isOpen, onClose }: LoginProps) {
             } else {
                 router.reload();
             }
-            return <></>;
         }
-    } else {
-        return (
-            <SideModal
-                isOpen={isOpen}
-                onClose={onClose}
-                className="flex flex-col gap-6 z-10"
-            >
-                <h1 className="text-neutral-900">Welcome back!</h1>
-
-                {isLoggedIn ? (
-                    <div>
-                        <p>Logged in as {username}</p>
-                        <Button onClick={handleSignOut}>Sign Out</Button>
-                    </div>
-                ) : (
-                    <Button onClick={handleLoginButton}>
-                        Login with Google
-                    </Button>
-                )}
-            </SideModal>
-        );
     }
+    return (
+        <SideModal
+            isOpen={isOpen}
+            onClose={onClose}
+            className="flex flex-col gap-6 z-10"
+        >
+            <h1 className="text-neutral-900">Welcome back!</h1>
+
+            <Button
+                onClick={handleLoginButton}
+                disabled={doneGoogleLogin && (isLoading || !fetchStarted)}
+            >
+                {doneGoogleLogin && (isLoading || !fetchStarted)
+                    ? "Loading..."
+                    : "Login with Google"}
+            </Button>
+        </SideModal>
+    );
 }

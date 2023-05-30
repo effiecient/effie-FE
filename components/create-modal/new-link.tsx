@@ -1,10 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { Button, LoadingAnimation, Modal } from "@/ui";
 import { BE_BASE_URL } from "@/config/be-config";
-import { useFetchEffieBE, useRenderingStore, useUserStore } from "@/hooks";
+import { useFetchEffieBENew, useRenderingStore, useUserStore } from "@/hooks";
 import Image from "next/image";
 import { FE_BASE_URL } from "@/config";
-import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
 
 type NewLinkProps = {
     isOpen: boolean;
@@ -32,7 +31,18 @@ export default function NewLink({
 
     const [{ isLoading, isError, response, fetchStarted }, fetcher] =
         useFetchEffieBENew();
-
+    const setShowSnackbar = useRenderingStore(
+        (state: any) => state.setShowSnackbar
+    );
+    const setSsnackbarType = useRenderingStore(
+        (state: any) => state.setSnackbarType
+    );
+    const setSnackbarTitle = useRenderingStore(
+        (state: any) => state.setSnackbarTitle
+    );
+    const setSnackbarMessage = useRenderingStore(
+        (state: any) => state.setSnackbarMessage
+    );
     useEffect(() => {
         const input = document.getElementById("link-name");
         if (input) {
@@ -79,19 +89,6 @@ export default function NewLink({
         });
         setIsSubmitted(true);
     };
-
-    const setShowSnackbar = useRenderingStore(
-        (state: any) => state.setShowSnackbar
-    );
-    const setSsnackbarType = useRenderingStore(
-        (state: any) => state.setSnackbarType
-    );
-    const setSnackbarTitle = useRenderingStore(
-        (state: any) => state.setSnackbarTitle
-    );
-    const setSnackbarMessage = useRenderingStore(
-        (state: any) => state.setSnackbarMessage
-    );
 
     if (isSubmitted) {
         if (isError) {
@@ -188,6 +185,14 @@ export default function NewLink({
                             className="input"
                         />
                     </div>
+                    {/* TODO: adapt to the new directory item card to follow product on figma */}
+                    {/* <DirectoryItemCard
+                        content="display link"
+                        title={title}
+                        url={linkNameRef.current?.value || ""}
+                        effieUrl=""
+                        className="h-fit"
+                    /> */}
                 </div>
             </form>
         </Modal>

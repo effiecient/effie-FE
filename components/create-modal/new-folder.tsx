@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from "react";
-import { Button, Modal } from "@/ui";
+import { Button, LoadingAnimation, Modal } from "@/ui";
 import DirectoryItemCard from "../directory-item-card";
 import { BE_BASE_URL } from "@/config/be-config";
 import { FE_BASE_URL } from "@/config";
 // import { unfurl } from 'unfurl.js'
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useFetchEffieBE, useUserStore } from "@/hooks";
+import { useFetchEffieBENew, useRenderingStore, useUserStore } from "@/hooks";
 
 type NewFolderProps = {
     isOpen: boolean;
@@ -20,7 +20,6 @@ export default function NewFolder({
     onNewItemCreated,
 }: NewFolderProps) {
     // USER CONSTANTS
-    const username = useUserStore((state: any) => state.username);
     const subdomain = useUserStore((state: any) => state.subdomain);
     const USER_BASE_URL = `${subdomain}.${FE_BASE_URL}/`;
     const currPathArray = window.location.pathname
@@ -29,7 +28,23 @@ export default function NewFolder({
         .filter((item) => item !== "");
 
     const [isMoreOptionsOpen, setIsMoreOptionsOpen] = useState(false);
+    const [isSubmitted, setIsSubmitted] = useState(false);
 
+    const [{ isLoading, isError, response, fetchStarted }, fetcher] =
+        useFetchEffieBENew();
+
+    const setShowSnackbar = useRenderingStore(
+        (state: any) => state.setShowSnackbar
+    );
+    const setSsnackbarType = useRenderingStore(
+        (state: any) => state.setSnackbarType
+    );
+    const setSnackbarTitle = useRenderingStore(
+        (state: any) => state.setSnackbarTitle
+    );
+    const setSnackbarMessage = useRenderingStore(
+        (state: any) => state.setSnackbarMessage
+    );
     useEffect(() => {
         const input = document.getElementById("folder-name");
         if (input) {
@@ -46,23 +61,14 @@ export default function NewFolder({
     const linkNameRef = useRef<HTMLInputElement>(null);
     const [title, setTitle] = useState<string>("");
 
-    const router = useRouter();
-    const [body, setBody] = useState<any>({});
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const linkName: any = formData.get("folder-name");
         let path = window.location.pathname;
         const title = formData.get("title") || linkName;
-        const thumbnailURL = formData.get("thumbnail-url");
         // Add "/" to the start of the link name if it doesn't exist
 
-        // TODO: change for a more robust validation
-        // check if linkName has space
-        if (linkName && linkName.includes(" ")) {
-            alert("Link name cannot have space");
-            return;
-        }
         const data = {
             username: subdomain,
             title: title,
@@ -70,29 +76,12 @@ export default function NewFolder({
             path: path,
             relativePath: linkName,
         };
-        setBody(data);
-        setReadyToPost(true);
-    };
-
-    const [readyToPost, setReadyToPost] = useState(false);
-
-    const { isLoading, isError, response } = useFetchEffieBE({
-        url: readyToPost ? `${BE_BASE_URL}/directory/folder` : "",
-        method: "POST",
-        body: body,
-    });
-    if (readyToPost && !isLoading && !isError && response) {
-        console.log("refetch di new folder");
-        onNewItemCreated();
-        onClose();
-        setReadyToPost(false);
-    }
-    const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.value !== "") {
-            setTitle(e.target.value);
-        } else {
-            setTitle(linkNameRef.current?.value || "");
-        }
+        fetcher({
+            url: `${BE_BASE_URL}/directory/folder`,
+            method: "POST",
+            body: data,
+        });
+        setIsSubmitted(true);
     };
 
     const closeModal = () => {
@@ -100,6 +89,20 @@ export default function NewFolder({
         setIsMoreOptionsOpen(false);
     };
 
+    if (isSubmitted) {
+        if (isError) {
+            setShowSnackbar(true);
+            setSsnackbarType("error");
+            setSnackbarTitle("create new folder error!");
+            setSnackbarMessage(response.message);
+            setIsSubmitted(false);
+        } else if (isLoading || !fetchStarted) {
+            console.log("Loading...");
+        } else {
+            onNewItemCreated();
+            onClose();
+        }
+    }
     return (
         <Modal isOpen={isOpen} onClose={closeModal} onOutsideClick={closeModal}>
             <h3 className="text-neutral-800 mb-8">New Folder</h3>
@@ -125,7 +128,16 @@ export default function NewFolder({
                         autoFocus
                         required
                     />
-                    <Button className="md:ml-4 h-[2.7rem] px-4">Add</Button>
+                    <Button
+                        className="md:ml-4 h-[2.7rem] px-4 w-24"
+                        disabled={isSubmitted && (isLoading || !fetchStarted)}
+                    >
+                        {isSubmitted && (isLoading || !fetchStarted) ? (
+                            <LoadingAnimation bg="rgb(var(--color-neutral-100))" />
+                        ) : (
+                            "Add"
+                        )}
+                    </Button>
                 </div>
                 <div
                     role="button"
@@ -158,18 +170,10 @@ export default function NewFolder({
                             id="title"
                             name="title"
                             placeholder="Custom Title"
-                            onChange={onTitleChange}
-                            className="input"
-                        />
-                        <input
-                            type="url"
-                            id="thumbnail-url"
-                            name="thumbnail-url"
-                            placeholder="Thumbnail URL"
                             className="input"
                         />
                     </div>
-                    {/* TODO: adapt to the new directory item card */}
+                    {/* TODO: adapt to the new directory item card to follow product on figma */}
                     {/* <DirectoryItemCard
                         content="display link"
                         title={title}

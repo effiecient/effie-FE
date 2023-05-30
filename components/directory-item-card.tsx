@@ -28,6 +28,7 @@ type DirectoryItemCardProps = {
     relativePath?: string;
     isFocused?: boolean;
     view: string;
+    disabled?: boolean;
 };
 
 export default function DirectoryItemCard({
@@ -39,6 +40,7 @@ export default function DirectoryItemCard({
     relativePath,
     isFocused = false,
     view,
+    disabled = true,
 }: DirectoryItemCardProps) {
     // console.log("DirectoryItemData");
     // console.log(DirectoryItemData);
@@ -63,8 +65,16 @@ export default function DirectoryItemCard({
     return (
         <>
             <div
-                onClick={onClick}
-                onDoubleClick={onDoubleClick}
+                onClick={() => {
+                    if (!disabled && onClick) {
+                        onClick();
+                    }
+                }}
+                onDoubleClick={() => {
+                    if (!disabled && onDoubleClick) {
+                        onDoubleClick();
+                    }
+                }}
                 className={`
                 ${className} 
                 ${
@@ -92,12 +102,12 @@ export default function DirectoryItemCard({
                 {/* images */}
                 {content === "new folder" ? (
                     <>
-                        <NewFolderIcon className="h-7 w-7" />
+                        <NewFolderIcon className="h-7 w-7 text-primary-500" />
                         <h6 className="text-primary-500 ml-2">New folder</h6>
                     </>
                 ) : content === "new link" ? (
                     <>
-                        <NewLinkIcon className="h-7 w-7" />
+                        <NewLinkIcon className="h-7 w-7 text-primary-500" />
                         <h6 className="text-primary-500 ml-2">New link</h6>
                     </>
                 ) : view === "grid" ? (

@@ -5,13 +5,7 @@ import LeftSideBar from "./left-side-bar";
 import { BE_BASE_URL } from "@/config/be-config";
 import { useRenderingStore, useUserStore } from "@/hooks";
 import { useState, useEffect } from "react";
-import {
-    KeyboardShortcuts,
-    NewLink,
-    NewFolder,
-    Navbar,
-    Snackbar,
-} from "@/components";
+import { KeyboardShortcuts, NewLink, NewFolder, Navbar } from "@/components";
 import RightSideBarProperties from "./right-side-bar-properties";
 import { FolderLinkDataArray } from "@/type";
 import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
@@ -47,7 +41,6 @@ export default function Browser() {
     const [isNewFolderModalOpen, setIsNewFolderModalOpen] = useState(false);
     const [isKeyboardShortcutsModalOpen, setIsKeyboardShortcutsModalOpen] =
         useState(false);
-    const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
 
     const [isRightSideBarPropertiesOpen, setIsRightSideBarPropertiesOpen] =
         useState(false);
@@ -426,74 +419,82 @@ export default function Browser() {
                         />
                         <div className="flex flex-row items-center justify-between md:justify-end gap-2 w-full md:w-auto">
                             {/* LOADING */}
-                            {isLoadingRefetch && <SyncingAnimation />}
-                            {/* SORT */}
-                            <div className="flex">
-                                <div className="flex gap-2 items-center">
-                                    <p className="hidden md:block text-neutral-700">
-                                        Sort by
-                                    </p>
-                                    {/* DROPDOWN INPUT */}
-                                    <Dropdown
-                                        options={["Name", "Link"]}
-                                        // Set first letter to uppercase and replace '-' to ' '
-                                        // TODO: I don't think this is necessary, might convert back
-                                        selectedOption={sortOption
-                                            .replace(/-/g, " ")
-                                            .replace(/\b\w/g, (l: any) =>
-                                                l.toUpperCase()
-                                            )}
-                                        setSelectedOption={(option: any) => {
-                                            setSortOption(option);
-                                            saveToCookie("sortOption", option);
-                                        }}
-                                    />
-                                    {/* ASC DESC */}
-                                    <button
-                                        className="text-neutral-700 py-1 rounded-full hover:text-neutral-900 font-normal mr-6"
-                                        onClick={() => {
-                                            setIsSortAsc(!isSortAsc);
-                                            saveToCookie(
-                                                "isSortAsc",
-                                                String(!isSortAsc)
-                                            );
-                                        }}
-                                    >
-                                        {isSortAsc ? "A → Z" : "Z → A"}
-                                    </button>
-                                </div>
-                                {/* VIEW */}
-                                <div className="flex gap-2">
-                                    {/* GRID */}
-                                    <button
-                                        onClick={() => {
-                                            setView("grid");
-                                            saveToCookie("view", "grid");
-                                        }}
-                                        className={`${
-                                            view === "grid"
-                                                ? "bg-primary-100"
-                                                : "hover:bg-primary-50"
-                                        } p-1 rounded-md duration-100`}
-                                    >
-                                        <GridIcon />
-                                    </button>
-                                    {/* LIST */}
-                                    <button
-                                        onClick={() => {
-                                            setView("list");
-                                            saveToCookie("view", "list");
-                                        }}
-                                        className={`${
-                                            view === "list"
-                                                ? "bg-primary-100"
-                                                : "hover:bg-primary-50"
-                                        } p-1  rounded-md duration-100`}
-                                    >
-                                        <ListIcon />
-                                    </button>
+                            <div className="flex flex-row-reverse md:flex-row items-center justify-between w-full">
+                                {isLoadingRefetch && <SyncingAnimation />}
+                                {/* SORT */}
+                                <div className="flex">
+                                    <div className="flex gap-2 items-center">
+                                        <p className="hidden md:block text-neutral-700">
+                                            Sort by
+                                        </p>
+                                        {/* DROPDOWN INPUT */}
+                                        <Dropdown
+                                            options={["Name", "Link"]}
+                                            // Set first letter to uppercase and replace '-' to ' '
+                                            // TODO: I don't think this is necessary, might convert back
+                                            selectedOption={sortOption
+                                                .replace(/-/g, " ")
+                                                .replace(/\b\w/g, (l: any) =>
+                                                    l.toUpperCase()
+                                                )}
+                                            setSelectedOption={(
+                                                option: any
+                                            ) => {
+                                                setSortOption(option);
+                                                saveToCookie(
+                                                    "sortOption",
+                                                    option
+                                                );
+                                            }}
+                                        />
+                                        {/* ASC DESC */}
+                                        <button
+                                            className="text-neutral-700 py-1 rounded-full hover:text-neutral-900 font-normal mr-6"
+                                            onClick={() => {
+                                                setIsSortAsc(!isSortAsc);
+                                                saveToCookie(
+                                                    "isSortAsc",
+                                                    String(!isSortAsc)
+                                                );
+                                            }}
+                                        >
+                                            {isSortAsc ? "A → Z" : "Z → A"}
+                                        </button>
+                                    </div>
+                                    {/* VIEW */}
+                                    <div className="flex gap-2">
+                                        {/* GRID */}
+                                        <button
+                                            onClick={() => {
+                                                setView("grid");
+                                                saveToCookie("view", "grid");
+                                            }}
+                                            className={`${
+                                                view === "grid"
+                                                    ? "bg-primary-100"
+                                                    : "hover:bg-primary-50"
+                                            } p-1 rounded-md duration-100`}
+                                        >
+                                            <GridIcon />
+                                        </button>
+                                        {/* LIST */}
+                                        <button
+                                            onClick={() => {
+                                                setView("list");
+                                                saveToCookie("view", "list");
+                                            }}
+                                            className={`${
+                                                view === "list"
+                                                    ? "bg-primary-100"
+                                                    : "hover:bg-primary-50"
+                                            } p-1  rounded-md duration-100`}
+                                        >
+                                            <ListIcon />
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
+
                             {/* INFO */}
                             <button
                                 className="ml-4"
@@ -534,7 +535,6 @@ export default function Browser() {
                     isOpen={isKeyboardShortcutsModalOpen}
                     onClose={() => setIsKeyboardShortcutsModalOpen(false)}
                 />
-                <Snackbar className="z-50" />
             </main>
         </>
     );
@@ -571,8 +571,6 @@ function sortDataToFolderAndLink(input: any, sortOption: string, asc: boolean) {
             dataChildrenLinks.push(child);
         }
     });
-    // console.log("dataChildrenFolders");
-    // console.log(dataChildrenFolders);
     // sort based on isPinned and then title alphabetically
     dataChildrenFolders.sort((a: any, b: any) => {
         if (a.isPinned === b.isPinned) {
@@ -613,7 +611,7 @@ function sortDataToFolderAndLink(input: any, sortOption: string, asc: boolean) {
 function SyncingAnimation() {
     // make the dot animate
     return (
-        <h6 className="text-primary-600 animate-pulse">
+        <h6 className="text-primary-600 animate-pulse md:mx-6">
             <LoadingAnimation bg="rgb(var(--color-neutral-900))" />
         </h6>
     );
