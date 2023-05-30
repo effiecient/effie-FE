@@ -102,6 +102,7 @@ export default function NewLink({
         } else {
             onNewItemCreated();
             onClose();
+            setIsSubmitted(false);
         }
     }
     return (

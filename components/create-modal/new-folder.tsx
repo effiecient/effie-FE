@@ -59,7 +59,6 @@ export default function NewFolder({
     };
 
     const linkNameRef = useRef<HTMLInputElement>(null);
-    const [title, setTitle] = useState<string>("");
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -101,6 +100,7 @@ export default function NewFolder({
         } else {
             onNewItemCreated();
             onClose();
+            setIsSubmitted(false);
         }
     }
     return (

@@ -287,28 +287,8 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                         ) : (
                             // folder not in edit mode
                             <div className="mt-6 lg:mt-16 h-full overflow-auto lg:mb-4">
-                                <div className="flex flex-col break-words gap-8 p-1">
-                                    <h4 className="text-neutral-900">
-                                        {itemData.title}
-                                    </h4>
-
-                                    <div className="flex justify-end">
-                                        <Image
-                                            src={
-                                                editedItemData.isPinned
-                                                    ? pinBlackIcon
-                                                    : pinIcon
-                                            }
-                                            alt="pin"
-                                            width={30}
-                                            height={30}
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <h5 className="text-neutral-800">
-                                            Link
-                                        </h5>
+                                <div className="flex flex-col break-words p-1">
+                                    <div className="pb-2">
                                         <a
                                             className="underline text-neutral-700 hover:text-neutral-900"
                                             href={`${FE_PROTOCOL}://${subdomain}.${FE_BASE_URL}${
@@ -322,14 +302,66 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                                 : `/${pathname}`
                                         }/${relativePath}`}</a>
                                     </div>
+                                    <div className="flex justify-between pb-1">
+                                        <h4 className="text-neutral-900">
+                                            {itemData.title}
+                                        </h4>
+                                        <div className="flex justify-end">
+                                            <Image
+                                                src={
+                                                    editedItemData.isPinned
+                                                        ? pinBlackIcon
+                                                        : pinIcon
+                                                }
+                                                alt="pin"
+                                                width={30}
+                                                height={30}
+                                            />
+                                        </div>
+                                    </div>
+                                    {/* format date to DD/MM/YYYY */}
+                                    <p className="text-neutral-400 pb-4 md:pb-12">
+                                        created at{" "}
+                                        {new Date(
+                                            itemData.createdAt
+                                        ).toLocaleDateString()}
+                                    </p>
 
-                                    <div>
-                                        <h5 className="text-neutral-800">
+                                    <div className="pb-4 md:pb-12">
+                                        <h5 className="text-neutral-700">
                                             Public Access
                                         </h5>
-                                        <p className="text-neutral-700">
+                                        <p className="text-neutral-500">
                                             {itemData.publicAccess}
                                         </p>
+                                    </div>
+
+                                    <div>
+                                        <h5 className="text-neutral-700">
+                                            Contents
+                                        </h5>
+                                        <div className="flex">
+                                            <div className="mr-4">
+                                                <p className="text-neutral-500">
+                                                    Folders
+                                                </p>
+                                                <div className="flex">
+                                                    <h4 className="border-l-8 border-primary-500 my-2 p-2 text-neutral-700">
+                                                        {itemData.folderCount}
+                                                    </h4>
+                                                </div>
+                                            </div>
+                                            <div className="ml-4">
+                                                <p className="text-neutral-500">
+                                                    Link
+                                                </p>
+                                                <div className="flex">
+                                                    <h4 className="border-l-8 border-tertiary-500 my-2 p-2 text-neutral-700">
+                                                        {itemData.linkCount}
+                                                    </h4>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
