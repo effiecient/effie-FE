@@ -426,7 +426,9 @@ export default function Browser() {
                         <div className="flex flex-row items-center justify-between md:justify-end gap-2 w-full md:w-auto">
                             {/* LOADING */}
                             <div className="flex flex-row-reverse md:flex-row items-center justify-between w-full">
-                                {isLoadingRefetch && <SyncingAnimation />}
+                                <div>
+                                    {isLoadingRefetch && <SyncingAnimation />}
+                                </div>
                                 {/* SORT */}
                                 <div className="flex">
                                     <div className="flex gap-2 items-center">
