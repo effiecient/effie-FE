@@ -50,28 +50,14 @@ export default function LeftSideBar({
                     <button
                         onClick={handleNewFolderClick}
                         className="w-12 h-12 hover:bg-primary-50 rounded-full p-2 duration-200"
-                        disabled={!isLoggedIn}
                     >
-                        <NewFolderIcon
-                            className={`h-full w-full ${
-                                isLoggedIn
-                                    ? "text-primary-500"
-                                    : "text-neutral-500"
-                            }`}
-                        />
+                        <NewFolderIcon className={`h-full w-full text-black`} />
                     </button>
                     <button
                         onClick={handleNewLinkClick}
                         className="w-12 h-12 hover:bg-primary-50 rounded-full p-2 duration-200"
-                        disabled={!isLoggedIn}
                     >
-                        <NewLinkIcon
-                            className={`h-full w-full ${
-                                isLoggedIn
-                                    ? "text-primary-500"
-                                    : "text-neutral-500"
-                            }`}
-                        />
+                        <NewLinkIcon className={`h-full w-full text-black`} />
                     </button>
                     {/* <div className="border-[1px] border-dashed h-6 lg:h-0 min-w-[1px] lg:w-[65%] border-neutral-300" />
                     <button className="w-12 h-12 hover:bg-primary-50 rounded-full p-2 duration-200">

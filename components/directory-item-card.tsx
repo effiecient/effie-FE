@@ -40,7 +40,7 @@ export default function DirectoryItemCard({
     relativePath,
     isFocused = false,
     view,
-    disabled = true,
+    disabled = false,
 }: DirectoryItemCardProps) {
     // console.log("DirectoryItemData");
     // console.log(DirectoryItemData);

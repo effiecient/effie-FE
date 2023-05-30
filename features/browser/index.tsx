@@ -197,10 +197,12 @@ export default function Browser() {
                                 <DirectoryItemCard
                                     content="new folder"
                                     view={view}
+                                    disabled={isLoadingRefetch}
                                 />
                                 <DirectoryItemCard
                                     content="new folder"
                                     view={view}
+                                    disabled={isLoadingRefetch}
                                 />
                             </section>
                         </div>
@@ -321,12 +323,14 @@ export default function Browser() {
                                     content="new folder"
                                     onClick={handleNewFolderClick}
                                     view={view}
+                                    disabled={isLoadingRefetch}
                                 />
                             )}
                             {dataChildrenFolders.map(
                                 (folderData: any, index: any) => {
                                     return (
                                         <DirectoryItemCard
+                                            disabled={isLoadingRefetch}
                                             key={index}
                                             content="folder"
                                             relativePath={
@@ -369,6 +373,7 @@ export default function Browser() {
                                 <DirectoryItemCard
                                     content="new link"
                                     onClick={handleNewLinkClick}
+                                    disabled={isLoadingRefetch}
                                     view={view}
                                 />
                             )}
@@ -376,6 +381,7 @@ export default function Browser() {
                                 (linkData: any, index: any) => {
                                     return (
                                         <DirectoryItemCard
+                                            disabled={isLoadingRefetch}
                                             key={index}
                                             content="link"
                                             relativePath={linkData.relativePath}
