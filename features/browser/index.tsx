@@ -63,13 +63,7 @@ export default function Browser() {
             newUrl += "/";
         }
         newUrl += `${pathname}/${child}`;
-        // console.log("newUrl", newUrl);
 
-        // let newUrl = `${pathname}/${child}`;
-
-        // console.log("newUrl", newUrl);
-
-        // change path without rerendering
         window.history.replaceState(null, "", newUrl);
         updatePathname();
         setFocusedItemName("");
@@ -203,10 +197,12 @@ export default function Browser() {
                                 <DirectoryItemCard
                                     content="new folder"
                                     view={view}
+                                    disabled={isLoadingRefetch}
                                 />
                                 <DirectoryItemCard
                                     content="new folder"
                                     view={view}
+                                    disabled={isLoadingRefetch}
                                 />
                             </section>
                         </div>
@@ -281,7 +277,6 @@ export default function Browser() {
                 >
                     <Background />
                 </div>
-
                 {/* CONTENT */}
                 <div
                     className={`z-0 absolute lg:ml-20 top-44 md:top-32 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
@@ -328,12 +323,14 @@ export default function Browser() {
                                     content="new folder"
                                     onClick={handleNewFolderClick}
                                     view={view}
+                                    disabled={isLoadingRefetch}
                                 />
                             )}
                             {dataChildrenFolders.map(
                                 (folderData: any, index: any) => {
                                     return (
                                         <DirectoryItemCard
+                                            disabled={isLoadingRefetch}
                                             key={index}
                                             content="folder"
                                             relativePath={
@@ -376,6 +373,7 @@ export default function Browser() {
                                 <DirectoryItemCard
                                     content="new link"
                                     onClick={handleNewLinkClick}
+                                    disabled={isLoadingRefetch}
                                     view={view}
                                 />
                             )}
@@ -383,6 +381,7 @@ export default function Browser() {
                                 (linkData: any, index: any) => {
                                     return (
                                         <DirectoryItemCard
+                                            disabled={isLoadingRefetch}
                                             key={index}
                                             content="link"
                                             relativePath={linkData.relativePath}
@@ -412,7 +411,6 @@ export default function Browser() {
                         </section>
                     </div>
                 </div>
-
                 {/* header */}
                 <div
                     className={`z-0 fixed bg-neutral-50 lg:ml-20 lg:top-[63px] left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
@@ -427,74 +425,84 @@ export default function Browser() {
                         />
                         <div className="flex flex-row items-center justify-between md:justify-end gap-2 w-full md:w-auto">
                             {/* LOADING */}
-                            {isLoadingRefetch && <SyncingAnimation />}
-                            {/* SORT */}
-                            <div className="flex">
-                                <div className="flex gap-2 items-center">
-                                    <p className="hidden md:block text-neutral-700">
-                                        Sort by
-                                    </p>
-                                    {/* DROPDOWN INPUT */}
-                                    <Dropdown
-                                        options={["Name", "Link"]}
-                                        // Set first letter to uppercase and replace '-' to ' '
-                                        // TODO: I don't think this is necessary, might convert back
-                                        selectedOption={sortOption
-                                            .replace(/-/g, " ")
-                                            .replace(/\b\w/g, (l: any) =>
-                                                l.toUpperCase()
-                                            )}
-                                        setSelectedOption={(option: any) => {
-                                            setSortOption(option);
-                                            saveToCookie("sortOption", option);
-                                        }}
-                                    />
-                                    {/* ASC DESC */}
-                                    <button
-                                        className="text-neutral-700 py-1 rounded-full hover:text-neutral-900 font-normal mr-6"
-                                        onClick={() => {
-                                            setIsSortAsc(!isSortAsc);
-                                            saveToCookie(
-                                                "isSortAsc",
-                                                String(!isSortAsc)
-                                            );
-                                        }}
-                                    >
-                                        {isSortAsc ? "A → Z" : "Z → A"}
-                                    </button>
+                            <div className="flex flex-row-reverse md:flex-row items-center justify-between w-full">
+                                <div>
+                                    {isLoadingRefetch && <SyncingAnimation />}
                                 </div>
-                                {/* VIEW */}
-                                <div className="flex gap-2">
-                                    {/* GRID */}
-                                    <button
-                                        onClick={() => {
-                                            setView("grid");
-                                            saveToCookie("view", "grid");
-                                        }}
-                                        className={`${
-                                            view === "grid"
-                                                ? "bg-primary-100"
-                                                : "hover:bg-primary-50"
-                                        } p-1 rounded-md duration-100`}
-                                    >
-                                        <GridIcon />
-                                    </button>
-                                    {/* LIST */}
-                                    <button
-                                        onClick={() => {
-                                            setView("list");
-                                            saveToCookie("view", "list");
-                                        }}
-                                        className={`${
-                                            view === "list"
-                                                ? "bg-primary-100"
-                                                : "hover:bg-primary-50"
-                                        } p-1  rounded-md duration-100`}
-                                    >
-                                        <ListIcon />
-                                    </button>
+                                {/* SORT */}
+                                <div className="flex">
+                                    <div className="flex gap-2 items-center">
+                                        <p className="hidden md:block text-neutral-700">
+                                            Sort by
+                                        </p>
+                                        {/* DROPDOWN INPUT */}
+                                        <Dropdown
+                                            options={["Name", "Link"]}
+                                            // Set first letter to uppercase and replace '-' to ' '
+                                            // TODO: I don't think this is necessary, might convert back
+                                            selectedOption={sortOption
+                                                .replace(/-/g, " ")
+                                                .replace(/\b\w/g, (l: any) =>
+                                                    l.toUpperCase()
+                                                )}
+                                            setSelectedOption={(
+                                                option: any
+                                            ) => {
+                                                setSortOption(option);
+                                                saveToCookie(
+                                                    "sortOption",
+                                                    option
+                                                );
+                                            }}
+                                        />
+                                        {/* ASC DESC */}
+                                        <button
+                                            className="text-neutral-700 py-1 rounded-full hover:text-neutral-900 font-normal mr-6"
+                                            onClick={() => {
+                                                setIsSortAsc(!isSortAsc);
+                                                saveToCookie(
+                                                    "isSortAsc",
+                                                    String(!isSortAsc)
+                                                );
+                                            }}
+                                        >
+                                            {isSortAsc ? "A → Z" : "Z → A"}
+                                        </button>
+                                    </div>
+                                    {/* VIEW */}
+                                    <div className="flex gap-2">
+                                        {/* GRID */}
+                                        <button
+                                            onClick={() => {
+                                                setView("grid");
+                                                saveToCookie("view", "grid");
+                                            }}
+                                            className={`${
+                                                view === "grid"
+                                                    ? "bg-primary-100"
+                                                    : "hover:bg-primary-50"
+                                            } p-1 rounded-md duration-100`}
+                                        >
+                                            <GridIcon />
+                                        </button>
+                                        {/* LIST */}
+                                        <button
+                                            onClick={() => {
+                                                setView("list");
+                                                saveToCookie("view", "list");
+                                            }}
+                                            className={`${
+                                                view === "list"
+                                                    ? "bg-primary-100"
+                                                    : "hover:bg-primary-50"
+                                            } p-1  rounded-md duration-100`}
+                                        >
+                                            <ListIcon />
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
+
                             {/* INFO */}
                             <button
                                 className="ml-4"
@@ -571,8 +579,6 @@ function sortDataToFolderAndLink(input: any, sortOption: string, asc: boolean) {
             dataChildrenLinks.push(child);
         }
     });
-    // console.log("dataChildrenFolders");
-    // console.log(dataChildrenFolders);
     // sort based on isPinned and then title alphabetically
     dataChildrenFolders.sort((a: any, b: any) => {
         if (a.isPinned === b.isPinned) {
@@ -613,7 +619,7 @@ function sortDataToFolderAndLink(input: any, sortOption: string, asc: boolean) {
 function SyncingAnimation() {
     // make the dot animate
     return (
-        <h6 className="text-primary-600 animate-pulse">
+        <h6 className="text-primary-600 animate-pulse md:mx-6">
             <LoadingAnimation bg="rgb(var(--color-neutral-900))" />
         </h6>
     );

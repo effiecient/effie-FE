@@ -7,6 +7,8 @@ import { initializeApp } from "firebase/app";
 
 import { FIREBASE_CONFIG, BE_BASE_URL } from "@/config";
 import { useRouter } from "next/router";
+import { useFetchEffieBENew, useRenderingStore } from "@/hooks";
+import { useState } from "react";
 
 type RegisterProps = {
     isOpen: boolean;
@@ -21,6 +23,22 @@ export default function Register({ isOpen, onClose }: RegisterProps) {
     const provider = new GoogleAuthProvider();
     const router = useRouter();
 
+    const setShowSnackbar = useRenderingStore(
+        (state: any) => state.setShowSnackbar
+    );
+    const setSsnackbarType = useRenderingStore(
+        (state: any) => state.setSnackbarType
+    );
+    const setSnackbarTitle = useRenderingStore(
+        (state: any) => state.setSnackbarTitle
+    );
+    const setSnackbarMessage = useRenderingStore(
+        (state: any) => state.setSnackbarMessage
+    );
+    const [{ isLoading, isError, response, fetchStarted }, fetcher] =
+        useFetchEffieBENew();
+    const [doneGoogleLogin, setDoneGoogleLogin] = useState(false);
+
     function handleOnRegisterButtonClick() {
         signInWithPopup(auth, provider)
             .then(async (result: any) => {
@@ -34,41 +52,48 @@ export default function Register({ isOpen, onClose }: RegisterProps) {
 
                 // now we have uid and accessToken
                 // hit api check (check if uid is associated with username)
-                const body = {
-                    uid: result.user.uid,
-                };
-                const res = await fetch(`${BE_BASE_URL}/user/check-google`, {
+                fetcher({
+                    url: `${BE_BASE_URL}/user/check-google`,
                     method: "POST",
-                    body: JSON.stringify(body),
-                    headers: {
-                        Authorization: result.user.accessToken,
-                        "Content-Type": "application/json",
-                        Accept: "application/json",
-                    },
+                    auth: result.user.accessToken,
+                    body: { uid: result.user.uid },
                 });
-                const data = await res.json();
-                // console.log("coba hit");
-                // console.log(data);
-                // TODO: Handle klik login belom regis
-                if (!data.data.isRegistered) {
-                    // navigate to /createUsername
-                    onClose();
-                    router.push("/create-username");
-                } else {
-                    // if yes, then error (user already registered)
-                    // TODO: Buat toast
-                    console.error("Udah regis");
-                    alert("Udah regis");
-                }
-                // TODO: change this behaviour to - if registered, then just do login, while giving a little toast saying "you're already registered"
-                // else, open modal and user can input username.
-                // redirect to createUsername
+                setDoneGoogleLogin(true);
             })
             .catch((error) => {
                 console.error(error);
+                setShowSnackbar(true);
+                setSsnackbarType("error");
+                setSnackbarTitle("google register error!");
+                setSnackbarMessage(error.message);
             });
     }
 
+    if (doneGoogleLogin) {
+        // return
+        if (isError) {
+            setShowSnackbar(true);
+            setSsnackbarType("error");
+            setSnackbarTitle("register error!");
+            setSnackbarMessage(response.message);
+        } else if (isLoading || !fetchStarted) {
+            console.log("loading...");
+        } else {
+            if (!response.data.isRegistered) {
+                // navigate to /createUsername
+                onClose();
+                router.push("/create-username");
+            } else {
+                // if yes, then error (user already registered)
+                // TODO: Buat toast
+                setShowSnackbar(true);
+                setSsnackbarType("error");
+                setSnackbarTitle("user already registered!");
+                setSnackbarMessage("Please login instead.");
+                setDoneGoogleLogin(false);
+            }
+        }
+    }
     return (
         <>
             <SideModal
@@ -77,8 +102,13 @@ export default function Register({ isOpen, onClose }: RegisterProps) {
                 className="flex flex-col gap-6"
             >
                 <h1 className="text-neutral-900">Create a new Effie account</h1>
-                <Button onClick={handleOnRegisterButtonClick}>
-                    Register with Google
+                <Button
+                    onClick={handleOnRegisterButtonClick}
+                    disabled={doneGoogleLogin && (isLoading || !fetchStarted)}
+                >
+                    {doneGoogleLogin && (isLoading || !fetchStarted)
+                        ? "Loading..."
+                        : "Register with Google"}
                 </Button>
             </SideModal>
         </>

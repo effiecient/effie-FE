@@ -7,8 +7,7 @@ import LP1 from "../public/images/lp1.png";
 import LP2 from "../public/images/lp2.png";
 import LP3 from "../public/images/lp3.png";
 import { useRegister, useWindowSize } from "@/hooks";
-import { Navbar, Snackbar } from "@/components";
-import { useState } from "react";
+import { Navbar } from "@/components";
 
 export default function Landing() {
     const isRegisterOpen = useRegister((state) => state.isRegisterOpen);

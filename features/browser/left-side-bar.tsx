@@ -4,9 +4,9 @@
 // import newDirIcon from "@/public/icons/new-folder-black.svg";
 // import newLinkIcon from "@/public/icons/new-link-black.svg";
 // import timedIcon from "@/public/icons/timed.svg";
-import { useRenderingStore } from "@/hooks";
-import NewFolderBlackIcon from "@/public/icons/new-folder-black";
-import NewLinkBlackIcon from "@/public/icons/new-link-black";
+import { useRenderingStore, useUserStore } from "@/hooks";
+import NewFolderIcon from "@/public/icons/new-folder";
+import NewLinkIcon from "@/public/icons/new-link";
 
 type SideBarProps = {
     handleNewLinkClick: () => void;
@@ -18,7 +18,7 @@ export default function LeftSideBar({
     handleNewFolderClick,
 }: SideBarProps) {
     const showSkeleton = useRenderingStore((state: any) => state.showSkeleton);
-
+    const isLoggedIn = useUserStore((state: any) => state.isLoggedIn);
     if (showSkeleton)
         return (
             <>
@@ -51,13 +51,13 @@ export default function LeftSideBar({
                         onClick={handleNewFolderClick}
                         className="w-12 h-12 hover:bg-primary-50 rounded-full p-2 duration-200"
                     >
-                        <NewFolderBlackIcon className="h-full w-full" />
+                        <NewFolderIcon className={`h-full w-full text-black`} />
                     </button>
                     <button
                         onClick={handleNewLinkClick}
                         className="w-12 h-12 hover:bg-primary-50 rounded-full p-2 duration-200"
                     >
-                        <NewLinkBlackIcon className="h-full w-full" />
+                        <NewLinkIcon className={`h-full w-full text-black`} />
                     </button>
                     {/* <div className="border-[1px] border-dashed h-6 lg:h-0 min-w-[1px] lg:w-[65%] border-neutral-300" />
                     <button className="w-12 h-12 hover:bg-primary-50 rounded-full p-2 duration-200">

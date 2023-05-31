@@ -40,7 +40,11 @@ export default function CopyButton({ effieURL, link, view }: copyButtonProps) {
     return (
         <div>
             <button
-                className={`${view === "grid" ? "group-hover:opacity-100 opacity-0 translate-x-1 group-hover:translate-x-0 absolute right-0 bottom-0 bg-white rounded-r-xl p-1" : ""}   flex items-end h-full duration-100`}
+                className={`${
+                    view === "grid"
+                        ? "group-hover:opacity-100 opacity-0 translate-x-1 group-hover:translate-x-0 absolute right-0 bottom-0 bg-white rounded-r-xl p-1"
+                        : ""
+                }   flex items-end h-full duration-100`}
                 onClick={copyEffieUrl}
             >
                 <CopyIcon className="duration-100 h-6 w-6" />
@@ -49,30 +53,24 @@ export default function CopyButton({ effieURL, link, view }: copyButtonProps) {
             <div
                 ref={copySuccessRef}
                 className={`opacity-0
-                -translate-y-1 -z-10 absolute -bottom-12 ${view === "grid" ? "-right-12" : "right-0" } bg-neutral-800 text-white rounded-md py-1 px-2 shadow-lg text-left duration-300 max-w-[12rem]`}
+                -translate-y-1 -z-10 absolute -bottom-12 ${
+                    view === "grid" ? "-right-12" : "right-0"
+                } bg-neutral-800 text-white rounded-md py-1 px-2 shadow-lg text-left duration-300 max-w-[12rem]`}
             >
                 <p className="text-xs">
                     Link copied!
                     <br />
-                    <a
-                        className="text-[0.6rem] underline text-neutral-100"
-                        href={link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
+                    <p className="text-[0.6rem] underline text-neutral-100">
                         {/* if effieURl > 20 character, show 10 characters with ... */}
                         {effieURL.length > 20
-                            ? `${effieURL.slice(
-                                0,
-                                10
-                            )}...${effieURL.slice(
-                                effieURL.length - 10,
-                                effieURL.length
-                            )}`
+                            ? `${effieURL.slice(0, 10)}...${effieURL.slice(
+                                  effieURL.length - 10,
+                                  effieURL.length
+                              )}`
                             : effieURL}
-                    </a>
+                    </p>
                 </p>
             </div>
         </div>
-    )
+    );
 }

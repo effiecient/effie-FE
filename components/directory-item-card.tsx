@@ -28,6 +28,7 @@ type DirectoryItemCardProps = {
     relativePath?: string;
     isFocused?: boolean;
     view: string;
+    disabled?: boolean;
 };
 
 export default function DirectoryItemCard({
@@ -39,9 +40,8 @@ export default function DirectoryItemCard({
     relativePath,
     isFocused = false,
     view,
+    disabled = false,
 }: DirectoryItemCardProps) {
-    // console.log("DirectoryItemData");
-    // console.log(DirectoryItemData);
     let pathname = window.location.pathname;
     let subdomain = useUserStore((state: any) => state.subdomain);
     // add / in the back if doesn't exist
@@ -63,8 +63,16 @@ export default function DirectoryItemCard({
     return (
         <>
             <div
-                onClick={onClick}
-                onDoubleClick={onDoubleClick}
+                onClick={() => {
+                    if (!disabled && onClick) {
+                        onClick();
+                    }
+                }}
+                onDoubleClick={() => {
+                    if (!disabled && onDoubleClick) {
+                        onDoubleClick();
+                    }
+                }}
                 className={`
                 ${className} 
                 ${
@@ -92,12 +100,12 @@ export default function DirectoryItemCard({
                 {/* images */}
                 {content === "new folder" ? (
                     <>
-                        <NewFolderIcon className="h-7 w-7" />
+                        <NewFolderIcon className="h-7 w-7 text-primary-500" />
                         <h6 className="text-primary-500 ml-2">New folder</h6>
                     </>
                 ) : content === "new link" ? (
                     <>
-                        <NewLinkIcon className="h-7 w-7" />
+                        <NewLinkIcon className="h-7 w-7 text-primary-500" />
                         <h6 className="text-primary-500 ml-2">New link</h6>
                     </>
                 ) : view === "grid" ? (
@@ -126,15 +134,12 @@ export default function DirectoryItemCard({
                             >
                                 {DirectoryItemData?.title}
                             </h6>
-                            <a
-                                href={DirectoryItemData?.link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className={`hover:text-primary-500 text-neutral-600 text-xs un hover:decoration-primary-500 inline-block max-w-full whitespace-nowrap overflow-hidden overflow-ellipsis`}
+                            <p
+                                className={`text-neutral-600 text-xs inline-block max-w-full whitespace-nowrap overflow-hidden overflow-ellipsis`}
                             >
                                 {DirectoryItemData?.link &&
                                     DirectoryItemData?.link?.slice(8)}
-                            </a>
+                            </p>
                             {(content === "link" || content === "folder") && (
                                 <CopyButton
                                     effieURL={effieURL}
