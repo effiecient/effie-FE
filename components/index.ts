@@ -10,7 +10,10 @@ import Navbar from "./navbar";
 import SideBarProperties from "../features/browser/right-side-bar-properties";
 import SideBar from "../features/browser/left-side-bar";
 import Snackbar from "./snackbar";
+import RightContext from "./right-context";
+
 export {
+    RightContext,
     KeyboardShortcuts,
     Login,
     Register,
