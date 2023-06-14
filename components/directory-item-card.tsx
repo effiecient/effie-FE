@@ -12,6 +12,7 @@ import CopyButton from "./copy-button";
 import PinIcon from "@/public/icons/pin";
 import DirectoriesIcon from "@/public/icons/directories";
 import LinkIcon from "@/public/icons/link";
+import { useRightContext } from "./right-context";
 
 type DirectoryItemCardProps = {
     content:
@@ -52,6 +53,8 @@ export default function DirectoryItemCard({
 
     const showSkeleton = useRenderingStore((state: any) => state.showSkeleton);
 
+    const { handleRightClick, setOptions } = useRightContext();
+
     if (showSkeleton) {
         return (
             <div
@@ -71,6 +74,47 @@ export default function DirectoryItemCard({
                 onDoubleClick={() => {
                     if (!disabled && onDoubleClick) {
                         onDoubleClick();
+                    }
+                }}
+                onContextMenu={(e) => {
+                    if (!disabled) {
+                        if (content === "new folder") {
+                            setOptions([
+                                {
+                                    title: "create new folder",
+                                    onClick: () => {
+                                        // setIsNewFolderOpen(true);
+                                    },
+                                },
+                                {
+                                    title: "create new folder",
+                                    onClick: () => {
+                                        // setIsNewFolderOpen(true);
+                                    },
+                                },
+                                {
+                                    title: "create new folder",
+                                    onClick: () => {
+                                        // setIsNewFolderOpen(true);
+                                    },
+                                },
+                            ]);
+                        } else if (content === "new link") {
+                            setOptions([
+                                {
+                                    title: "create new link",
+                                    onClick: () => {},
+                                },
+                            ]);
+                        } else {
+                            setOptions([
+                                {
+                                    title: "info",
+                                    onClick: () => {},
+                                },
+                            ]);
+                        }
+                        handleRightClick(e);
                     }
                 }}
                 className={`

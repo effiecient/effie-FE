@@ -9,6 +9,7 @@ import {
     NewFolder,
     Navbar,
     DirectoryItemCard,
+    RightContext,
 } from "@/components";
 import LeftSideBar from "./components/left-side-bar";
 import RightSideBarProperties from "./components/right-side-bar-properties";
@@ -27,6 +28,7 @@ import InfoIcon from "@/public/icons/info";
 import GridIcon from "@/public/icons/grid";
 import ListIcon from "@/public/icons/list";
 import { saveToCookie } from "@/helper";
+import { useRightContext } from "@/components/right-context";
 
 export default function Browser() {
     let pathname: any;
@@ -59,6 +61,7 @@ export default function Browser() {
     const [focusedItemName, setFocusedItemName] = useState<string>("");
     const [isSomethingChanged, setIsSomethingChanged] =
         useState<boolean>(false);
+
 
     const handleNewLinkClick = () => {
         setIsNewLinkModalOpen(true);
@@ -254,6 +257,7 @@ export default function Browser() {
         sortOption,
         isSortAsc
     );
+
     return (
         <>
             <Head>
@@ -554,6 +558,7 @@ export default function Browser() {
                     onClose={() => setIsNewFolderModalOpen(false)}
                     onNewItemCreated={() => setIsSomethingChanged(true)}
                 />
+                <RightContext />
                 {/* <KeyboardShortcuts
                     isOpen={isKeyboardShortcutsModalOpen}
                     onClose={() => setIsKeyboardShortcutsModalOpen(false)}

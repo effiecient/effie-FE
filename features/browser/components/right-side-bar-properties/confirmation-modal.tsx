@@ -8,10 +8,7 @@ type ConfirmationModalProps = {
     onConfirm: () => void;
     title?: string;
     name?: string;
-    confirmText?: string;
     cancelText?: string;
-    confirmButtonClassName?: string;
-    cancelButtonClassName?: string;
 };
 
 export default function ConfirmationModal({
@@ -19,11 +16,8 @@ export default function ConfirmationModal({
     onClose,
     onConfirm,
     title,
-    confirmText,
     cancelText,
     name,
-    confirmButtonClassName,
-    cancelButtonClassName,
 }: ConfirmationModalProps) {
     const closeModal = () => {
         onClose();

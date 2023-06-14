@@ -14,10 +14,6 @@ export default function Landing() {
     const setIsRegisterOpen = useRegister((state) => state.setIsRegisterOpen);
     const { width } = useWindowSize();
 
-    const [isRightContextOpen, setIsRightContextOpen] = useState(false);
-    // point location
-    const [x, setX] = useState(0);
-    const [y, setY] = useState(0);
     return (
         <>
             <Head>
@@ -35,16 +31,7 @@ export default function Landing() {
 
             <Navbar />
             <main className="px-16 md:px-44 xl:px-[20%] py-16">
-                <div
-                    className="grid grid-cols-1 md:grid-cols-2 md:grid-rows-3 gap-y-16 md:gap-y-24 md:gap-x-20 items-center justify-center"
-                    onContextMenu={(e: any) => {
-                        e.preventDefault();
-                        console.log("hello");
-                        setIsRightContextOpen(true);
-                        setX(e.pageX);
-                        setY(e.pageY);
-                    }}
-                >
+                <div className="grid grid-cols-1 md:grid-cols-2 md:grid-rows-3 gap-y-16 md:gap-y-24 md:gap-x-20 items-center justify-center">
                     {width ? (
                         width <= 768 && (
                             <div className="flex justify-center">
@@ -131,16 +118,7 @@ export default function Landing() {
                     )}
                 </div>
             </main>
-            <RightContext
-                isOpen={isRightContextOpen}
-                onClose={() => setIsRightContextOpen(false)}
-                x={x}
-                y={y}
-                options={{
-                    title: "hello",
-                    onClick: () => console.log("hello"),
-                }}
-            />
+
             <Footer />
         </>
     );
