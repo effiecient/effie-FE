@@ -49,8 +49,8 @@ export default function Browser() {
 
     const [isNewLinkModalOpen, setIsNewLinkModalOpen] = useState(false);
     const [isNewFolderModalOpen, setIsNewFolderModalOpen] = useState(false);
-    const [isKeyboardShortcutsModalOpen, setIsKeyboardShortcutsModalOpen] =
-        useState(false);
+    // const [isKeyboardShortcutsModalOpen, setIsKeyboardShortcutsModalOpen] =
+    //     useState(false);
 
     const [isRightSideBarPropertiesOpen, setIsRightSideBarPropertiesOpen] =
         useState(false);
@@ -122,6 +122,8 @@ export default function Browser() {
         refetcher,
     ] = useFetchEffieBENew();
 
+    // handle when something is changed
+    // 1. refetch when something is changed
     useEffect(() => {
         if (!isSomethingChanged) {
             return;
@@ -132,6 +134,7 @@ export default function Browser() {
         }
     }, [isSomethingChanged]);
 
+    // 2.
     useEffect(() => {
         if (!isLoadingRefetch && fetchStartedRefetch) {
             // update focused item data
@@ -551,10 +554,10 @@ export default function Browser() {
                     onClose={() => setIsNewFolderModalOpen(false)}
                     onNewItemCreated={() => setIsSomethingChanged(true)}
                 />
-                <KeyboardShortcuts
+                {/* <KeyboardShortcuts
                     isOpen={isKeyboardShortcutsModalOpen}
                     onClose={() => setIsKeyboardShortcutsModalOpen(false)}
-                />
+                /> */}
             </main>
         </>
     );

@@ -2,8 +2,7 @@
 //     return <footer className="bg-primary-500 h-28"></footer>;
 // }
 import Image from "next/image";
-import IMG from "../public/images/footer-left.png";
-import CREDITS from "../public/images/credits.png";
+import CREDITS from "@/public/images/credits.png";
 import Link from "next/link";
 
 export default function Footer() {

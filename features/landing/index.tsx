@@ -1,11 +1,11 @@
 import Head from "next/head";
 import { Button } from "@/ui";
 // import { useState } from "react";
-import Footer from "@/components/footer";
+import Footer from "./footer";
 import Image from "next/image";
-import LP1 from "../public/images/lp1.png";
-import LP2 from "../public/images/lp2.png";
-import LP3 from "../public/images/lp3.png";
+import LP1 from "@/public/images/lp1.png";
+import LP2 from "@/public/images/lp2.png";
+import LP3 from "@/public/images/lp3.png";
 import { useRegister, useWindowSize } from "@/hooks";
 import { Navbar, RightContext } from "@/components";
 import { useState } from "react";
