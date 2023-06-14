@@ -57,7 +57,7 @@ export default function CopyButton({ effieURL, link, view }: copyButtonProps) {
                     view === "grid" ? "-right-12" : "right-0"
                 } bg-neutral-800 text-white rounded-md py-1 px-2 shadow-lg text-left duration-300 max-w-[12rem]`}
             >
-                <p className="text-xs">
+                <div className="text-xs">
                     Link copied!
                     <br />
                     <p className="text-[0.6rem] underline text-neutral-100">
@@ -69,7 +69,7 @@ export default function CopyButton({ effieURL, link, view }: copyButtonProps) {
                               )}`
                             : effieURL}
                     </p>
-                </p>
+                </div>
             </div>
         </div>
     );

@@ -33,6 +33,7 @@ export default function Login({ isOpen, onClose }: LoginProps) {
 
     const isLoggedIn = useUserStore((state: any) => state.isLoggedIn);
     const username = useUserStore((state: any) => state.username);
+    const pathname = useUserStore((state: any) => state.pathname);
 
     const router = useRouter();
     const setShowSnackbar = useRenderingStore(
@@ -47,6 +48,7 @@ export default function Login({ isOpen, onClose }: LoginProps) {
     const setSnackbarMessage = useRenderingStore(
         (state: any) => state.setSnackbarMessage
     );
+
     const [{ isLoading, isError, response, fetchStarted }, fetcher] =
         useFetchEffieBENew();
 
@@ -97,7 +99,7 @@ export default function Login({ isOpen, onClose }: LoginProps) {
 
             // if login in landing, redirect to dashboard. if not, reload page
             // onClose();
-            if (window.location.pathname === "/") {
+            if (pathname === "/") {
                 router.push(
                     `${FE_PROTOCOL}://${response.data.username}.${FE_BASE_URL}`
                 );

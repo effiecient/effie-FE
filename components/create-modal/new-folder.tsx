@@ -3,7 +3,6 @@ import { Button, LoadingAnimation, Modal } from "@/ui";
 import DirectoryItemCard from "../directory-item-card";
 import { BE_BASE_URL } from "@/config/be-config";
 import { FE_BASE_URL } from "@/config";
-// import { unfurl } from 'unfurl.js'
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useFetchEffieBENew, useRenderingStore, useUserStore } from "@/hooks";
@@ -22,10 +21,12 @@ export default function NewFolder({
     // USER CONSTANTS
     const subdomain = useUserStore((state: any) => state.subdomain);
     const USER_BASE_URL = `${subdomain}.${FE_BASE_URL}/`;
-    const currPathArray = window.location.pathname
+
+    const pathname = useUserStore((state: any) => state.pathname);
+    const currPathArray = pathname
         .split("/")
         .slice(1)
-        .filter((item) => item !== "");
+        .filter((item: any) => item !== "");
 
     const [isMoreOptionsOpen, setIsMoreOptionsOpen] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -64,7 +65,7 @@ export default function NewFolder({
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const linkName: any = formData.get("folder-name");
-        let path = window.location.pathname;
+        let path = pathname;
         const title = formData.get("title") || linkName;
         // Add "/" to the start of the link name if it doesn't exist
 

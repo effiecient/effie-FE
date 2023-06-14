@@ -1,23 +1,24 @@
-import { useRenderingStore, useUserStore } from "@/hooks";
+import { useRenderingStore, useUserStore, useWindowSize } from "@/hooks";
 import { Breadcrumb } from "@/ui";
+import { useEffect, useState } from "react";
 
 export const BrowserBreadcrumb = ({ onBreadcrumbClick }: any) => {
     const subdomain = useUserStore((state: any) => state.subdomain);
+    console.log("subdomain", subdomain);
+    const pathname = useUserStore((state: any) => state.pathname);
 
-    const location = window.location.pathname
-        .split("/")
-        .filter((loc: string) => loc !== "");
+    const [location, setLocation] = useState<any>([]);
 
-    const showSkeleton = useRenderingStore((state: any) => state.showSkeleton);
-    if (showSkeleton) {
-        return (
-            <span>
-                <div className="animate-pulse h-5 w-16 bg-neutral-200 rounded-full" />
-            </span>
-        );
-    }
+    useEffect(() => {
+        setLocation(pathname.split("/").filter((loc: string) => loc !== ""));
+    }, [pathname]);
+
+    const { width = 768 } = useWindowSize();
+
+    console.log("location", location);
+
     return (
-        <span>
+        <div className="flex">
             <Breadcrumb
                 path={subdomain}
                 onClick={() => {
@@ -27,28 +28,28 @@ export const BrowserBreadcrumb = ({ onBreadcrumbClick }: any) => {
                 }}
                 className="pr-4"
             />
-            {((window.innerWidth < 768 && location.length > 1) ||
-                (window.innerWidth >= 768 && location.length > 3)) && (
-                <span>
+            {((width < 768 && location.length > 1) ||
+                (width && location.length > 3)) && (
+                <div className="flex">
                     <span className="text-neutral-300">/</span>
                     <Breadcrumb
                         path="..."
                         onClick={() => {
                             onBreadcrumbClick(
                                 `/${location
-                                    .slice(0, window.innerWidth < 768 ? -1 : -3)
+                                    .slice(0, width < 768 ? -1 : -3)
                                     .join("/")}`
                             );
                         }}
                         className="px-4"
                     />
-                </span>
+                </div>
             )}
             {location
-                .slice(window.innerWidth < 768 ? -1 : -3)
+                .slice(width < 768 ? -1 : -3)
                 .map((loc: any, index: any) => {
                     return (
-                        <span key={index}>
+                        <div className="flex" key={index}>
                             <span className="text-neutral-300">/</span>
                             <Breadcrumb
                                 key={index}
@@ -65,9 +66,9 @@ export const BrowserBreadcrumb = ({ onBreadcrumbClick }: any) => {
                                 }}
                                 className="px-4"
                             />
-                        </span>
+                        </div>
                     );
                 })}
-        </span>
+        </div>
     );
 };

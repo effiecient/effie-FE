@@ -6,7 +6,6 @@ import Image from "next/image";
 import Head from "next/head";
 import { useUserStore } from "@/hooks";
 import { Navbar } from "@/components";
-// import { unfurl } from 'unfurl.js'
 
 export default function QuickCreate() {
     const USER_BASE_URL = "https://effie.boo/";
@@ -69,7 +68,6 @@ export default function QuickCreate() {
     const onURLblur = (e: React.FocusEvent<HTMLInputElement>) => {
         // fetch with header
         // const url = "https://www.zoom.us";
-        // unfurl(url);
         // fetch(e.target.value, {
         //     method: "GET",
         //     headers: {

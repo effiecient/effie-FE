@@ -30,7 +30,13 @@ import ListIcon from "@/public/icons/list";
 import { saveToCookie } from "@/helper";
 import { useRightContext } from "@/components/right-context";
 
-export default function Browser() {
+export default function Browser({
+    response,
+    isError,
+}: {
+    response: any;
+    isError: any;
+}) {
     let pathname: any;
 
     const subdomain = useUserStore((state: any) => state.subdomain);
@@ -61,7 +67,6 @@ export default function Browser() {
     const [focusedItemName, setFocusedItemName] = useState<string>("");
     const [isSomethingChanged, setIsSomethingChanged] =
         useState<boolean>(false);
-
 
     const handleNewLinkClick = () => {
         setIsNewLinkModalOpen(true);
@@ -105,14 +110,14 @@ export default function Browser() {
     const fetchURL = `${BE_BASE_URL}/directory/${subdomain}/${pathname}`;
 
     // initial fetch
-    const [{ isLoading, isError, response, fetchStarted }, fetcher] =
-        useFetchEffieBENew();
+    // const [{ isLoading, isError, response, fetchStarted }, fetcher] =
+    //     useFetchEffieBENew();
 
-    useEffect(() => {
-        fetcher({
-            url: fetchURL,
-        });
-    }, [subdomain]);
+    // useEffect(() => {
+    //     fetcher({
+    //         url: fetchURL,
+    //     });
+    // }, [subdomain]);
 
     // refetch
     const [
@@ -159,7 +164,7 @@ export default function Browser() {
     }, [isLoadingRefetch, fetchStartedRefetch]);
 
     // show skeleton
-    setShowSkeleton(true);
+    // setShowSkeleton(true);
 
     // return
     if (isError) {
@@ -177,71 +182,6 @@ export default function Browser() {
         return <Page404 />;
     }
 
-    if (isLoading || !fetchStarted) {
-        return (
-            <>
-                <main className="bg-white w-full h-full">
-                    <Navbar />
-                    {/* left sidebar */}
-                    <LeftSideBar
-                        handleNewLinkClick={handleNewLinkClick}
-                        handleNewFolderClick={handleNewFolderClick}
-                    />
-                    {/* background */}
-                    <div
-                        className={`z-0 h-full fixed bg-neutral-50 lg:ml-20 bottom-0 lg:top-16 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
-                            isRightSideBarPropertiesOpen
-                                ? "lg:mr-[20vw]"
-                                : "lg:mr-6"
-                        }`}
-                    >
-                        <Background />
-                    </div>
-                    {/* content */}
-                    <div
-                        className={`z-0 absolute lg:ml-20 top-44 md:top-32 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
-                            isRightSideBarPropertiesOpen
-                                ? "lg:mr-[20vw]"
-                                : "lg:mr-6"
-                        }`}
-                    >
-                        <div className="p-6">
-                            <h5 className="z-10 pb-2">
-                                <p className="bg-neutral-200 w-12 rounded-full h-5 pb-2 relative" />
-                            </h5>
-                            <section className="flex gap-4 w-full flex-wrap">
-                                <DirectoryItemCard
-                                    content="new folder"
-                                    view={view}
-                                    disabled={isLoadingRefetch}
-                                />
-                                <DirectoryItemCard
-                                    content="new folder"
-                                    view={view}
-                                    disabled={isLoadingRefetch}
-                                />
-                            </section>
-                        </div>
-                    </div>
-                    {/* header */}
-                    <div
-                        className={`z-0 fixed bg-neutral-50 lg:ml-20 lg:top-[63px] left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
-                            isRightSideBarPropertiesOpen
-                                ? "lg:mr-[20vw]"
-                                : "lg:mr-6"
-                        }`}
-                    >
-                        <div className="p-6 flex justify-between items-center">
-                            <BrowserBreadcrumb
-                                onBreadcrumbClick={handleBreadcrumbClick}
-                            />
-                            <div className="w-[30px] h-[30px] rounded-full bg-neutral-200 animate-pulse" />
-                        </div>
-                    </div>
-                </main>
-            </>
-        );
-    }
     setShowSkeleton(false);
 
     // preprocess data to be shown

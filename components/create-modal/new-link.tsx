@@ -19,10 +19,11 @@ export default function NewLink({
     // USER CONSTANTS
     const subdomain = useUserStore((state: any) => state.subdomain);
     const USER_BASE_URL = `${subdomain}.${FE_BASE_URL}/`;
-    const currPathArray = window.location.pathname
+    const pathname = useUserStore((state: any) => state.pathname);
+    const currPathArray = pathname
         .split("/")
         .slice(1)
-        .filter((item) => item !== "");
+        .filter((item: any) => item !== "");
 
     // USER INTERFACE CONFIGURATIONS
     const linkNameRef = useRef<HTMLInputElement>(null);
@@ -69,7 +70,7 @@ export default function NewLink({
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const linkName: any = formData.get("link-name");
-        let path = window.location.pathname;
+        let path = pathname;
         const linkUrl = formData.get("link-url");
         const title = formData.get("title") || linkName;
 
