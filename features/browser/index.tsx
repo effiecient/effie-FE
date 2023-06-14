@@ -10,13 +10,13 @@ import {
     Navbar,
     DirectoryItemCard,
 } from "@/components";
-import LeftSideBar from "./left-side-bar";
-import RightSideBarProperties from "./right-side-bar-properties";
+import LeftSideBar from "./components/left-side-bar";
+import RightSideBarProperties from "./components/right-side-bar-properties";
 
 import { BE_BASE_URL } from "@/config/be-config";
 import { useRenderingStore, useUserStore } from "@/hooks";
 import { FolderLinkDataArray } from "@/type";
-import { BrowserBreadcrumb } from "./browser-breadcrumb";
+import { BrowserBreadcrumb } from "./components/browser-breadcrumb";
 
 import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
 

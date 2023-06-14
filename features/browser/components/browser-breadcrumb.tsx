@@ -1,6 +1,5 @@
 import { useRenderingStore, useUserStore } from "@/hooks";
 import { Breadcrumb } from "@/ui";
-import { useRouter } from "next/router";
 
 export const BrowserBreadcrumb = ({ onBreadcrumbClick }: any) => {
     const subdomain = useUserStore((state: any) => state.subdomain);
