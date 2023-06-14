@@ -1,10 +1,4 @@
-// import { useState } from "react";
-// import Image from "next/image";
-// import directoriesIcon from "@/public/icons/directories.svg";
-// import newDirIcon from "@/public/icons/new-folder-black.svg";
-// import newLinkIcon from "@/public/icons/new-link-black.svg";
-// import timedIcon from "@/public/icons/timed.svg";
-import { useRenderingStore, useUserStore } from "@/hooks";
+import { useRenderingStore } from "@/hooks";
 import NewFolderIcon from "@/public/icons/new-folder";
 import NewLinkIcon from "@/public/icons/new-link";
 
@@ -18,7 +12,6 @@ export default function LeftSideBar({
     handleNewFolderClick,
 }: SideBarProps) {
     const showSkeleton = useRenderingStore((state: any) => state.showSkeleton);
-    const isLoggedIn = useUserStore((state: any) => state.isLoggedIn);
     if (showSkeleton)
         return (
             <>
@@ -31,13 +24,6 @@ export default function LeftSideBar({
                         <div className="w-12 h-12 hover:bg-primary-50 rounded-full p-2 duration-200">
                             <div className="w-8 h-8 bg-neutral-200 rounded-full" />
                         </div>
-                        {/* <div className="border-[1px] border-dashed h-6 lg:h-0 min-w-[1px] lg:w-[65%] border-neutral-300" />
-                        <div className="w-12 h-12 hover:bg-primary-50 rounded-full p-2 duration-200">
-                            <div className="w-8 h-8 bg-neutral-200 rounded-full" />
-                        </div>
-                        <div className="w-12 h-12 hover:bg-primary-50 rounded-full p-2 duration-200">
-                            <div className="w-8 h-8 bg-neutral-200 rounded-full" />
-                        </div> */}
                     </div>
                 </nav>
             </>
@@ -59,21 +45,6 @@ export default function LeftSideBar({
                     >
                         <NewLinkIcon className={`h-full w-full text-black`} />
                     </button>
-                    {/* <div className="border-[1px] border-dashed h-6 lg:h-0 min-w-[1px] lg:w-[65%] border-neutral-300" />
-                    <button className="w-12 h-12 hover:bg-primary-50 rounded-full p-2 duration-200">
-                        <Image
-                            src={directoriesIcon}
-                            alt="Directory Icon"
-                            className="w-full h-full"
-                        />
-                    </button>
-                    <button className="w-12 h-12 hover:bg-primary-50 rounded-full p-2 duration-200">
-                        <Image
-                            src={timedIcon}
-                            alt="Timed icon"
-                            className="w-full h-full"
-                        />
-                    </button> */}
                 </div>
             </nav>
         </>

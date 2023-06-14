@@ -3,7 +3,7 @@ import { FolderLinkData } from "@/type";
 import Modal from "../../../components/modal";
 
 import { useWindowSize } from "@/hooks";
-import { RightSideBar } from "../right-side-bar";
+import { RightSideBar } from "./right-side-bar";
 
 import { Content } from "./content";
 type RightSideBarPropertiesProps = {

@@ -19,8 +19,6 @@ const RightContext = ({
     closeOnOutsideClick = true,
     closeOnOptionClick = true,
 }: rightContextProps) => {
-    console.log("x", x);
-    console.log("y", y);
     return (
         <>
             {/* background */}

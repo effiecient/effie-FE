@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 
 export const BrowserBreadcrumb = ({ onBreadcrumbClick }: any) => {
     const subdomain = useUserStore((state: any) => state.subdomain);
-    const router = useRouter();
 
     const location = window.location.pathname
         .split("/")

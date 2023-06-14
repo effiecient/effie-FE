@@ -1,17 +1,27 @@
 import Head from "next/head";
-import DirectoryItemCard from "@/components/directory-item-card";
 import Image from "next/image";
+
+import { useState, useEffect } from "react";
+
+import {
+    KeyboardShortcuts,
+    NewLink,
+    NewFolder,
+    Navbar,
+    DirectoryItemCard,
+} from "@/components";
 import LeftSideBar from "./left-side-bar";
+import RightSideBarProperties from "./right-side-bar-properties";
+
 import { BE_BASE_URL } from "@/config/be-config";
 import { useRenderingStore, useUserStore } from "@/hooks";
-import { useState, useEffect } from "react";
-import { KeyboardShortcuts, NewLink, NewFolder, Navbar } from "@/components";
-import RightSideBarProperties from "./right-side-bar-properties";
 import { FolderLinkDataArray } from "@/type";
+import { BrowserBreadcrumb } from "./browser-breadcrumb";
+
 import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
 
-import Page404 from "../page404";
-import { BrowserBreadcrumb } from "./browser-breadcrumb";
+import Page404 from "@/features/page404";
+
 import { LoadingAnimation, Dropdown } from "@/ui";
 import InfoIcon from "@/public/icons/info";
 import GridIcon from "@/public/icons/grid";
@@ -27,6 +37,7 @@ export default function Browser() {
         (state: any) => state.setShowSkeleton
     );
 
+    // browser state
     const view = useUserStore((state: any) => state.view);
     const setView = useUserStore((state: any) => state.setView);
 
@@ -36,7 +47,6 @@ export default function Browser() {
     const isSortAsc = useUserStore((state: any) => state.isSortAsc);
     const setIsSortAsc = useUserStore((state: any) => state.setIsSortAsc);
 
-    // browser state
     const [isNewLinkModalOpen, setIsNewLinkModalOpen] = useState(false);
     const [isNewFolderModalOpen, setIsNewFolderModalOpen] = useState(false);
     const [isKeyboardShortcutsModalOpen, setIsKeyboardShortcutsModalOpen] =
@@ -257,12 +267,12 @@ export default function Browser() {
             </Head>
             <main className="bg-white w-full h-full">
                 <Navbar setIsNewLinkModalOpen={setIsNewLinkModalOpen} />
-                {/* left sidebar */}
+                {/* # LEFT SIDEBAR */}
                 <LeftSideBar
                     handleNewLinkClick={handleNewLinkClick}
                     handleNewFolderClick={handleNewFolderClick}
                 />
-                {/* background */}
+                {/* # BACKGROUND */}
                 <div
                     className={`z-0 h-full fixed bg-neutral-50 lg:ml-20 bottom-0 lg:top-16 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
                         isRightSideBarPropertiesOpen
@@ -277,7 +287,7 @@ export default function Browser() {
                 >
                     <Background />
                 </div>
-                {/* CONTENT */}
+                {/* # CONTENT */}
                 <div
                     className={`z-0 absolute lg:ml-20 top-44 md:top-32 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
                         isRightSideBarPropertiesOpen
@@ -290,8 +300,9 @@ export default function Browser() {
                             view === "grid" ? "pt-6" : "pt-0"
                         } pb-24 lg:pb-6 px-6 relative`}
                     >
+                        {/* ## FOLDER */}
+
                         {view === "grid" && (
-                            // header
                             <div className="flex justify-between items-center">
                                 <h5 className="text-neutral-400 relative z-10 pb-2">
                                     Folders
@@ -358,6 +369,7 @@ export default function Browser() {
                                 }
                             )}
                         </section>
+                        {/* ## LINK */}
 
                         {view === "grid" && (
                             <h5 className="text-neutral-400 relative z-10 pt-2 pb-2">
@@ -411,7 +423,7 @@ export default function Browser() {
                         </section>
                     </div>
                 </div>
-                {/* header */}
+                {/* # header */}
                 <div
                     className={`z-0 fixed bg-neutral-50 lg:ml-20 lg:top-[63px] left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
                         isRightSideBarPropertiesOpen
@@ -424,12 +436,12 @@ export default function Browser() {
                             onBreadcrumbClick={handleBreadcrumbClick}
                         />
                         <div className="flex flex-row items-center justify-between md:justify-end gap-2 w-full md:w-auto">
-                            {/* LOADING */}
                             <div className="flex flex-row-reverse md:flex-row items-center justify-between w-full">
+                                {/* ## LOADING */}
                                 <div>
                                     {isLoadingRefetch && <SyncingAnimation />}
                                 </div>
-                                {/* SORT */}
+                                {/* ## SORT */}
                                 <div className="flex">
                                     <div className="flex gap-2 items-center">
                                         <p className="hidden md:block text-neutral-700">
@@ -455,7 +467,7 @@ export default function Browser() {
                                                 );
                                             }}
                                         />
-                                        {/* ASC DESC */}
+                                        {/* ### ASC DESC */}
                                         <button
                                             className="text-neutral-700 py-1 rounded-full hover:text-neutral-900 font-normal mr-6"
                                             onClick={() => {
@@ -469,9 +481,9 @@ export default function Browser() {
                                             {isSortAsc ? "A → Z" : "Z → A"}
                                         </button>
                                     </div>
-                                    {/* VIEW */}
+                                    {/* ## VIEW */}
                                     <div className="flex gap-2">
-                                        {/* GRID */}
+                                        {/* ### GRID */}
                                         <button
                                             onClick={() => {
                                                 setView("grid");
@@ -485,7 +497,7 @@ export default function Browser() {
                                         >
                                             <GridIcon />
                                         </button>
-                                        {/* LIST */}
+                                        {/* ### LIST */}
                                         <button
                                             onClick={() => {
                                                 setView("list");
@@ -503,7 +515,7 @@ export default function Browser() {
                                 </div>
                             </div>
 
-                            {/* INFO */}
+                            {/* ## INFO */}
                             <button
                                 className="ml-4"
                                 onClick={() => {
@@ -520,7 +532,7 @@ export default function Browser() {
                         </div>
                     </div>
                 </div>
-                {/* right sidebar */}
+                {/* # right sidebar */}
                 <RightSideBarProperties
                     onClose={() => setIsRightSideBarPropertiesOpen(false)}
                     isOpen={isRightSideBarPropertiesOpen}
@@ -528,7 +540,7 @@ export default function Browser() {
                     relativePath={focusedItemName}
                     onUpdate={() => setIsSomethingChanged(true)}
                 />
-                {/* MODALS */}
+                {/* # MODALS */}
                 <NewLink
                     isOpen={isNewLinkModalOpen}
                     onClose={() => setIsNewLinkModalOpen(false)}

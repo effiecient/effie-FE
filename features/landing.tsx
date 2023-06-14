@@ -11,7 +11,6 @@ import { Navbar, RightContext } from "@/components";
 import { useState } from "react";
 
 export default function Landing() {
-    const isRegisterOpen = useRegister((state) => state.isRegisterOpen);
     const setIsRegisterOpen = useRegister((state) => state.setIsRegisterOpen);
     const { width } = useWindowSize();
 
