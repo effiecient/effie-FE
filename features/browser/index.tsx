@@ -47,6 +47,8 @@ export default function Browser({
         setIsNewFolderModalOpen,
         isRightSideBarPropertiesOpen,
         setIsRightSideBarPropertiesOpen,
+        focusedItemData,
+        setFocusedItemData,
     ] = useBrowserStore(
         (state: any) => [
             state.setPathname,
@@ -62,11 +64,13 @@ export default function Browser({
             state.setIsNewFolderModalOpen,
             state.isRightSideBarPropertiesOpen,
             state.setIsRightSideBarPropertiesOpen,
+            state.focusedItemData,
+            state.setFocusedItemData,
         ],
         shallow
     );
 
-    const [focusedItemData, setFocusedItemData] = useState<any>(undefined);
+    // const [focusedItemData, setFocusedItemData] = useState<any>(undefined);
     const [isSomethingChanged, setIsSomethingChanged] =
         useState<boolean>(false);
 
@@ -140,7 +144,7 @@ export default function Browser({
             let newFocusedItemData = undefined;
             if (responseRefetch?.data?.children !== undefined) {
                 responseRefetch.data.children.forEach((child: any) => {
-                    if (child.relativePath === focusedItemData.relativePath) {
+                    if (child.relativePath === focusedItemData?.relativePath) {
                         newFocusedItemData = child;
                     }
                 });
@@ -165,12 +169,7 @@ export default function Browser({
     }
 
     // preprocess data to be shown
-    let responseData;
-    if (responseRefetch !== undefined) {
-        responseData = responseRefetch.data;
-    } else {
-        responseData = response.data;
-    }
+    let responseData = responseRefetch ? responseRefetch.data : response.data;
 
     const { dataChildrenFolders, dataChildrenLinks } = sortDataToFolderAndLink(
         responseData,
@@ -269,9 +268,6 @@ export default function Browser({
                                             disabled={isLoadingRefetch}
                                             key={index}
                                             content="folder"
-                                            relativePath={
-                                                folderData.relativePath
-                                            }
                                             DirectoryItemData={folderData}
                                             onDoubleClick={() => {
                                                 handleDirectoryCardClick(
@@ -281,10 +277,6 @@ export default function Browser({
                                             onClick={() => {
                                                 setFocusedItemData(folderData);
                                             }}
-                                            isFocused={
-                                                focusedItemData?.relativePath ===
-                                                folderData.relativePath
-                                            }
                                         />
                                     );
                                 }
@@ -316,7 +308,6 @@ export default function Browser({
                                             disabled={isLoadingRefetch}
                                             key={index}
                                             content="link"
-                                            relativePath={linkData.relativePath}
                                             DirectoryItemData={linkData}
                                             onDoubleClick={() => {
                                                 // open url in new page
@@ -328,10 +319,6 @@ export default function Browser({
                                             onClick={() => {
                                                 setFocusedItemData(linkData);
                                             }}
-                                            isFocused={
-                                                focusedItemData?.relativePath ===
-                                                linkData.relativePath
-                                            }
                                         />
                                     );
                                 }
@@ -340,114 +327,12 @@ export default function Browser({
                     </div>
                 </div>
                 {/* # header */}
-                <div
-                    className={`z-0 fixed bg-neutral-50 lg:ml-20 lg:top-[63px] left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
-                        isRightSideBarPropertiesOpen
-                            ? "lg:mr-[20vw]"
-                            : "lg:mr-6"
-                    }`}
-                >
-                    <div className="p-6 flex flex-col md:flex-row justify-between items-start md:items-center max-w-full gap-4 md:gap-0">
-                        <BrowserBreadcrumb
-                            onBreadcrumbClick={handleBreadcrumbClick}
-                        />
-                        <div className="flex flex-row items-center justify-between md:justify-end gap-2 w-full md:w-auto">
-                            <div className="flex flex-row-reverse md:flex-row items-center justify-between w-full">
-                                {/* ## LOADING */}
-                                <div>
-                                    {isLoadingRefetch && <SyncingAnimation />}
-                                </div>
-                                {/* ## SORT */}
-                                <div className="flex">
-                                    <div className="flex gap-2 items-center">
-                                        <p className="hidden md:block text-neutral-700">
-                                            Sort by
-                                        </p>
-                                        {/* DROPDOWN INPUT */}
-                                        <Dropdown
-                                            options={["Name", "Link"]}
-                                            // Set first letter to uppercase and replace '-' to ' '
-                                            // TODO: I don't think this is necessary, might convert back
-                                            selectedOption={sortOption
-                                                .replace(/-/g, " ")
-                                                .replace(/\b\w/g, (l: any) =>
-                                                    l.toUpperCase()
-                                                )}
-                                            setSelectedOption={(
-                                                option: any
-                                            ) => {
-                                                setSortOption(option);
-                                                saveToCookie(
-                                                    "sortOption",
-                                                    option
-                                                );
-                                            }}
-                                        />
-                                        {/* ### ASC DESC */}
-                                        <button
-                                            className="text-neutral-700 py-1 rounded-full hover:text-neutral-900 font-normal mr-6"
-                                            onClick={() => {
-                                                setIsSortAsc(!isSortAsc);
-                                                saveToCookie(
-                                                    "isSortAsc",
-                                                    String(!isSortAsc)
-                                                );
-                                            }}
-                                        >
-                                            {isSortAsc ? "A → Z" : "Z → A"}
-                                        </button>
-                                    </div>
-                                    {/* ## VIEW */}
-                                    <div className="flex gap-2">
-                                        {/* ### GRID */}
-                                        <button
-                                            onClick={() => {
-                                                setView("grid");
-                                                saveToCookie("view", "grid");
-                                            }}
-                                            className={`${
-                                                view === "grid"
-                                                    ? "bg-primary-100"
-                                                    : "hover:bg-primary-50"
-                                            } p-1 rounded-md duration-100`}
-                                        >
-                                            <GridIcon />
-                                        </button>
-                                        {/* ### LIST */}
-                                        <button
-                                            onClick={() => {
-                                                setView("list");
-                                                saveToCookie("view", "list");
-                                            }}
-                                            className={`${
-                                                view === "list"
-                                                    ? "bg-primary-100"
-                                                    : "hover:bg-primary-50"
-                                            } p-1  rounded-md duration-100`}
-                                        >
-                                            <ListIcon />
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* ## INFO */}
-                            <button
-                                className="ml-4"
-                                onClick={() => {
-                                    setIsRightSideBarPropertiesOpen(
-                                        !isRightSideBarPropertiesOpen
-                                    );
-                                }}
-                            >
-                                <InfoIcon
-                                    className="h-8 w-8"
-                                    aria-label="Info"
-                                />
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                {
+                    <BrowserHeader
+                        onBreadcrumbClick={handleBreadcrumbClick}
+                        isLoadingRefetch={isLoadingRefetch}
+                    />
+                }
                 {/* # right sidebar */}
                 <RightSideBarProperties
                     onClose={() => setIsRightSideBarPropertiesOpen(false)}
@@ -489,6 +374,128 @@ const Background = () => {
                     objectPosition: "bottom right",
                 }}
             />
+        </div>
+    );
+};
+
+const BrowserHeader = ({ onBreadcrumbClick, isLoadingRefetch }: any) => {
+    const [
+        sortOption,
+        setSortOption,
+        isSortAsc,
+        setIsSortAsc,
+        view,
+        setView,
+        isRightSideBarPropertiesOpen,
+        setIsRightSideBarPropertiesOpen,
+    ] = useBrowserStore(
+        (state: any) => [
+            state.sortOption,
+            state.setSortOption,
+            state.isSortAsc,
+            state.setIsSortAsc,
+            state.view,
+            state.setView,
+            state.isRightSideBarPropertiesOpen,
+            state.setIsRightSideBarPropertiesOpen,
+        ],
+        shallow
+    );
+
+    return (
+        <div
+            className={`z-0 fixed bg-neutral-50 lg:ml-20 lg:top-[63px] left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
+                isRightSideBarPropertiesOpen ? "lg:mr-[20vw]" : "lg:mr-6"
+            }`}
+        >
+            <div className="p-6 flex flex-col md:flex-row justify-between items-start md:items-center max-w-full gap-4 md:gap-0">
+                <BrowserBreadcrumb onBreadcrumbClick={onBreadcrumbClick} />
+                <div className="flex flex-row items-center justify-between md:justify-end gap-2 w-full md:w-auto">
+                    <div className="flex flex-row-reverse md:flex-row items-center justify-between w-full">
+                        {/* ## LOADING */}
+                        <div>{isLoadingRefetch && <SyncingAnimation />}</div>
+                        {/* ## SORT */}
+                        <div className="flex">
+                            <div className="flex gap-2 items-center">
+                                <p className="hidden md:block text-neutral-700">
+                                    Sort by
+                                </p>
+                                {/* DROPDOWN INPUT */}
+                                <Dropdown
+                                    options={["Name", "Link"]}
+                                    // Set first letter to uppercase and replace '-' to ' '
+                                    // TODO: I don't think this is necessary, might convert back
+                                    selectedOption={sortOption
+                                        .replace(/-/g, " ")
+                                        .replace(/\b\w/g, (l: any) =>
+                                            l.toUpperCase()
+                                        )}
+                                    setSelectedOption={(option: any) => {
+                                        setSortOption(option);
+                                        saveToCookie("sortOption", option);
+                                    }}
+                                />
+                                {/* ### ASC DESC */}
+                                <button
+                                    className="text-neutral-700 py-1 rounded-full hover:text-neutral-900 font-normal mr-6"
+                                    onClick={() => {
+                                        setIsSortAsc(!isSortAsc);
+                                        saveToCookie(
+                                            "isSortAsc",
+                                            String(!isSortAsc)
+                                        );
+                                    }}
+                                >
+                                    {isSortAsc ? "A → Z" : "Z → A"}
+                                </button>
+                            </div>
+                            {/* ## VIEW */}
+                            <div className="flex gap-2">
+                                {/* ### GRID */}
+                                <button
+                                    onClick={() => {
+                                        setView("grid");
+                                        saveToCookie("view", "grid");
+                                    }}
+                                    className={`${
+                                        view === "grid"
+                                            ? "bg-primary-100"
+                                            : "hover:bg-primary-50"
+                                    } p-1 rounded-md duration-100`}
+                                >
+                                    <GridIcon />
+                                </button>
+                                {/* ### LIST */}
+                                <button
+                                    onClick={() => {
+                                        setView("list");
+                                        saveToCookie("view", "list");
+                                    }}
+                                    className={`${
+                                        view === "list"
+                                            ? "bg-primary-100"
+                                            : "hover:bg-primary-50"
+                                    } p-1  rounded-md duration-100`}
+                                >
+                                    <ListIcon />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* ## INFO */}
+                    <button
+                        className="ml-4"
+                        onClick={() => {
+                            setIsRightSideBarPropertiesOpen(
+                                !isRightSideBarPropertiesOpen
+                            );
+                        }}
+                    >
+                        <InfoIcon className="h-8 w-8" aria-label="Info" />
+                    </button>
+                </div>
+            </div>
         </div>
     );
 };

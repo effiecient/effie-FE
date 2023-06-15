@@ -10,6 +10,7 @@ import PinIcon from "@/public/icons/pin";
 import DirectoriesIcon from "@/public/icons/directories";
 import LinkIcon from "@/public/icons/link";
 import { useRightContext } from "../../../components/right-context";
+import { shallow } from "zustand/shallow";
 
 type DirectoryItemCardProps = {
     content:
@@ -23,8 +24,6 @@ type DirectoryItemCardProps = {
     onClick?: () => void;
     onDoubleClick?: () => void;
     className?: string;
-    relativePath?: string;
-    isFocused?: boolean;
     disabled?: boolean;
 };
 
@@ -34,25 +33,40 @@ export default function DirectoryItemCard({
     onClick,
     onDoubleClick,
     className,
-    relativePath,
-    isFocused = false,
     disabled = false,
 }: DirectoryItemCardProps) {
     let subdomain = useUserStore((state: any) => state.subdomain);
 
-    let pathname = useBrowserStore((state: any) => state.pathname);
-    let view = useBrowserStore((state: any) => state.view);
-    let setIsNewFolderModalOpen = useBrowserStore(
-        (state: any) => state.setIsNewFolderModalOpen
+    const [
+        pathname,
+        view,
+        setIsNewFolderModalOpen,
+        setFocusedItemData,
+        setIsRightSideBarPropertiesOpen,
+        setIsNewLinkModalOpen,
+        focusedItemData,
+    ] = useBrowserStore(
+        (state: any) => [
+            state.pathname,
+            state.view,
+            state.setIsNewFolderModalOpen,
+            state.setFocusedItemData,
+            state.setIsRightSideBarPropertiesOpen,
+            state.setIsNewLinkModalOpen,
+            state.focusedItemData,
+        ],
+        shallow
     );
+    const isFocused =
+        focusedItemData?.relativePath === DirectoryItemData?.relativePath;
 
     const { setOptions, handleRightClick } = useRightContext();
 
     // add / in the back if doesn't exist
-    if (pathname[pathname.length - 1] !== "/") {
-        pathname = pathname + "/";
-    }
-    const effieURL = `${FE_PROTOCOL}://${subdomain}.${FE_BASE_URL}${pathname}${relativePath}`;
+
+    const effieURL = `${FE_PROTOCOL}://${subdomain}.${FE_BASE_URL}${
+        pathname[pathname.length - 1] === "/" ? pathname : pathname + "/"
+    }${DirectoryItemData?.relativePath}`;
 
     return (
         <>
@@ -82,14 +96,19 @@ export default function DirectoryItemCard({
                             setOptions([
                                 {
                                     title: "create new link",
-                                    onClick: () => {},
+                                    onClick: () => {
+                                        setIsNewLinkModalOpen(true);
+                                    },
                                 },
                             ]);
                         } else {
                             setOptions([
                                 {
                                     title: "info",
-                                    onClick: () => {},
+                                    onClick: () => {
+                                        setFocusedItemData(DirectoryItemData);
+                                        setIsRightSideBarPropertiesOpen(true);
+                                    },
                                 },
                             ]);
                         }
