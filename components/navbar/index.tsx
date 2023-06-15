@@ -33,33 +33,6 @@ export default function Navbar({
     const photoURL = useUserStore((state: any) => state.photoURL);
     const profileRef = useRef<HTMLImageElement>(null);
 
-    const showSkeleton = useRenderingStore((state: any) => state.showSkeleton);
-    // skeleton
-    if (showSkeleton) {
-        return (
-            <>
-                <div className="relative right-0 left-0 top-0 h-16" />
-                <div className="fixed right-0 left-0 top-0 h-16 z-50 animate-pulse">
-                    <nav
-                        className={`flex flex-row justify-between w-full bg-white items-center px-6 py-3`}
-                    >
-                        {/* Logo */}
-                        <p className="h-8 bg-neutral-200 rounded-full w-16" />
-                        {/* Login-Register */}
-                        <div className="space-x-2">
-                            {/* Navbar for logged-in users */}
-                            <div className="flex flex-row items-center gap-1.5">
-                                <>
-                                    <Button type="default" pill={true}></Button>
-                                </>
-                                <div className="rounded-full w-[40px] h-[40px] bg-neutral-300"></div>
-                            </div>
-                        </div>
-                    </nav>
-                </div>
-            </>
-        );
-    }
     return (
         <>
             {/* Navbar */}

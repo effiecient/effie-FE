@@ -41,9 +41,6 @@ export default function Browser({
 
     const subdomain = useUserStore((state: any) => state.subdomain);
     const setPathname = useUserStore((state: any) => state.setPathname);
-    const setShowSkeleton = useRenderingStore(
-        (state: any) => state.setShowSkeleton
-    );
 
     // browser state
     const view = useUserStore((state: any) => state.view);
@@ -163,26 +160,17 @@ export default function Browser({
         }
     }, [isLoadingRefetch, fetchStartedRefetch]);
 
-    // show skeleton
-    // setShowSkeleton(true);
-
     // return
     if (isError) {
-        setShowSkeleton(false);
-
         console.log("isError");
         console.error(response.message);
         return <Page404 />;
     }
     if (isErrorRefetch) {
-        setShowSkeleton(false);
-
         console.log("isErrorRefetch");
         console.error(responseRefetch.message);
         return <Page404 />;
     }
-
-    setShowSkeleton(false);
 
     // preprocess data to be shown
     let responseData;

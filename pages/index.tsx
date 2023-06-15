@@ -6,7 +6,7 @@ import { useUserStore } from "@/hooks";
 import { NextResponse } from "next/server";
 import { BE_BASE_URL, BE_STATUS_ERROR } from "@/config";
 import { EFFIE_AUTH_TOKEN } from "@/constants";
-import CheckUser from "@/middlewares/checkUser";
+import { GlobalStateSetter } from "@/middlewares";
 
 export default function Index({
     isLoggedIn,
@@ -17,7 +17,7 @@ export default function Index({
     isSubdomain,
     subdomain,
 }: any) {
-    const checkUserProps = {
+    const globalStateSetterProps = {
         isLoggedIn,
         isAuthError,
         authResponse,
@@ -31,28 +31,21 @@ export default function Index({
 
     if (isSubdomain) {
         return (
-            <CheckUser {...checkUserProps}>
-                <div className="flex h-full w-full flex-col">
-                    <Browser {...browserProps} />
-                    <Snackbar className="z-50" />
-                </div>
-            </CheckUser>
+            <GlobalStateSetter {...globalStateSetterProps}>
+                <Browser {...browserProps} />
+                <Snackbar className="z-50" />
+            </GlobalStateSetter>
         );
     } else {
         if (isLoggedIn) {
             return (
-                <CheckUser {...checkUserProps}>
+                <GlobalStateSetter {...globalStateSetterProps}>
                     <QuickCreate />
                     <Snackbar className="z-50" />
-                </CheckUser>
+                </GlobalStateSetter>
             );
         } else {
-            return (
-                <>
-                    <Landing />
-                    <Snackbar className="z-50" />
-                </>
-            );
+            return <Landing />;
         }
     }
 }

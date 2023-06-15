@@ -20,12 +20,12 @@ export default function App({ Component, pageProps }: AppProps) {
 
     useEffect(() => {
         setPathname(window.location.pathname.replace(/^\//, ""));
+        const themeCookie = getKeyFromCookie("theme");
+        if (themeCookie !== "") {
+            setTheme(themeCookie);
+        }
     }, []);
-    const themeCookie = getKeyFromCookie("theme");
-    if (themeCookie !== "") {
-        setTheme(themeCookie);
-    }
-    
+
     return (
         <>
             <div

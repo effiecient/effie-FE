@@ -11,7 +11,7 @@ import { getKeyFromCookie, saveToCookie } from "@/helper";
 import { EFFIE_AUTH_TOKEN } from "@/constants";
 
 // used to set isLoggedIn, username, isSubdomain, subdomain
-export default function CheckUser({
+export default function GlobalStateSetter({
     children,
     isLoggedIn,
     isAuthError,
@@ -29,7 +29,6 @@ export default function CheckUser({
     const setSortOption = useUserStore((state: any) => state.setSortOption);
     const setIsSortAsc = useUserStore((state: any) => state.setIsSortAsc);
 
-    let pathname;
     // get effie_auth_token from cookie on first render
     useEffect(() => {
         setIsSubdomain(isSubdomain);

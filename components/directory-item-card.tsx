@@ -45,23 +45,13 @@ export default function DirectoryItemCard({
 }: DirectoryItemCardProps) {
     let pathname = useUserStore((state: any) => state.pathname);
     let subdomain = useUserStore((state: any) => state.subdomain);
+    const { setOptions, handleRightClick } = useRightContext();
+
     // add / in the back if doesn't exist
     if (pathname[pathname.length - 1] !== "/") {
         pathname = pathname + "/";
     }
     const effieURL = `${FE_PROTOCOL}://${subdomain}.${FE_BASE_URL}${pathname}${relativePath}`;
-
-    const showSkeleton = useRenderingStore((state: any) => state.showSkeleton);
-
-    const { handleRightClick, setOptions } = useRightContext();
-
-    if (showSkeleton) {
-        return (
-            <div
-                className={`animate-pulse pt-3 pb-2 px-5 rounded-xl bg-neutral-200 w-[32vw] md:w-[44vw] lg:w-[20vw] max-w-[16rem] min-w-[8rem] min-h-[4rem]`}
-            />
-        );
-    }
 
     return (
         <>

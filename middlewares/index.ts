@@ -1,3 +1,3 @@
 // client side middleware
-import checkUser from "./checkUser";
-export { checkUser };
+import GlobalStateSetter from "./globalStateSetter";
+export { GlobalStateSetter };

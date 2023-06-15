@@ -1,12 +1,11 @@
 import { Snackbar } from "@/components";
 import { Browser } from "@/features";
 
-import CheckUser from "@/middlewares/checkUser";
+import { GlobalStateSetter } from "@/middlewares";
 import React from "react";
 
 import { EFFIE_AUTH_TOKEN } from "@/constants";
 import { BE_BASE_URL, BE_STATUS_ERROR } from "@/config";
-import { Page404 } from "@/features";
 
 export default function Directory({
     isLoggedIn,
@@ -17,7 +16,7 @@ export default function Directory({
     isSubdomain,
     subdomain,
 }: any) {
-    const checkUserProps = {
+    const globalStateSetterProps = {
         isLoggedIn,
         isAuthError,
         authResponse,
@@ -29,14 +28,11 @@ export default function Directory({
         response,
     };
 
-    console.log("checkUserProps", checkUserProps);
-    console.log("browserProps", browserProps);
-
     return (
-        <CheckUser {...checkUserProps}>
+        <GlobalStateSetter {...globalStateSetterProps}>
             <Browser {...browserProps} />
             <Snackbar className="z-50" />
-        </CheckUser>
+        </GlobalStateSetter>
     );
 }
 export async function getServerSideProps(context: any) {
