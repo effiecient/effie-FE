@@ -28,7 +28,6 @@ export default function Index({
         isError,
         response,
     };
-
     if (isSubdomain) {
         return (
             <GlobalStateSetter {...globalStateSetterProps}>
@@ -49,6 +48,7 @@ export default function Index({
         }
     }
 }
+
 export async function getServerSideProps(context: any) {
     let isLoggedIn = false;
     let isSubdomain = false;
@@ -60,7 +60,9 @@ export async function getServerSideProps(context: any) {
     let response = null;
     let isError = false;
 
-    // get authtoken
+    let theme = "";
+
+    // get data from cookie
     const cookies = context.req.headers.cookie;
     let authToken = undefined;
 
@@ -73,6 +75,10 @@ export async function getServerSideProps(context: any) {
         if (token) {
             authToken = token.split("=")[1];
             isLoggedIn = true;
+        }
+        const keyvalue = cookieArr.find((item: any) => item.includes("theme"));
+        if (keyvalue) {
+            theme = keyvalue.split("=")[1];
         }
     }
 
@@ -123,6 +129,8 @@ export async function getServerSideProps(context: any) {
         if (response.status == BE_STATUS_ERROR) {
             isError = true;
         }
+    } else {
+        isError = true;
     }
 
     return {
@@ -134,6 +142,7 @@ export async function getServerSideProps(context: any) {
             authResponse,
             isSubdomain,
             subdomain,
+            theme,
         },
     };
 }

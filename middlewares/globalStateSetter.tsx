@@ -25,57 +25,33 @@ export default function GlobalStateSetter({
     const setSubdomain = useUserStore((state: any) => state.setSubdomain);
     const setPhotoURL = useUserStore((state: any) => state.setPhotoURL);
 
-    const setView = useBrowserStore((state: any) => state.setView);
-    const setSortOption = useBrowserStore((state: any) => state.setSortOption);
-    const setIsSortAsc = useBrowserStore((state: any) => state.setIsSortAsc);
-
     // get effie_auth_token from cookie on first render
     useEffect(() => {
         setIsSubdomain(isSubdomain);
         setSubdomain(subdomain);
 
-        // ### check browser preference ###
-        const view = getKeyFromCookie("view");
-        if (view !== "") {
-            setView(view);
-        }
-        const sortOption = getKeyFromCookie("sortOption");
-        if (sortOption) {
-            setSortOption(sortOption);
-        }
-        const isSortAsc = getKeyFromCookie("isSortAsc");
-        if (isSortAsc) {
-            setIsSortAsc(JSON.parse(isSortAsc));
+        setIsLoggedIn(!isAuthError && isLoggedIn);
+
+        if (isLoggedIn && !isAuthError) {
+            setUsername(authResponse.data.username);
+            setIsLoggedIn(true);
+            setPhotoURL(authResponse.data.photoURL);
+            // set new token
+            // set to cookie to be used accross subdomains. expire in 1 year
+            saveToCookie(EFFIE_AUTH_TOKEN, authResponse.data.token);
         }
     }, []);
 
-    // normal return
-    // 1. return if not logged in
-    if (!isLoggedIn) {
-        setIsLoggedIn(false);
-        return children;
-    } else {
-        // 2. return if logged in
-        if (isAuthError) {
-            setIsLoggedIn(false);
-
-            return (
-                <>
-                    <div>error: {authResponse.message}</div>
-                    <Button>
-                        <Link href="/logout">Logout</Link>
-                    </Button>
-                </>
-            );
-        }
-
-        setUsername(authResponse.data.username);
-        setIsLoggedIn(true);
-        setPhotoURL(authResponse.data.photoURL);
-        // set new token
-        // set to cookie to be used accross subdomains. expire in 1 year
-        saveToCookie(EFFIE_AUTH_TOKEN, authResponse.data.token);
-
-        return children;
+    if (isLoggedIn && isAuthError) {
+        return (
+            <>
+                <div>error: {authResponse.message}</div>
+                <Button>
+                    <Link href="/logout">Logout</Link>
+                </Button>
+            </>
+        );
     }
+
+    return children;
 }

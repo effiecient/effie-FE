@@ -1,3 +1,4 @@
+import { getKeyFromCookie } from "@/helper";
 import { create } from "zustand";
 
 const useUserStore = create((set) => ({
@@ -6,7 +7,7 @@ const useUserStore = create((set) => ({
     photoURL: "",
     isSubdomain: false,
     subdomain: "",
-    theme: "effie",
+    theme: "",
 
     setUsername: (username: string) => set(() => ({ username })),
     setTheme: (theme: string) => set(() => ({ theme })),

@@ -162,7 +162,7 @@ export default function Browser({
     // return
     if (isError) {
         console.log("isError");
-        console.error(response.message);
+        // console.error(response.message);
         return <Page404 />;
     }
     if (isErrorRefetch) {
