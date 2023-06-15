@@ -1,13 +1,9 @@
-import { BE_BASE_URL } from "@/config";
-
-// TODO: update this to import from config only
-import { FE_DOMAIN, FE_TOP_LEVEL_DOMAIN } from "@/config/fe-config";
-
-import { useBrowserStore, useUserStore } from "@/hooks";
 import { useEffect } from "react";
 import Link from "next/link";
+
 import { Button } from "@/ui";
-import { getKeyFromCookie, saveToCookie } from "@/helper";
+import { useUserStore } from "@/hooks";
+import { saveToCookie } from "@/helper";
 import { EFFIE_AUTH_TOKEN } from "@/constants";
 
 // used to set isLoggedIn, username, isSubdomain, subdomain

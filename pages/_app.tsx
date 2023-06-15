@@ -9,23 +9,18 @@ import "@/styles/globals.css";
 import "@/styles/text.css";
 import "@/styles/loading.css";
 import "@/styles/theme.css";
-import { useBrowserStore, useUserStore } from "@/hooks";
-import { ReactElement, Suspense, useEffect, useState } from "react";
-import { getEffieAuthTokenFromCookie, getKeyFromCookie } from "@/helper";
-import { LoadingAnimation } from "@/ui";
-import { GlobalStateSetter } from "@/middlewares";
+import {  useUserStore } from "@/hooks";
+import {  useEffect } from "react";
+import {  getKeyFromCookie } from "@/helper";
 
 export default function App({ Component, pageProps }: AppProps) {
-    // const setTheme = useUserStore((state: any) => state.setTheme);
     const theme = useUserStore((state: any) => state.theme);
 
-    console.log("page prop", pageProps);
-    console.log("theme", theme);
     return (
         <SetGlobalStateFromCookie>
             <div
                 className={`${poppins.variable} theme-${
-                    theme === "" ? pageProps.theme : theme
+                    theme === "" ? pageProps.theme || "effie" : theme
                 } text-black bg-white selection:bg-secondary-500 accent-tertiary-500 h-screen`}
             >
                 <Component {...pageProps} />

@@ -1,9 +1,7 @@
 import { Snackbar } from "@/components";
 import { Browser, Landing } from "@/features";
-import QuickCreate from "@/features/quick-create";
-import { useUserStore } from "@/hooks";
+import { QuickCreate } from "@/features";
 
-import { NextResponse } from "next/server";
 import { BE_BASE_URL, BE_STATUS_ERROR } from "@/config";
 import { EFFIE_AUTH_TOKEN } from "@/constants";
 import { GlobalStateSetter } from "@/middlewares";
