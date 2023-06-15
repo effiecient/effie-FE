@@ -9,9 +9,9 @@ import "@/styles/globals.css";
 import "@/styles/text.css";
 import "@/styles/loading.css";
 import "@/styles/theme.css";
-import {  useUserStore } from "@/hooks";
-import {  useEffect } from "react";
-import {  getKeyFromCookie } from "@/helper";
+import { useBrowserStore, useUserStore } from "@/hooks";
+import { useEffect } from "react";
+import { getKeyFromCookie } from "@/helper";
 
 export default function App({ Component, pageProps }: AppProps) {
     const theme = useUserStore((state: any) => state.theme);
@@ -31,9 +31,10 @@ export default function App({ Component, pageProps }: AppProps) {
 
 const SetGlobalStateFromCookie = ({ children }: any) => {
     const setTheme = useUserStore((state: any) => state.setTheme);
-    const setView = useUserStore((state: any) => state.setView);
-    const setSortOption = useUserStore((state: any) => state.setSortOption);
-    const setIsSortAsc = useUserStore((state: any) => state.setIsSortAsc);
+
+    const setView = useBrowserStore((state: any) => state.setView);
+    const setSortOption = useBrowserStore((state: any) => state.setSortOption);
+    const setIsSortAsc = useBrowserStore((state: any) => state.setIsSortAsc);
 
     useEffect(() => {
         const theme = getKeyFromCookie("theme");

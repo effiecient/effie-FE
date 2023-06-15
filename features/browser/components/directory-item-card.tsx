@@ -25,7 +25,6 @@ type DirectoryItemCardProps = {
     className?: string;
     relativePath?: string;
     isFocused?: boolean;
-    view: string;
     disabled?: boolean;
 };
 
@@ -37,11 +36,16 @@ export default function DirectoryItemCard({
     className,
     relativePath,
     isFocused = false,
-    view,
     disabled = false,
 }: DirectoryItemCardProps) {
-    let pathname = useBrowserStore((state: any) => state.pathname);
     let subdomain = useUserStore((state: any) => state.subdomain);
+
+    let pathname = useBrowserStore((state: any) => state.pathname);
+    let view = useBrowserStore((state: any) => state.view);
+    let setIsNewFolderModalOpen = useBrowserStore(
+        (state: any) => state.setIsNewFolderModalOpen
+    );
+
     const { setOptions, handleRightClick } = useRightContext();
 
     // add / in the back if doesn't exist
@@ -70,19 +74,7 @@ export default function DirectoryItemCard({
                                 {
                                     title: "create new folder",
                                     onClick: () => {
-                                        // setIsNewFolderOpen(true);
-                                    },
-                                },
-                                {
-                                    title: "create new folder",
-                                    onClick: () => {
-                                        // setIsNewFolderOpen(true);
-                                    },
-                                },
-                                {
-                                    title: "create new folder",
-                                    onClick: () => {
-                                        // setIsNewFolderOpen(true);
+                                        setIsNewFolderModalOpen(true);
                                     },
                                 },
                             ]);

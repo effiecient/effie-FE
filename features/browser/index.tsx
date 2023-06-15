@@ -3,12 +3,7 @@ import Image from "next/image";
 
 import { useState, useEffect } from "react";
 
-import {
-    KeyboardShortcuts,
-    Navbar,
-    DirectoryItemCard,
-    RightContext,
-} from "@/components";
+import { Navbar, DirectoryItemCard, RightContext } from "@/components";
 
 import { NewLinkModal, NewFolderModal } from "./components";
 import LeftSideBar from "./components/left-side-bar";
@@ -19,8 +14,6 @@ import { useUserStore, useFetchEffieBENew, useBrowserStore } from "@/hooks";
 import { FolderLinkDataArray } from "@/type";
 import { BrowserBreadcrumb } from "./components/browser-breadcrumb";
 
-import {} from "@/hooks";
-
 import Page404 from "@/features/page404";
 
 import { LoadingAnimation, Dropdown } from "@/ui";
@@ -28,7 +21,7 @@ import InfoIcon from "@/public/icons/info";
 import GridIcon from "@/public/icons/grid";
 import ListIcon from "@/public/icons/list";
 import { saveToCookie } from "@/helper";
-
+import { shallow } from "zustand/shallow";
 export default function Browser({
     response,
     isError,
@@ -39,28 +32,41 @@ export default function Browser({
     let pathname: any;
 
     const subdomain = useUserStore((state: any) => state.subdomain);
-    const setPathname = useBrowserStore((state: any) => state.setPathname);
 
-    // browser state
-    const view = useBrowserStore((state: any) => state.view);
-    const setView = useBrowserStore((state: any) => state.setView);
-
-    const sortOption = useBrowserStore((state: any) => state.sortOption);
-    const setSortOption = useBrowserStore((state: any) => state.setSortOption);
-
-    const isSortAsc = useBrowserStore((state: any) => state.isSortAsc);
-    const setIsSortAsc = useBrowserStore((state: any) => state.setIsSortAsc);
-
-    const [isNewLinkModalOpen, setIsNewLinkModalOpen] = useState(false);
-    const [isNewFolderModalOpen, setIsNewFolderModalOpen] = useState(false);
-    // const [isKeyboardShortcutsModalOpen, setIsKeyboardShortcutsModalOpen] =
-    //     useState(false);
-
-    const [isRightSideBarPropertiesOpen, setIsRightSideBarPropertiesOpen] =
-        useState(false);
+    const [
+        setPathname,
+        view,
+        setView,
+        sortOption,
+        setSortOption,
+        isSortAsc,
+        setIsSortAsc,
+        isNewLinkModalOpen,
+        setIsNewLinkModalOpen,
+        isNewFolderModalOpen,
+        setIsNewFolderModalOpen,
+        isRightSideBarPropertiesOpen,
+        setIsRightSideBarPropertiesOpen,
+    ] = useBrowserStore(
+        (state: any) => [
+            state.setPathname,
+            state.view,
+            state.setView,
+            state.sortOption,
+            state.setSortOption,
+            state.isSortAsc,
+            state.setIsSortAsc,
+            state.isNewLinkModalOpen,
+            state.setIsNewLinkModalOpen,
+            state.isNewFolderModalOpen,
+            state.setIsNewFolderModalOpen,
+            state.isRightSideBarPropertiesOpen,
+            state.setIsRightSideBarPropertiesOpen,
+        ],
+        shallow
+    );
 
     const [focusedItemData, setFocusedItemData] = useState<any>(undefined);
-    const [focusedItemName, setFocusedItemName] = useState<string>("");
     const [isSomethingChanged, setIsSomethingChanged] =
         useState<boolean>(false);
 
@@ -80,7 +86,6 @@ export default function Browser({
 
         window.history.replaceState(null, "", newUrl);
         updatePathname();
-        setFocusedItemName("");
         setIsSomethingChanged(true);
     };
     const handleBreadcrumbClick = (newUrl: any) => {
@@ -104,16 +109,6 @@ export default function Browser({
     updatePathname();
 
     const fetchURL = `${BE_BASE_URL}/directory/${subdomain}/${pathname}`;
-
-    // initial fetch
-    // const [{ isLoading, isError, response, fetchStarted }, fetcher] =
-    //     useFetchEffieBENew();
-
-    // useEffect(() => {
-    //     fetcher({
-    //         url: fetchURL,
-    //     });
-    // }, [subdomain]);
 
     // refetch
     const [
@@ -142,18 +137,16 @@ export default function Browser({
     useEffect(() => {
         if (!isLoadingRefetch && fetchStartedRefetch) {
             // update focused item data
-            let focusedItemData = undefined;
+            let newFocusedItemData = undefined;
             if (responseRefetch?.data?.children !== undefined) {
                 responseRefetch.data.children.forEach((child: any) => {
-                    if (child.relativePath === focusedItemName) {
-                        focusedItemData = child;
+                    if (child.relativePath === focusedItemData.relativePath) {
+                        newFocusedItemData = child;
                     }
                 });
             }
-            if (focusedItemData === undefined) {
-                setFocusedItemName("");
-            }
-            setFocusedItemData(focusedItemData);
+
+            setFocusedItemData(newFocusedItemData);
 
             setIsSomethingChanged(false);
         }
@@ -216,7 +209,6 @@ export default function Browser({
                     onClick={() => {
                         // reset focused item
                         setFocusedItemData(undefined);
-                        setFocusedItemName("");
                     }}
                 >
                     <Background />
@@ -267,7 +259,6 @@ export default function Browser({
                                 <DirectoryItemCard
                                     content="new folder"
                                     onClick={handleNewFolderClick}
-                                    view={view}
                                     disabled={isLoadingRefetch}
                                 />
                             )}
@@ -289,15 +280,11 @@ export default function Browser({
                                             }}
                                             onClick={() => {
                                                 setFocusedItemData(folderData);
-                                                setFocusedItemName(
-                                                    folderData.relativePath
-                                                );
                                             }}
                                             isFocused={
-                                                focusedItemName ===
+                                                focusedItemData?.relativePath ===
                                                 folderData.relativePath
                                             }
-                                            view={view}
                                         />
                                     );
                                 }
@@ -320,7 +307,6 @@ export default function Browser({
                                     content="new link"
                                     onClick={handleNewLinkClick}
                                     disabled={isLoadingRefetch}
-                                    view={view}
                                 />
                             )}
                             {dataChildrenLinks.map(
@@ -341,15 +327,11 @@ export default function Browser({
                                             }}
                                             onClick={() => {
                                                 setFocusedItemData(linkData);
-                                                setFocusedItemName(
-                                                    linkData.relativePath
-                                                );
                                             }}
                                             isFocused={
-                                                focusedItemName ===
+                                                focusedItemData?.relativePath ===
                                                 linkData.relativePath
                                             }
-                                            view={view}
                                         />
                                     );
                                 }
@@ -471,7 +453,7 @@ export default function Browser({
                     onClose={() => setIsRightSideBarPropertiesOpen(false)}
                     isOpen={isRightSideBarPropertiesOpen}
                     itemData={focusedItemData}
-                    relativePath={focusedItemName}
+                    relativePath={focusedItemData?.relativePath}
                     onUpdate={() => setIsSomethingChanged(true)}
                 />
                 {/* # MODALS */}
