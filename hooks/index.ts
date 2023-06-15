@@ -1,9 +1,9 @@
 import useUserStore from "./useUserStore";
 import useRegister from "./useRegister";
 import useWindowSize from "./useWindowSize";
-import useRenderingStore from "./useRenderingStore";
+import useSnackbarStore from "./useSnackbarStore";
 
-export { useUserStore, useRenderingStore, useRegister, useWindowSize };
+export { useUserStore, useSnackbarStore, useRegister, useWindowSize };
 
 export { useFetchEffieBENew } from "./useFetchEffieBENew";
 export { useBrowserStore } from "./useBrowserStore";

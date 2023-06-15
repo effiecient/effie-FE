@@ -8,7 +8,7 @@ import registerIcon from "@/public/icons/register.svg";
 import DirectoriesWhiteIcon from "@/public/icons/directories-white";
 // import newLinkIcon from "@/public/icons/new-link.svg";
 import defaultUserImg from "@/public/images/user.png";
-import { useRegister, useRenderingStore, useUserStore } from "@/hooks";
+import { useRegister, useSnackbarStore, useUserStore } from "@/hooks";
 import Link from "next/link";
 // TODO: update this to import from config only
 import { FE_BASE_URL, FE_FULL_BASE_URL, FE_PROTOCOL } from "@/config/fe-config";
@@ -42,7 +42,11 @@ export default function Navbar({
                     className={`flex flex-row justify-between w-full bg-white items-center px-6 py-3`}
                 >
                     {/* Logo */}
-                    <Link href={`${FE_FULL_BASE_URL}`} target="_self">
+                    <Link
+                        href={`${FE_FULL_BASE_URL}`}
+                        as={`${FE_FULL_BASE_URL}`}
+                        target="_self"
+                    >
                         <h1 className="text-2xl">Effie</h1>
                     </Link>
                     {/* Login-Register */}

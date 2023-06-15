@@ -5,21 +5,21 @@ import { useState, useEffect } from "react";
 
 import {
     KeyboardShortcuts,
-    NewLink,
-    NewFolder,
     Navbar,
     DirectoryItemCard,
     RightContext,
 } from "@/components";
+
+import { NewLinkModal, NewFolderModal } from "./components";
 import LeftSideBar from "./components/left-side-bar";
 import RightSideBarProperties from "./components/right-side-bar-properties";
 
 import { BE_BASE_URL } from "@/config/be-config";
-import { useRenderingStore, useUserStore } from "@/hooks";
+import { useUserStore, useFetchEffieBENew, useBrowserStore } from "@/hooks";
 import { FolderLinkDataArray } from "@/type";
 import { BrowserBreadcrumb } from "./components/browser-breadcrumb";
 
-import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
+import {} from "@/hooks";
 
 import Page404 from "@/features/page404";
 
@@ -28,7 +28,6 @@ import InfoIcon from "@/public/icons/info";
 import GridIcon from "@/public/icons/grid";
 import ListIcon from "@/public/icons/list";
 import { saveToCookie } from "@/helper";
-import { useRightContext } from "@/components/right-context";
 
 export default function Browser({
     response,
@@ -40,17 +39,17 @@ export default function Browser({
     let pathname: any;
 
     const subdomain = useUserStore((state: any) => state.subdomain);
-    const setPathname = useUserStore((state: any) => state.setPathname);
+    const setPathname = useBrowserStore((state: any) => state.setPathname);
 
     // browser state
-    const view = useUserStore((state: any) => state.view);
-    const setView = useUserStore((state: any) => state.setView);
+    const view = useBrowserStore((state: any) => state.view);
+    const setView = useBrowserStore((state: any) => state.setView);
 
-    const sortOption = useUserStore((state: any) => state.sortOption);
-    const setSortOption = useUserStore((state: any) => state.setSortOption);
+    const sortOption = useBrowserStore((state: any) => state.sortOption);
+    const setSortOption = useBrowserStore((state: any) => state.setSortOption);
 
-    const isSortAsc = useUserStore((state: any) => state.isSortAsc);
-    const setIsSortAsc = useUserStore((state: any) => state.setIsSortAsc);
+    const isSortAsc = useBrowserStore((state: any) => state.isSortAsc);
+    const setIsSortAsc = useBrowserStore((state: any) => state.setIsSortAsc);
 
     const [isNewLinkModalOpen, setIsNewLinkModalOpen] = useState(false);
     const [isNewFolderModalOpen, setIsNewFolderModalOpen] = useState(false);
@@ -476,12 +475,12 @@ export default function Browser({
                     onUpdate={() => setIsSomethingChanged(true)}
                 />
                 {/* # MODALS */}
-                <NewLink
+                <NewLinkModal
                     isOpen={isNewLinkModalOpen}
                     onClose={() => setIsNewLinkModalOpen(false)}
                     onNewItemCreated={() => setIsSomethingChanged(true)}
                 />
-                <NewFolder
+                <NewFolderModal
                     isOpen={isNewFolderModalOpen}
                     onClose={() => setIsNewFolderModalOpen(false)}
                     onNewItemCreated={() => setIsSomethingChanged(true)}

@@ -3,7 +3,7 @@ import { BE_BASE_URL } from "@/config";
 // TODO: update this to import from config only
 import { FE_DOMAIN, FE_TOP_LEVEL_DOMAIN } from "@/config/fe-config";
 
-import { useUserStore } from "@/hooks";
+import { useBrowserStore, useUserStore } from "@/hooks";
 import { useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/ui";
@@ -25,9 +25,9 @@ export default function GlobalStateSetter({
     const setSubdomain = useUserStore((state: any) => state.setSubdomain);
     const setPhotoURL = useUserStore((state: any) => state.setPhotoURL);
 
-    const setView = useUserStore((state: any) => state.setView);
-    const setSortOption = useUserStore((state: any) => state.setSortOption);
-    const setIsSortAsc = useUserStore((state: any) => state.setIsSortAsc);
+    const setView = useBrowserStore((state: any) => state.setView);
+    const setSortOption = useBrowserStore((state: any) => state.setSortOption);
+    const setIsSortAsc = useBrowserStore((state: any) => state.setIsSortAsc);
 
     // get effie_auth_token from cookie on first render
     useEffect(() => {

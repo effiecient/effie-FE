@@ -1,11 +1,11 @@
-import { useRenderingStore, useUserStore, useWindowSize } from "@/hooks";
+import { useBrowserStore, useUserStore, useWindowSize } from "@/hooks";
 import { Breadcrumb } from "@/ui";
 import { useEffect, useState } from "react";
 
 export const BrowserBreadcrumb = ({ onBreadcrumbClick }: any) => {
     const subdomain = useUserStore((state: any) => state.subdomain);
     console.log("subdomain", subdomain);
-    const pathname = useUserStore((state: any) => state.pathname);
+    const pathname = useBrowserStore((state: any) => state.pathname);
 
     const [location, setLocation] = useState<any>([]);
 
@@ -14,8 +14,6 @@ export const BrowserBreadcrumb = ({ onBreadcrumbClick }: any) => {
     }, [pathname]);
 
     const { width = 768 } = useWindowSize();
-
-    console.log("location", location);
 
     return (
         <div className="flex">

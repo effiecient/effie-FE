@@ -1,6 +1,6 @@
 import { FolderLinkData } from "@/type";
 
-import Modal from "../../../../components/modal";
+import Modal from "@/ui/modal";
 
 import { useWindowSize } from "@/hooks";
 import { RightSideBar } from "./right-side-bar";
@@ -26,25 +26,37 @@ export default function RightSideBarProperties({
     // use modal when screen size is small
     const { width = 976 } = useWindowSize();
     const isSmallScreen = width < 976;
+
     return (
-        <>
-            {isSmallScreen ? (
-                <Modal isOpen={isOpen} onClose={onClose}>
-                    <Content
-                        itemData={itemData}
-                        relativePath={relativePath}
-                        onUpdate={onUpdate}
-                    />
-                </Modal>
-            ) : (
-                <RightSideBar isOpen={isOpen} className={`${className} h-full`}>
-                    <Content
-                        itemData={itemData}
-                        relativePath={relativePath}
-                        onUpdate={onUpdate}
-                    />
-                </RightSideBar>
-            )}
-        </>
+        <AlternateParent
+            parent={isSmallScreen ? Modal : RightSideBar}
+            isOpen={isOpen}
+            onClose={onClose}
+            className={`${className} ${!isSmallScreen && "h-full"}`}
+        >
+            <Content
+                itemData={itemData}
+                relativePath={relativePath}
+                onUpdate={onUpdate}
+            />
+        </AlternateParent>
     );
 }
+
+type alternateParentProps = {
+    parent: React.ComponentType<any>;
+};
+
+const AlternateParent = (props: any) => {
+    const { parent: Parent } = props;
+
+    // filter out Parent from props
+    const passedProps = Object.keys(props)
+        .filter((key) => key !== "parent")
+        .reduce((obj: any, key: any) => {
+            obj[key] = props[key];
+            return obj;
+        }, {});
+
+    return <Parent {...passedProps} />;
+};

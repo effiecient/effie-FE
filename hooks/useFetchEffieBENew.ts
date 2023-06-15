@@ -29,7 +29,6 @@ const initialFetchState = {
 
 export function useFetchEffieBENew(): [any, any] {
     const [state, setState] = useLegacyState(initialFetchState);
-    const [previousProps, setPreviousProps] = useState<any>({});
     const useCalled = ({ auth, url = "", method = "GET", body }: Props) => {
         setState({
             isError: false,

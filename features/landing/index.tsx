@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { Button } from "@/ui";
 // import { useState } from "react";
-import Footer from "./footer";
+import Footer from "./components/footer";
 import Image from "next/image";
 import LP1 from "@/public/images/lp1.png";
 import LP2 from "@/public/images/lp2.png";

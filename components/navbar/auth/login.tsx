@@ -6,7 +6,7 @@ import { initializeApp } from "firebase/app";
 import { useState } from "react";
 
 import { BE_BASE_URL, FIREBASE_CONFIG } from "@/config";
-import { useRenderingStore, useUserStore } from "@/hooks";
+import { useSnackbarStore, useUserStore } from "@/hooks";
 import { useRouter } from "next/router";
 
 // TODO: update this to import from config only
@@ -36,16 +36,16 @@ export default function Login({ isOpen, onClose }: LoginProps) {
     const pathname = useUserStore((state: any) => state.pathname);
 
     const router = useRouter();
-    const setShowSnackbar = useRenderingStore(
+    const setShowSnackbar = useSnackbarStore(
         (state: any) => state.setShowSnackbar
     );
-    const setSsnackbarType = useRenderingStore(
+    const setSsnackbarType = useSnackbarStore(
         (state: any) => state.setSnackbarType
     );
-    const setSnackbarTitle = useRenderingStore(
+    const setSnackbarTitle = useSnackbarStore(
         (state: any) => state.setSnackbarTitle
     );
-    const setSnackbarMessage = useRenderingStore(
+    const setSnackbarMessage = useSnackbarStore(
         (state: any) => state.setSnackbarMessage
     );
 

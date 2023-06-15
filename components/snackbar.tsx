@@ -5,22 +5,20 @@ import successIcon from "@/public/icons/success_green.svg";
 import Image from "next/image";
 import CrossIcon from "@/public/icons/cross";
 import { use, useEffect, useRef } from "react";
-import { useRenderingStore } from "@/hooks";
+import { useSnackbarStore } from "@/hooks";
 type SnackbarProps = {
     className?: string;
 };
 
 export default function Snackbar({ className }: SnackbarProps) {
-    const showSnackbar = useRenderingStore((state: any) => state.showSnackbar);
-    const setShowSnackbar = useRenderingStore(
+    const showSnackbar = useSnackbarStore((state: any) => state.showSnackbar);
+    const setShowSnackbar = useSnackbarStore(
         (state: any) => state.setShowSnackbar
     );
 
-    const snackbarType = useRenderingStore((state: any) => state.snackbarType);
-    const snackbarTitle = useRenderingStore(
-        (state: any) => state.snackbarTitle
-    );
-    const snackbarMessage = useRenderingStore(
+    const snackbarType = useSnackbarStore((state: any) => state.snackbarType);
+    const snackbarTitle = useSnackbarStore((state: any) => state.snackbarTitle);
+    const snackbarMessage = useSnackbarStore(
         (state: any) => state.snackbarMessage
     );
 

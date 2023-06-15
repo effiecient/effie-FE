@@ -1,18 +1,15 @@
 import { useRef } from "react";
 import Image from "next/image";
-// import NewLink from "./create-modal/new-link";
-// import NewFolder from "./create-modal/new-folder";
 import { FE_BASE_URL, FE_PROTOCOL } from "@/config";
-import { useRenderingStore, useUserStore } from "@/hooks";
-// import { useRouter } from "next/router";
+import { useBrowserStore, useSnackbarStore, useUserStore } from "@/hooks";
 import { FolderLinkData } from "@/type";
 import NewFolderIcon from "@/public/icons/new-folder";
 import NewLinkIcon from "@/public/icons/new-link";
-import CopyButton from "./copy-button";
+import CopyButton from "../../../components/copy-button";
 import PinIcon from "@/public/icons/pin";
 import DirectoriesIcon from "@/public/icons/directories";
 import LinkIcon from "@/public/icons/link";
-import { useRightContext } from "./right-context";
+import { useRightContext } from "../../../components/right-context";
 
 type DirectoryItemCardProps = {
     content:
@@ -43,7 +40,7 @@ export default function DirectoryItemCard({
     view,
     disabled = false,
 }: DirectoryItemCardProps) {
-    let pathname = useUserStore((state: any) => state.pathname);
+    let pathname = useBrowserStore((state: any) => state.pathname);
     let subdomain = useUserStore((state: any) => state.subdomain);
     const { setOptions, handleRightClick } = useRightContext();
 

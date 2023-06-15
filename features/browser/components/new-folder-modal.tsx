@@ -1,28 +1,31 @@
 import { useState, useEffect, useRef } from "react";
 import { Button, LoadingAnimation, Modal } from "@/ui";
-import DirectoryItemCard from "../directory-item-card";
 import { BE_BASE_URL } from "@/config/be-config";
 import { FE_BASE_URL } from "@/config";
 import Image from "next/image";
-import { useRouter } from "next/router";
-import { useFetchEffieBENew, useRenderingStore, useUserStore } from "@/hooks";
+import {
+    useBrowserStore,
+    useFetchEffieBENew,
+    useSnackbarStore,
+    useUserStore,
+} from "@/hooks";
 
-type NewFolderProps = {
+type NewFolderModalProps = {
     isOpen: boolean;
     onClose: () => void;
     onNewItemCreated: () => void;
 };
 
-export default function NewFolder({
+export function NewFolderModal({
     isOpen,
     onClose,
     onNewItemCreated,
-}: NewFolderProps) {
+}: NewFolderModalProps) {
     // USER CONSTANTS
     const subdomain = useUserStore((state: any) => state.subdomain);
     const USER_BASE_URL = `${subdomain}.${FE_BASE_URL}/`;
 
-    const pathname = useUserStore((state: any) => state.pathname);
+    const pathname = useBrowserStore((state: any) => state.pathname);
     const currPathArray = pathname
         .split("/")
         .slice(1)
@@ -34,16 +37,16 @@ export default function NewFolder({
     const [{ isLoading, isError, response, fetchStarted }, fetcher] =
         useFetchEffieBENew();
 
-    const setShowSnackbar = useRenderingStore(
+    const setShowSnackbar = useSnackbarStore(
         (state: any) => state.setShowSnackbar
     );
-    const setSsnackbarType = useRenderingStore(
+    const setSsnackbarType = useSnackbarStore(
         (state: any) => state.setSnackbarType
     );
-    const setSnackbarTitle = useRenderingStore(
+    const setSnackbarTitle = useSnackbarStore(
         (state: any) => state.setSnackbarTitle
     );
-    const setSnackbarMessage = useRenderingStore(
+    const setSnackbarMessage = useSnackbarStore(
         (state: any) => state.setSnackbarMessage
     );
     useEffect(() => {
@@ -174,14 +177,6 @@ export default function NewFolder({
                             className="input"
                         />
                     </div>
-                    {/* TODO: adapt to the new directory item card to follow product on figma */}
-                    {/* <DirectoryItemCard
-                        content="display link"
-                        title={title}
-                        url={linkNameRef.current?.value || ""}
-                        effieUrl=""
-                        className="h-fit"
-                    /> */}
                 </div>
             </form>
         </Modal>

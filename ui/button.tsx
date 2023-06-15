@@ -1,4 +1,4 @@
-import { useRenderingStore } from "@/hooks";
+import { useSnackbarStore } from "@/hooks";
 
 type ButtonProps = {
     type?: "default" | "danger" | "success" | "warning" | "info" | "custom";

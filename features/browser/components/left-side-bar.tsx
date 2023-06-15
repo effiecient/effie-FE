@@ -1,4 +1,4 @@
-import { useRenderingStore } from "@/hooks";
+import { useSnackbarStore } from "@/hooks";
 import NewFolderIcon from "@/public/icons/new-folder";
 import NewLinkIcon from "@/public/icons/new-link";
 

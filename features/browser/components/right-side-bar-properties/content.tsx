@@ -8,7 +8,7 @@ import { Button, Input, Select } from "@/ui";
 
 import { BE_BASE_URL, FE_BASE_URL, FE_PROTOCOL } from "@/config";
 
-import { useUserStore } from "@/hooks";
+import { useBrowserStore, useUserStore } from "@/hooks";
 
 import editIcon from "@/public/icons/edit.svg";
 import trashIcon from "@/public/icons/trash.svg";
@@ -42,7 +42,7 @@ export function useLegacyState<T>(initialState: any) {
 
 export const Content = ({ itemData, relativePath, onUpdate }: any) => {
     const subdomain = useUserStore((state: any) => state.subdomain);
-    const pathname = useUserStore((state: any) => state.pathname);
+    const pathname = useBrowserStore((state: any) => state.pathname);
 
     const [isInEditMode, setIsInEditMode] = useState(false);
 

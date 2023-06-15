@@ -7,7 +7,7 @@ import { initializeApp } from "firebase/app";
 
 import { FIREBASE_CONFIG, BE_BASE_URL } from "@/config";
 import { useRouter } from "next/router";
-import { useFetchEffieBENew, useRenderingStore } from "@/hooks";
+import { useFetchEffieBENew, useSnackbarStore } from "@/hooks";
 import { useState } from "react";
 
 type RegisterProps = {
@@ -23,16 +23,16 @@ export default function Register({ isOpen, onClose }: RegisterProps) {
     const provider = new GoogleAuthProvider();
     const router = useRouter();
 
-    const setShowSnackbar = useRenderingStore(
+    const setShowSnackbar = useSnackbarStore(
         (state: any) => state.setShowSnackbar
     );
-    const setSsnackbarType = useRenderingStore(
+    const setSsnackbarType = useSnackbarStore(
         (state: any) => state.setSnackbarType
     );
-    const setSnackbarTitle = useRenderingStore(
+    const setSnackbarTitle = useSnackbarStore(
         (state: any) => state.setSnackbarTitle
     );
-    const setSnackbarMessage = useRenderingStore(
+    const setSnackbarMessage = useSnackbarStore(
         (state: any) => state.setSnackbarMessage
     );
     const [{ isLoading, isError, response, fetchStarted }, fetcher] =
