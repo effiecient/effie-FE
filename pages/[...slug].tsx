@@ -27,13 +27,10 @@ export default function Directory({
         isError,
         response,
     };
-    console.log("globalStateSetterProps", globalStateSetterProps);
-    console.log("browserProps", browserProps);
 
     return (
         <GlobalStateSetter {...globalStateSetterProps}>
             <Browser {...browserProps} />
-            <Snackbar className="z-50" />
         </GlobalStateSetter>
     );
 }

@@ -30,7 +30,6 @@ export default function Index({
         return (
             <GlobalStateSetter {...globalStateSetterProps}>
                 <Browser {...browserProps} />
-                <Snackbar className="z-50" />
             </GlobalStateSetter>
         );
     } else {
@@ -38,7 +37,6 @@ export default function Index({
             return (
                 <GlobalStateSetter {...globalStateSetterProps}>
                     <QuickCreate />
-                    <Snackbar className="z-50" />
                 </GlobalStateSetter>
             );
         } else {

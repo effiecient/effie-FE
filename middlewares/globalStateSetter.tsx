@@ -6,7 +6,7 @@ import { useUserStore } from "@/hooks";
 import { saveToCookie } from "@/helper";
 import { EFFIE_AUTH_TOKEN } from "@/constants";
 
-// used to set isLoggedIn, username, isSubdomain, subdomain
+// set fetched data into zustand store
 export default function GlobalStateSetter({
     children,
     isLoggedIn,

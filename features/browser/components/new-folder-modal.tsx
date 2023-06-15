@@ -131,6 +131,7 @@ export function NewFolderModal({
                         className="input text-lg text-primary-500 font-bold flex-grow"
                         autoFocus
                         required
+                        autoComplete="off"
                     />
                     <Button
                         className="md:ml-4 h-[2.7rem] px-4 w-24"
@@ -175,6 +176,7 @@ export function NewFolderModal({
                             name="title"
                             placeholder="Custom Title"
                             className="input"
+                            autoComplete="off"
                         />
                     </div>
                 </div>

@@ -3,7 +3,12 @@ import Image from "next/image";
 
 import { useState, useEffect } from "react";
 
-import { Navbar, DirectoryItemCard, RightContext } from "@/components";
+import {
+    Navbar,
+    DirectoryItemCard,
+    RightContext,
+    Snackbar,
+} from "@/components";
 
 import { NewLinkModal, NewFolderModal } from "./components";
 import LeftSideBar from "./components/left-side-bar";
@@ -36,11 +41,8 @@ export default function Browser({
     const [
         setPathname,
         view,
-        setView,
         sortOption,
-        setSortOption,
         isSortAsc,
-        setIsSortAsc,
         isNewLinkModalOpen,
         setIsNewLinkModalOpen,
         isNewFolderModalOpen,
@@ -53,11 +55,8 @@ export default function Browser({
         (state: any) => [
             state.setPathname,
             state.view,
-            state.setView,
             state.sortOption,
-            state.setSortOption,
             state.isSortAsc,
-            state.setIsSortAsc,
             state.isNewLinkModalOpen,
             state.setIsNewLinkModalOpen,
             state.isNewFolderModalOpen,
@@ -358,6 +357,7 @@ export default function Browser({
                     onClose={() => setIsKeyboardShortcutsModalOpen(false)}
                 /> */}
             </main>
+            <Snackbar className="z-50" />
         </>
     );
 }

@@ -135,6 +135,7 @@ export function NewLinkModal({
                         className="input text-lg text-primary-500 font-bold flex-grow"
                         autoFocus
                         required
+                        autoComplete="off"
                     />
                 </div>
                 <div className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
@@ -146,6 +147,7 @@ export function NewLinkModal({
                         required
                         className="input flex-grow"
                         onBlur={onURLblur}
+                        autoComplete="off"
                     />
                     <Button
                         className="h-8 w-24"
@@ -190,6 +192,7 @@ export function NewLinkModal({
                             name="title"
                             placeholder="Custom Title"
                             className="input"
+                            autoComplete="off"
                         />
                     </div>
                 </div>

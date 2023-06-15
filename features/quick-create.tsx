@@ -5,7 +5,7 @@ import { BE_BASE_URL } from "@/config/be-config";
 import Image from "next/image";
 import Head from "next/head";
 import { useFetchEffieBENew, useSnackbarStore, useUserStore } from "@/hooks";
-import { Navbar } from "@/components";
+import { Navbar, Snackbar } from "@/components";
 
 export default function QuickCreate() {
     const username = useUserStore((state: any) => state.username);
@@ -188,6 +188,7 @@ export default function QuickCreate() {
                     </form>
                 </div>
             </div>
+            <Snackbar className="z-50" />
         </>
     );
 }
