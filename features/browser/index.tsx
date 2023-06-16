@@ -34,11 +34,10 @@ export default function Browser({
     response: any;
     isError: any;
 }) {
-    let pathname: any;
-
     const subdomain = useUserStore((state: any) => state.subdomain);
 
     const [
+        pathname,
         setPathname,
         view,
         sortOption,
@@ -53,6 +52,7 @@ export default function Browser({
         setFocusedItemData,
     ] = useBrowserStore(
         (state: any) => [
+            state.pathname,
             state.setPathname,
             state.view,
             state.sortOption,
@@ -69,7 +69,6 @@ export default function Browser({
         shallow
     );
 
-    // const [focusedItemData, setFocusedItemData] = useState<any>(undefined);
     const [isSomethingChanged, setIsSomethingChanged] =
         useState<boolean>(false);
 
@@ -80,38 +79,20 @@ export default function Browser({
         setIsNewFolderModalOpen(true);
     };
     const handleDirectoryCardClick = (child: any) => {
-        let newUrl = window.location.origin;
-        //  check if pathame start with /. if not, append / to new url
-        if (pathname[0] !== "/" && pathname !== "") {
-            newUrl += "/";
-        }
-        newUrl += `${pathname}/${child}`;
-
-        window.history.replaceState(null, "", newUrl);
-        updatePathname();
+        let newPathname = `${
+            pathname[pathname.length - 1] === "/" ? pathname : pathname + "/"
+        }${child}`;
+        setPathname(newPathname);
         setIsSomethingChanged(true);
     };
-    const handleBreadcrumbClick = (newUrl: any) => {
-        // change path without rerendering
-        window.history.replaceState(null, "", newUrl);
-        updatePathname();
-
+    const handleBreadcrumbClick = (newPathname: any) => {
+        setPathname(newPathname);
         setIsSomethingChanged(true);
     };
 
-    const updatePathname = () => {
-        if (typeof window !== "undefined") {
-            pathname = window.location.pathname;
-            // remove / in the front if exists
-            if (pathname[0] === "/") {
-                pathname = pathname.slice(1);
-            }
-            setPathname(pathname);
-        }
-    };
-    updatePathname();
-
-    const fetchURL = `${BE_BASE_URL}/directory/${subdomain}/${pathname}`;
+    useEffect(() => {
+        setPathname(window.location.pathname);
+    }, []);
 
     // refetch
     const [
@@ -127,12 +108,22 @@ export default function Browser({
     // handle when something is changed
     // 1. refetch when something is changed
     useEffect(() => {
+        // based on the value of isSomethingChanged, and pathname, will:
+        // 1. refetch
+        // 2. update window.location if pathname is different
         if (!isSomethingChanged) {
             return;
         } else {
+            const fetchURL = `${BE_BASE_URL}/directory/${subdomain}${pathname}`;
+
             refetcher({
                 url: fetchURL,
             });
+
+            if (window.location.pathname !== pathname) {
+                let newUrl = window.location.origin + pathname;
+                window.history.replaceState(null, "", newUrl);
+            }
         }
     }, [isSomethingChanged]);
 

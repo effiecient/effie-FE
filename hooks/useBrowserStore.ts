@@ -2,7 +2,7 @@ import { create } from "zustand";
 
 // settings that only affect the browser
 export const useBrowserStore = create((set) => ({
-    pathname: "",
+    pathname: "/", // convention: always start with /
     view: "grid",
     sortOption: "name",
     isSortAsc: true,

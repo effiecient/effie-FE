@@ -26,6 +26,9 @@ export function NewFolderModal({
     const USER_BASE_URL = `${subdomain}.${FE_BASE_URL}/`;
 
     const pathname = useBrowserStore((state: any) => state.pathname);
+
+    console.log("pathname", pathname);
+    
     const currPathArray = pathname
         .split("/")
         .slice(1)
