@@ -26,7 +26,7 @@ export function RightSideBarProperties({
         setIsRightSideBarPropertiesOpen(false);
     };
     return (
-        width && (
+        (width && (
             <AlternateParent
                 parent={width < 976 ? Modal : RightSideBar}
                 isOpen={isRightSideBarPropertiesOpen}
@@ -35,7 +35,7 @@ export function RightSideBarProperties({
             >
                 <Content />
             </AlternateParent>
-        )
+        )) || <></>
     );
 }
 
