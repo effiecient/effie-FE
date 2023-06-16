@@ -22,20 +22,23 @@ import drawerImage from "@/public/images/drawer.svg";
 import { useFetchEffieBE } from "@/hooks";
 
 import { getObjectDifferences, checkIfObjectSame } from "@/utils";
-import { ConfirmationModal } from "@/components";
 import { useLegacyState } from "@/hooks";
 
 const ShareConfigurationOptions = ["none", "viewer", "editor"];
 
 export const Content = () => {
     const subdomain = useUserStore((state: any) => state.subdomain);
-    const [pathname, focusedItemData, setDoRefetch] = useBrowserStore(
-        (state: any) => [
-            state.pathname,
-            state.focusedItemData,
-            state.setDoRefetch,
-        ]
-    );
+    const [
+        pathname,
+        focusedItemData,
+        setDoRefetch,
+        setIsConfirmationModalOpen,
+    ] = useBrowserStore((state: any) => [
+        state.pathname,
+        state.focusedItemData,
+        state.setDoRefetch,
+        state.setIsConfirmationModalOpen,
+    ]);
     const [{ isLoading, isError, response }, fetcher] = useFetchEffieBE();
 
     const [localPathname, setLocalPathname] = useState(pathname);
@@ -53,8 +56,6 @@ export const Content = () => {
     // right side bar variable
     const [isInEditMode, setIsInEditMode] = useState(false);
     const [isChanged, setIsChanged] = useState(false);
-    const [isConfirmationModalOpen, setIsConfirmationModalOpen] =
-        useState(false);
 
     const [editedItemData, setEditedItemData] =
         useLegacyState<any>(focusedItemData);
@@ -152,13 +153,11 @@ export const Content = () => {
 
     // handle update
     useEffect(() => {
-        if (startUpdate || startDelete) {
+        if (startUpdate) {
             if (isError) {
                 setShowSnackbar(true);
                 setSnackbarType("error");
-                setSnackbarTitle(
-                    startUpdate ? "Update error!" : "Delete error!"
-                );
+                setSnackbarTitle("Update error!");
                 setSnackbarMessage(response.message);
                 setStartUpdate(false);
                 setIsInEditMode(true);
@@ -169,19 +168,7 @@ export const Content = () => {
                 setDoRefetch(true);
             }
         }
-    }, [isLoading, isError, response]);
-
-    // Handle delete
-    const [startDelete, setStartDelete] = useState(false);
-
-    useEffect(() => {
-        if (startDelete) {
-            fetcher({
-                url: `${BE_BASE_URL}/directory/${subdomain}${pathnameWithRelativePath}`,
-                method: "DELETE",
-            });
-        }
-    }, [startDelete]);
+    }, [isLoading]);
 
     function handleSaveButtonClick() {
         setStartUpdate(true);
@@ -189,11 +176,6 @@ export const Content = () => {
 
     function handleDeleteButtonClick() {
         setIsConfirmationModalOpen(true);
-    }
-
-    function handleDeleteConfirm() {
-        setStartDelete(true);
-        setIsConfirmationModalOpen(false);
     }
 
     return (
@@ -614,14 +596,6 @@ export const Content = () => {
                         )}
                     </div>
                 </>
-            )}
-            {isConfirmationModalOpen && (
-                <ConfirmationModal
-                    name={focusedItemData.relativePath}
-                    isOpen={isConfirmationModalOpen}
-                    onClose={() => setIsConfirmationModalOpen(false)}
-                    onConfirm={handleDeleteConfirm}
-                />
             )}
         </>
     );

@@ -25,7 +25,7 @@ type DirectoryItemCardProps = {
     disabled?: boolean;
 };
 
-export default function DirectoryItemCard({
+export function DirectoryItemCard({
     content,
     DirectoryItemData,
     className,

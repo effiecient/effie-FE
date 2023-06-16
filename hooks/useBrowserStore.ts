@@ -12,6 +12,7 @@ export const useBrowserStore = create((set) => ({
     focusedItemData: undefined,
     doRefetch: false,
     currentDirectoryData: undefined,
+    isConfirmationModalOpen: false,
     setPathname: (pathname: string) => set(() => ({ pathname })),
     setView: (view: string) => set(() => ({ view })),
     setSortOption: (sortOption: string) => set(() => ({ sortOption })),
@@ -26,6 +27,8 @@ export const useBrowserStore = create((set) => ({
     setDoRefetch: (by: boolean) => set(() => ({ doRefetch: by })),
     setCurrentDirectoryData: (data: any) =>
         set(() => ({ currentDirectoryData: data })),
+    setIsConfirmationModalOpen: (by: boolean) =>
+        set(() => ({ isConfirmationModalOpen: by })),
 }));
 
 export default useBrowserStore;

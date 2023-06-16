@@ -7,12 +7,7 @@ import { BE_BASE_URL } from "@/config/be-config";
 import { useUserStore, useFetchEffieBE, useBrowserStore } from "@/hooks";
 
 // global
-import {
-    Navbar,
-    DirectoryItemCard,
-    RightContext,
-    Snackbar,
-} from "@/components";
+import { Navbar, RightContext, Snackbar } from "@/components";
 import Page404 from "@/features/page404";
 
 // local
@@ -22,6 +17,8 @@ import {
     LeftSideBar,
     NewLinkModal,
     NewFolderModal,
+    DirectoryItemCard,
+    ConfirmationModal,
 } from "./components";
 import { sortDataToFolderAndLink } from "./utils/sortDataToFolderAndLink";
 
@@ -286,6 +283,7 @@ export default function Browser({
                 {/* # MODALS */}
                 <NewLinkModal />
                 <NewFolderModal />
+                <ConfirmationModal />
                 <RightContext />
                 {/* <KeyboardShortcuts
                     isOpen={isKeyboardShortcutsModalOpen}
