@@ -8,7 +8,7 @@ import { Button, Input, Select } from "@/ui";
 
 import { BE_BASE_URL, FE_BASE_URL, FE_PROTOCOL } from "@/config";
 
-import { useBrowserStore, useUserStore } from "@/hooks";
+import { useBrowserStore, useSnackbarStore, useUserStore } from "@/hooks";
 
 import editIcon from "@/public/icons/edit.svg";
 import trashIcon from "@/public/icons/trash.svg";
@@ -23,32 +23,9 @@ import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
 
 import { getObjectDifferences, checkIfObjectSame } from "@/utils";
 import { ConfirmationModal } from "@/components";
+import { useLegacyState } from "@/hooks";
 
 const ShareConfigurationOptions = ["none", "viewer", "editor"];
-
-export function useLegacyState<T>(initialState: any) {
-    // for object, only update key that is changed
-    const [state, setState] = useState<T>(initialState);
-    const setLegacyState: any = (
-        newState: any,
-        clearPreviousState: boolean = false
-    ) => {
-        setState((prevState: any) => {
-            // if clear is true, then don't include the previous state
-            if (clearPreviousState) {
-                return {
-                    ...newState,
-                };
-            } else {
-                return {
-                    ...prevState,
-                    ...newState,
-                };
-            }
-        });
-    };
-    return [state, setLegacyState];
-}
 
 export const Content = () => {
     const subdomain = useUserStore((state: any) => state.subdomain);
@@ -59,7 +36,21 @@ export const Content = () => {
             state.setDoRefetch,
         ]
     );
+    const [{ isLoading, isError, response, fetchStarted }, fetcher] =
+        useFetchEffieBENew();
 
+    const [localPathname, setLocalPathname] = useState(pathname);
+    const [
+        setShowSnackbar,
+        setSnackbarType,
+        setSnackbarTitle,
+        setSnackbarMessage,
+    ] = useSnackbarStore((state: any) => [
+        state.setShowSnackbar,
+        state.setSnackbarType,
+        state.setSnackbarTitle,
+        state.setSnackbarMessage,
+    ]);
     // right side bar variable
     const [isInEditMode, setIsInEditMode] = useState(false);
     const [isChanged, setIsChanged] = useState(false);
@@ -73,7 +64,7 @@ export const Content = () => {
         useState("");
     const [effieLink, setEffieLink] = useState("");
 
-    const [localPathname, setLocalPathname] = useState(pathname);
+    const [startUpdate, setStartUpdate] = useState(false);
 
     // reset everything when the focusedItemData is changed
     useEffect(() => {
@@ -99,8 +90,6 @@ export const Content = () => {
         } else {
             tempLocalPathname = pathname;
         }
-        console.log("tempLocalPathname", tempLocalPathname);
-        console.log("focusedItemData", focusedItemData);
         setLocalPathname(tempLocalPathname);
 
         let tempPathnameWithRelativePath = `${tempLocalPathname}${
@@ -126,7 +115,7 @@ export const Content = () => {
         }
     }, [isInEditMode]);
 
-    // set isChanged
+    // set isChanged when the editedItemData is changed
     useEffect(() => {
         // check if the focusedItemData and editedItemData are the same
         const isSame = checkIfObjectSame(focusedItemData, editedItemData);
@@ -135,14 +124,8 @@ export const Content = () => {
         setIsChanged(!isSame);
     }, [editedItemData]);
 
-    const [{ isLoading, isError, response, fetchStarted }, fetcher] =
-        useFetchEffieBENew();
-
-    const [startUpdate, setStartUpdate] = useState(false);
-
     useEffect(() => {
         if (startUpdate) {
-            // console.log(editedItemData);
             let focusedItemDataDifferences = getObjectDifferences(
                 focusedItemData,
                 editedItemData
@@ -170,10 +153,16 @@ export const Content = () => {
 
     // handle update
     useEffect(() => {
-        if (startUpdate) {
+        if (startUpdate || startDelete) {
             if (isError) {
+                setShowSnackbar(true);
+                setSnackbarType("error");
+                setSnackbarTitle(
+                    startUpdate ? "Update error!" : "Delete error!"
+                );
+                setSnackbarMessage(response.message);
                 setStartUpdate(false);
-                setIsInEditMode(false);
+                setIsInEditMode(true);
             } else if (isLoading || !fetchStarted) {
             } else {
                 setStartUpdate(false);
