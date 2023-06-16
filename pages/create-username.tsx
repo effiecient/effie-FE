@@ -41,7 +41,6 @@ export default function CreateUsername() {
             isLoading: isLoadingUsername,
             isError: isErrorUsername,
             response: responseUsername,
-            fetchStarted: fetchStartedUsername,
         },
         fetcherUsername,
     ] = useFetchEffieBENew();
@@ -81,7 +80,7 @@ export default function CreateUsername() {
 
     // Handle aftermath of creating username
     useEffect(() => {
-        if (fetchStartedUsername === true && isLoadingUsername === false) {
+        if (isLoadingUsername === false) {
             // Data is ready
             if (responseUsername.status === BE_STATUS_SUCCESS) {
                 setIsInputtingUsername(true);
@@ -99,8 +98,7 @@ export default function CreateUsername() {
     }, [isLoadingUsername]);
 
     // Handle Logging in
-    const [{ isLoading, isError, response, fetchStarted }, fetcher] =
-        useFetchEffieBENew();
+    const [{ isLoading, isError, response }, fetcher] = useFetchEffieBENew();
     function doEffieLogin(accessToken: any, uid: any, photoURL: any) {
         fetcher({
             url: `${BE_BASE_URL}/user/login-google`,
@@ -133,7 +131,7 @@ export default function CreateUsername() {
                 </div>
             );
         }
-        if (isLoading || !fetchStarted) {
+        if (isLoading) {
             return (
                 <div className="h-screen w-screen flex flex-col items-center justify-center">
                     <div className="h-1/6  w-1/6 md:h-1/12 md:w-1/12">

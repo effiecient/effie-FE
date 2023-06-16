@@ -35,8 +35,7 @@ export default function Register({ isOpen, onClose }: RegisterProps) {
     const setSnackbarMessage = useSnackbarStore(
         (state: any) => state.setSnackbarMessage
     );
-    const [{ isLoading, isError, response, fetchStarted }, fetcher] =
-        useFetchEffieBENew();
+    const [{ isLoading, isError, response }, fetcher] = useFetchEffieBENew();
     const [doneGoogleLogin, setDoneGoogleLogin] = useState(false);
 
     function handleOnRegisterButtonClick() {
@@ -76,7 +75,7 @@ export default function Register({ isOpen, onClose }: RegisterProps) {
             setSsnackbarType("error");
             setSnackbarTitle("register error!");
             setSnackbarMessage(response.message);
-        } else if (isLoading || !fetchStarted) {
+        } else if (isLoading) {
             console.log("loading...");
         } else {
             if (!response.data.isRegistered) {
@@ -104,9 +103,9 @@ export default function Register({ isOpen, onClose }: RegisterProps) {
                 <h1 className="text-neutral-900">Create a new Effie account</h1>
                 <Button
                     onClick={handleOnRegisterButtonClick}
-                    disabled={doneGoogleLogin && (isLoading || !fetchStarted)}
+                    disabled={doneGoogleLogin && isLoading}
                 >
-                    {doneGoogleLogin && (isLoading || !fetchStarted)
+                    {doneGoogleLogin && isLoading
                         ? "Loading..."
                         : "Register with Google"}
                 </Button>

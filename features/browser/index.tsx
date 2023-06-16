@@ -73,7 +73,6 @@ export default function Browser({
             isLoading: isLoadingRefetch,
             isError: isErrorRefetch,
             response: responseRefetch,
-            fetchStarted: fetchStartedRefetch,
         },
         refetcher,
     ] = useFetchEffieBENew();
@@ -100,7 +99,7 @@ export default function Browser({
 
     // 2.
     useEffect(() => {
-        if (!isLoadingRefetch && fetchStartedRefetch) {
+        if (!isLoadingRefetch) {
             // update focused item data
 
             // if previously focus on current folder, then focus on current folder
@@ -123,7 +122,7 @@ export default function Browser({
 
             setDoRefetch(false);
         }
-    }, [isLoadingRefetch, fetchStartedRefetch]);
+    }, [isLoadingRefetch]);
 
     // return
     if (isError) {

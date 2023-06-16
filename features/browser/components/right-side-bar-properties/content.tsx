@@ -36,8 +36,7 @@ export const Content = () => {
             state.setDoRefetch,
         ]
     );
-    const [{ isLoading, isError, response, fetchStarted }, fetcher] =
-        useFetchEffieBENew();
+    const [{ isLoading, isError, response }, fetcher] = useFetchEffieBENew();
 
     const [localPathname, setLocalPathname] = useState(pathname);
     const [
@@ -163,14 +162,14 @@ export const Content = () => {
                 setSnackbarMessage(response.message);
                 setStartUpdate(false);
                 setIsInEditMode(true);
-            } else if (isLoading || !fetchStarted) {
+            } else if (isLoading) {
             } else {
                 setStartUpdate(false);
                 setIsInEditMode(false);
                 setDoRefetch(true);
             }
         }
-    }, [isLoading, isError, response, fetchStarted]);
+    }, [isLoading, isError, response]);
 
     // Handle delete
     const [startDelete, setStartDelete] = useState(false);
@@ -549,7 +548,7 @@ export const Content = () => {
                                     disabled={!isChanged}
                                 >
                                     {startUpdate ? (
-                                        isLoading || !fetchStarted ? (
+                                        isLoading ? (
                                             <div className="animate-pulse text-2xl flex">
                                                 ...
                                             </div>

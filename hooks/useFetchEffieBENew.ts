@@ -1,5 +1,4 @@
-import { useCallback, useMemo, useReducer, useState } from "react";
-import { EFFIE_AUTH_TOKEN } from "@/constants";
+import { useReducer } from "react";
 import { BE_STATUS_ERROR } from "@/config";
 import { getEffieAuthTokenFromCookie } from "@/helper";
 
@@ -24,7 +23,6 @@ const useLegacyState = (initialState: any) =>
 const initialFetchState = {
     isLoading: false,
     isError: false,
-    fetchStarted: false,
 };
 
 export function useFetchEffieBENew(): [any, any] {
@@ -33,7 +31,6 @@ export function useFetchEffieBENew(): [any, any] {
         setState({
             isError: false,
             isLoading: true,
-            fetchStarted: true,
         });
 
         const headers: any = {

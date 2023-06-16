@@ -49,8 +49,7 @@ export default function Login({ isOpen, onClose }: LoginProps) {
         (state: any) => state.setSnackbarMessage
     );
 
-    const [{ isLoading, isError, response, fetchStarted }, fetcher] =
-        useFetchEffieBENew();
+    const [{ isLoading, isError, response }, fetcher] = useFetchEffieBENew();
 
     const [doneGoogleLogin, setDoneGoogleLogin] = useState(false);
 
@@ -84,7 +83,7 @@ export default function Login({ isOpen, onClose }: LoginProps) {
             setSnackbarTitle("login error!");
             setSnackbarMessage(response.message);
             setDoneGoogleLogin(false);
-        } else if (isLoading || !fetchStarted) {
+        } else if (isLoading) {
         } else {
             // set token to local storage
             if (typeof localStorage !== "undefined") {
@@ -118,9 +117,9 @@ export default function Login({ isOpen, onClose }: LoginProps) {
 
             <Button
                 onClick={handleLoginButton}
-                disabled={doneGoogleLogin && (isLoading || !fetchStarted)}
+                disabled={doneGoogleLogin && isLoading}
             >
-                {doneGoogleLogin && (isLoading || !fetchStarted)
+                {doneGoogleLogin && isLoading
                     ? "Loading..."
                     : "Login with Google"}
             </Button>

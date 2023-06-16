@@ -31,8 +31,7 @@ export function NewLinkModal() {
     const [isMoreOptionsOpen, setIsMoreOptionsOpen] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
 
-    const [{ isLoading, isError, response, fetchStarted }, fetcher] =
-        useFetchEffieBENew();
+    const [{ isLoading, isError, response }, fetcher] = useFetchEffieBENew();
 
     const [
         setShowSnackbar,
@@ -102,7 +101,7 @@ export function NewLinkModal() {
             setSnackbarTitle("create new link error!");
             setSnackbarMessage(response.message);
             setIsSubmitted(false);
-        } else if (isLoading || !fetchStarted) {
+        } else if (isLoading) {
             console.log("Loading...");
         } else {
             setIsNewLinkModalOpen(false);
@@ -154,9 +153,9 @@ export function NewLinkModal() {
                     />
                     <Button
                         className="h-8 w-24"
-                        disabled={isSubmitted && (isLoading || !fetchStarted)}
+                        disabled={isSubmitted && isLoading}
                     >
-                        {isSubmitted && (isLoading || !fetchStarted) ? (
+                        {isSubmitted && isLoading ? (
                             <LoadingAnimation bg="rgb(var(--color-neutral-100))" />
                         ) : (
                             "Save Link"
