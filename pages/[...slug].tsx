@@ -27,6 +27,7 @@ export default function Directory({
         isError,
         response,
     };
+    console.log("response", response);
 
     return (
         <GlobalStateSetter {...globalStateSetterProps}>

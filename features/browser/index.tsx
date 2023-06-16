@@ -143,7 +143,7 @@ export default function Browser({
 
     // preprocess data to be shown
     let responseData = responseRefetch ? responseRefetch.data : response.data;
-    
+
     setCurrentDirectoryData(responseData);
 
     const { dataChildrenFolders, dataChildrenLinks } = sortDataToFolderAndLink(
@@ -281,13 +281,7 @@ export default function Browser({
                 {/* # header */}
                 {<BrowserHeader isLoadingRefetch={isLoadingRefetch} />}
                 {/* # right sidebar */}
-                <RightSideBarProperties
-                    onClose={() => setIsRightSideBarPropertiesOpen(false)}
-                    isOpen={isRightSideBarPropertiesOpen}
-                    itemData={focusedItemData}
-                    relativePath={focusedItemData?.relativePath}
-                    onUpdate={() => setDoRefetch(true)}
-                />
+                <RightSideBarProperties />
                 {/* # MODALS */}
                 <NewLinkModal
                     isOpen={isNewLinkModalOpen}

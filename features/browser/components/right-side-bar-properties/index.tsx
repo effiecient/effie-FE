@@ -2,61 +2,52 @@ import { FolderLinkData } from "@/type";
 
 import Modal from "@/ui/modal";
 
-import { useWindowSize } from "@/hooks";
+import { useBrowserStore, useWindowSize } from "@/hooks";
 import { RightSideBar } from "./right-side-bar";
 
 import { Content } from "./content";
 type RightSideBarPropertiesProps = {
-    isOpen: boolean;
-    itemData: FolderLinkData;
     className?: string;
-    relativePath: string;
-    onClose: () => void;
-    onUpdate: () => void;
 };
 
 export default function RightSideBarProperties({
-    onClose = () => {},
-    isOpen = false,
-    itemData,
     className,
-    relativePath,
-    onUpdate = () => {},
 }: RightSideBarPropertiesProps) {
     // use modal when screen size is small
     const { width = 976 } = useWindowSize();
     const isSmallScreen = width < 976;
 
+    const [isRightSideBarPropertiesOpen, setIsRightSideBarPropertiesOpen] =
+        useBrowserStore((state: any) => [
+            state.isRightSideBarPropertiesOpen,
+            state.setIsRightSideBarPropertiesOpen,
+        ]);
+
+    const handleClose = () => {
+        setIsRightSideBarPropertiesOpen(false);
+    };
     return (
         <AlternateParent
             parent={isSmallScreen ? Modal : RightSideBar}
-            isOpen={isOpen}
-            onClose={onClose}
+            isOpen={isRightSideBarPropertiesOpen}
+            onClose={handleClose}
             className={`${className} ${!isSmallScreen && "h-full"}`}
         >
-            <Content
-                itemData={itemData}
-                relativePath={relativePath}
-                onUpdate={onUpdate}
-            />
+            <Content />
         </AlternateParent>
     );
 }
 
 type alternateParentProps = {
     parent: React.ComponentType<any>;
+    [x: string]: any; // any other props
 };
 
-const AlternateParent = (props: any) => {
+const AlternateParent = (props: alternateParentProps) => {
     const { parent: Parent } = props;
 
     // filter out Parent from props
-    const passedProps = Object.keys(props)
-        .filter((key) => key !== "parent")
-        .reduce((obj: any, key: any) => {
-            obj[key] = props[key];
-            return obj;
-        }, {});
+    const passedProps = { ...props, parent: undefined };
 
     return <Parent {...passedProps} />;
 };

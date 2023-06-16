@@ -26,6 +26,7 @@ export default function Index({
         isError,
         response,
     };
+
     if (isSubdomain) {
         return (
             <GlobalStateSetter {...globalStateSetterProps}>

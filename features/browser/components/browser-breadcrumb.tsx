@@ -39,9 +39,9 @@ export const BrowserBreadcrumb = () => {
             <Breadcrumb
                 path={subdomain}
                 onClick={() => {
-                    // if last breadcrumb is clicked, focus on current directory
+                    // if root breadcrumb is clicked and in root, do nothing
                     if (location.length === 0) {
-                        setFocusedItemData(currentDirectoryData);
+                        return;
                     } else {
                         handleBreadcrumbClick(`/`);
                     }
