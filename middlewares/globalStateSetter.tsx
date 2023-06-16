@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 import { Button } from "@/ui";
@@ -15,6 +15,7 @@ export default function GlobalStateSetter({
     isSubdomain,
     subdomain,
 }: any) {
+    const [isGlobalSet, setIsGlobalSet] = useState(false);
     const setUsername = useUserStore((state: any) => state.setUsername);
     const setIsLoggedIn = useUserStore((state: any) => state.setIsLoggedIn);
     const setIsSubdomain = useUserStore((state: any) => state.setIsSubdomain);
@@ -36,6 +37,7 @@ export default function GlobalStateSetter({
             // set to cookie to be used accross subdomains. expire in 1 year
             saveToCookie(EFFIE_AUTH_TOKEN, authResponse.data.token);
         }
+        setIsGlobalSet(true);
     }, []);
 
     if (isLoggedIn && isAuthError) {
@@ -49,5 +51,5 @@ export default function GlobalStateSetter({
         );
     }
 
-    return children;
+    return <>{isGlobalSet && children}</>;
 }
