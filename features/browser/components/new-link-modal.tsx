@@ -3,7 +3,7 @@ import { Button, LoadingAnimation, Modal } from "@/ui";
 import { BE_BASE_URL } from "@/config/be-config";
 import {
     useBrowserStore,
-    useFetchEffieBENew,
+    useFetchEffieBE,
     useSnackbarStore,
     useUserStore,
 } from "@/hooks";
@@ -31,7 +31,7 @@ export function NewLinkModal() {
     const [isMoreOptionsOpen, setIsMoreOptionsOpen] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
 
-    const [{ isLoading, isError, response }, fetcher] = useFetchEffieBENew();
+    const [{ isLoading, isError, response }, fetcher] = useFetchEffieBE();
 
     const [
         setShowSnackbar,

@@ -7,7 +7,7 @@ import { initializeApp } from "firebase/app";
 
 import { FIREBASE_CONFIG, BE_BASE_URL } from "@/config";
 import { useRouter } from "next/router";
-import { useFetchEffieBENew, useSnackbarStore } from "@/hooks";
+import { useFetchEffieBE, useSnackbarStore } from "@/hooks";
 import { useState } from "react";
 
 type RegisterProps = {
@@ -35,7 +35,7 @@ export default function Register({ isOpen, onClose }: RegisterProps) {
     const setSnackbarMessage = useSnackbarStore(
         (state: any) => state.setSnackbarMessage
     );
-    const [{ isLoading, isError, response }, fetcher] = useFetchEffieBENew();
+    const [{ isLoading, isError, response }, fetcher] = useFetchEffieBE();
     const [doneGoogleLogin, setDoneGoogleLogin] = useState(false);
 
     function handleOnRegisterButtonClick() {

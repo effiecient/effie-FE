@@ -19,7 +19,7 @@ import pinBlackIcon from "@/public/icons/pin-black.svg";
 
 import drawerImage from "@/public/images/drawer.svg";
 
-import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
+import { useFetchEffieBE } from "@/hooks";
 
 import { getObjectDifferences, checkIfObjectSame } from "@/utils";
 import { ConfirmationModal } from "@/components";
@@ -36,7 +36,7 @@ export const Content = () => {
             state.setDoRefetch,
         ]
     );
-    const [{ isLoading, isError, response }, fetcher] = useFetchEffieBENew();
+    const [{ isLoading, isError, response }, fetcher] = useFetchEffieBE();
 
     const [localPathname, setLocalPathname] = useState(pathname);
     const [

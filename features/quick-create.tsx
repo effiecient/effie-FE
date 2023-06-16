@@ -4,7 +4,7 @@ import { Button, LoadingAnimation } from "@/ui";
 import { BE_BASE_URL } from "@/config/be-config";
 import Image from "next/image";
 import Head from "next/head";
-import { useFetchEffieBENew, useSnackbarStore, useUserStore } from "@/hooks";
+import { useFetchEffieBE, useSnackbarStore, useUserStore } from "@/hooks";
 import { Navbar, Snackbar } from "@/components";
 
 export default function QuickCreate() {
@@ -15,7 +15,7 @@ export default function QuickCreate() {
     const [isMoreOptionsOpen, setIsMoreOptionsOpen] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
 
-    const [{ isLoading, isError, response }, fetcher] = useFetchEffieBENew();
+    const [{ isLoading, isError, response }, fetcher] = useFetchEffieBE();
     const setShowSnackbar = useSnackbarStore(
         (state: any) => state.setShowSnackbar
     );

@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { shallow } from "zustand/shallow";
 
 import { BE_BASE_URL } from "@/config/be-config";
-import { useUserStore, useFetchEffieBENew, useBrowserStore } from "@/hooks";
+import { useUserStore, useFetchEffieBE, useBrowserStore } from "@/hooks";
 
 // global
 import {
@@ -75,7 +75,7 @@ export default function Browser({
             response: responseRefetch,
         },
         refetcher,
-    ] = useFetchEffieBENew();
+    ] = useFetchEffieBE();
 
     // based on the value of isSomethingChanged, and pathname, will:
     // 1. refetch

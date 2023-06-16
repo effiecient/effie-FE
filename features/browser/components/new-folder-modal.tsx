@@ -5,7 +5,7 @@ import { FE_BASE_URL } from "@/config";
 import Image from "next/image";
 import {
     useBrowserStore,
-    useFetchEffieBENew,
+    useFetchEffieBE,
     useSnackbarStore,
     useUserStore,
 } from "@/hooks";
@@ -35,7 +35,7 @@ export function NewFolderModal() {
     const [isMoreOptionsOpen, setIsMoreOptionsOpen] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
 
-    const [{ isLoading, isError, response }, fetcher] = useFetchEffieBENew();
+    const [{ isLoading, isError, response }, fetcher] = useFetchEffieBE();
 
     const setShowSnackbar = useSnackbarStore(
         (state: any) => state.setShowSnackbar

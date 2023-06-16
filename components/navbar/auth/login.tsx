@@ -18,7 +18,7 @@ import {
 } from "@/config/fe-config";
 
 import { EFFIE_AUTH_TOKEN } from "@/constants";
-import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
+import { useFetchEffieBE } from "@/hooks";
 type LoginProps = {
     isOpen: boolean;
     onClose: () => void;
@@ -49,7 +49,7 @@ export default function Login({ isOpen, onClose }: LoginProps) {
         (state: any) => state.setSnackbarMessage
     );
 
-    const [{ isLoading, isError, response }, fetcher] = useFetchEffieBENew();
+    const [{ isLoading, isError, response }, fetcher] = useFetchEffieBE();
 
     const [doneGoogleLogin, setDoneGoogleLogin] = useState(false);
 
