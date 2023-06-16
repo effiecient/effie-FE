@@ -10,21 +10,17 @@ import {
 import Image from "next/image";
 import { FE_BASE_URL } from "@/config";
 
-type NewLinkModalProps = {
-    isOpen: boolean;
-    onClose: () => void;
-    onNewItemCreated: () => void;
-};
-
-export function NewLinkModal({
-    isOpen,
-    onClose,
-    onNewItemCreated,
-}: NewLinkModalProps) {
+export function NewLinkModal() {
     // USER CONSTANTS
     const subdomain = useUserStore((state: any) => state.subdomain);
     const USER_BASE_URL = `${subdomain}.${FE_BASE_URL}/`;
-    const pathname = useBrowserStore((state: any) => state.pathname);
+    const [pathname, isNewLinkModalOpen, setIsNewLinkModalOpen, setDoRefetch] =
+        useBrowserStore((state: any) => [
+            state.pathname,
+            state.isNewLinkModalOpen,
+            state.setIsNewLinkModalOpen,
+            state.setDoRefetch,
+        ]);
     const currPathArray = pathname
         .split("/")
         .slice(1)
@@ -37,24 +33,27 @@ export function NewLinkModal({
 
     const [{ isLoading, isError, response, fetchStarted }, fetcher] =
         useFetchEffieBENew();
-    const setShowSnackbar = useSnackbarStore(
-        (state: any) => state.setShowSnackbar
-    );
-    const setSsnackbarType = useSnackbarStore(
-        (state: any) => state.setSnackbarType
-    );
-    const setSnackbarTitle = useSnackbarStore(
-        (state: any) => state.setSnackbarTitle
-    );
-    const setSnackbarMessage = useSnackbarStore(
-        (state: any) => state.setSnackbarMessage
-    );
+
+    const [
+        setShowSnackbar,
+        setSnackbarType,
+        setSnackbarTitle,
+        setSnackbarMessage,
+    ] = useSnackbarStore((state: any) => [
+        state.setShowSnackbar,
+        state.setSnackbarType,
+        state.setSnackbarTitle,
+        state.setSnackbarMessage,
+    ]);
+
     useEffect(() => {
-        const input = document.getElementById("link-name");
-        if (input) {
-            input.focus();
+        if (isNewLinkModalOpen) {
+            const input = document.getElementById("link-name");
+            if (input) {
+                input.focus();
+            }
         }
-    }, [isOpen]);
+    }, [isNewLinkModalOpen]);
 
     const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
         if (e.key === "Enter" || e.key === " ") {
@@ -64,8 +63,8 @@ export function NewLinkModal({
 
     const onURLblur = (e: React.FocusEvent<HTMLInputElement>) => {};
 
-    const closeModal = () => {
-        onClose();
+    const handleCloseModal = () => {
+        setIsNewLinkModalOpen(false);
         setIsMoreOptionsOpen(false);
     };
 
@@ -99,20 +98,24 @@ export function NewLinkModal({
     if (isSubmitted) {
         if (isError) {
             setShowSnackbar(true);
-            setSsnackbarType("error");
+            setSnackbarType("error");
             setSnackbarTitle("create new link error!");
             setSnackbarMessage(response.message);
             setIsSubmitted(false);
         } else if (isLoading || !fetchStarted) {
             console.log("Loading...");
         } else {
-            onNewItemCreated();
-            onClose();
+            setIsNewLinkModalOpen(false);
             setIsSubmitted(false);
+            setDoRefetch(true);
         }
     }
     return (
-        <Modal isOpen={isOpen} onClose={closeModal} onOutsideClick={closeModal}>
+        <Modal
+            isOpen={isNewLinkModalOpen}
+            onClose={handleCloseModal}
+            onOutsideClick={handleCloseModal}
+        >
             <h3 className="text-neutral-800 mb-8">New Link</h3>
             <form onSubmit={onSubmit}>
                 <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-0 mb-6">

@@ -10,7 +10,7 @@ type RightSideBarPropertiesProps = {
     className?: string;
 };
 
-export default function RightSideBarProperties({
+export function RightSideBarProperties({
     className,
 }: RightSideBarPropertiesProps) {
     // use modal when screen size is small

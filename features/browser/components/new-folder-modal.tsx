@@ -10,25 +10,23 @@ import {
     useUserStore,
 } from "@/hooks";
 
-type NewFolderModalProps = {
-    isOpen: boolean;
-    onClose: () => void;
-    onNewItemCreated: () => void;
-};
-
-export function NewFolderModal({
-    isOpen,
-    onClose,
-    onNewItemCreated,
-}: NewFolderModalProps) {
+export function NewFolderModal() {
     // USER CONSTANTS
     const subdomain = useUserStore((state: any) => state.subdomain);
     const USER_BASE_URL = `${subdomain}.${FE_BASE_URL}/`;
 
-    const pathname = useBrowserStore((state: any) => state.pathname);
+    const [
+        pathname,
+        isNewFolderModalOpen,
+        setIsNewFolderModalOpen,
+        setDoRefetch,
+    ] = useBrowserStore((state: any) => [
+        state.pathname,
+        state.isNewFolderModalOpen,
+        state.setIsNewFolderModalOpen,
+        state.setDoRefetch,
+    ]);
 
-    console.log("pathname", pathname);
-    
     const currPathArray = pathname
         .split("/")
         .slice(1)
@@ -53,11 +51,13 @@ export function NewFolderModal({
         (state: any) => state.setSnackbarMessage
     );
     useEffect(() => {
-        const input = document.getElementById("folder-name");
-        if (input) {
-            input.focus();
+        if (isNewFolderModalOpen) {
+            const input = document.getElementById("folder-name");
+            if (input) {
+                input.focus();
+            }
         }
-    }, [isOpen]);
+    }, [isNewFolderModalOpen]);
 
     const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
         if (e.key === "Enter" || e.key === " ") {
@@ -90,8 +90,8 @@ export function NewFolderModal({
         setIsSubmitted(true);
     };
 
-    const closeModal = () => {
-        onClose();
+    const handleCloseModal = () => {
+        setIsNewFolderModalOpen(false);
         setIsMoreOptionsOpen(false);
     };
 
@@ -105,13 +105,17 @@ export function NewFolderModal({
         } else if (isLoading || !fetchStarted) {
             console.log("Loading...");
         } else {
-            onNewItemCreated();
-            onClose();
+            setIsNewFolderModalOpen(false);
             setIsSubmitted(false);
+            setDoRefetch(true);
         }
     }
     return (
-        <Modal isOpen={isOpen} onClose={closeModal} onOutsideClick={closeModal}>
+        <Modal
+            isOpen={isNewFolderModalOpen}
+            onClose={handleCloseModal}
+            onOutsideClick={handleCloseModal}
+        >
             <h3 className="text-neutral-800 mb-8">New Folder</h3>
             <form onSubmit={onSubmit}>
                 <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-0 mb-6">
