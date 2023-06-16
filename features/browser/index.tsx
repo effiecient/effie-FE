@@ -170,11 +170,14 @@ export default function Browser({
                         setFocusedItemData(undefined);
                     }}
                 >
-                    <div className="select-none absolute right-0 bottom-16 w-1/2 h-1/2">
+                    <div className="select-none absolute right-0 bottom-16 w-[50vw] h-[50vh]">
                         <Image
                             src={"/images/background.png"}
                             alt=""
                             fill
+                            sizes="50vw"
+                            priority
+                            placeholder="empty"
                             style={{
                                 objectFit: "contain",
                                 objectPosition: "bottom right",

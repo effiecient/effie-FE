@@ -9,6 +9,7 @@ export const RightSideBar = ({
     isOpen = false,
     className = "",
 }: RightSideBarProps) => {
+    console.log("isOpen", isOpen);
     return (
         <>
             {/* create a fake div behind. holyshit i spend 3 hours for this few lines*/}

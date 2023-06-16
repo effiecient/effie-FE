@@ -14,8 +14,7 @@ export function RightSideBarProperties({
     className,
 }: RightSideBarPropertiesProps) {
     // use modal when screen size is small
-    const { width = 976 } = useWindowSize();
-    const isSmallScreen = width < 976;
+    const { width } = useWindowSize();
 
     const [isRightSideBarPropertiesOpen, setIsRightSideBarPropertiesOpen] =
         useBrowserStore((state: any) => [
@@ -27,14 +26,16 @@ export function RightSideBarProperties({
         setIsRightSideBarPropertiesOpen(false);
     };
     return (
-        <AlternateParent
-            parent={isSmallScreen ? Modal : RightSideBar}
-            isOpen={isRightSideBarPropertiesOpen}
-            onClose={handleClose}
-            className={`${className} ${!isSmallScreen && "h-full"}`}
-        >
-            <Content />
-        </AlternateParent>
+        width && (
+            <AlternateParent
+                parent={width < 976 ? Modal : RightSideBar}
+                isOpen={isRightSideBarPropertiesOpen}
+                onClose={handleClose}
+                className={`${className} ${!(width < 976) && "h-full"}`}
+            >
+                <Content />
+            </AlternateParent>
+        )
     );
 }
 
