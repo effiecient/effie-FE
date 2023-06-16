@@ -60,6 +60,7 @@ const RightContext = ({
 
 // use zustand to manage x and y
 import { create } from "zustand";
+import { shallow } from "zustand/shallow";
 
 // options is an array of objects with title and onClick
 type option = {
@@ -86,7 +87,8 @@ export const useRightContext = () => {
             state.setY,
             state.setIsOpen,
             state.setOptions,
-        ]
+        ],
+        shallow
     );
 
     const handleRightClick = (e: any) => {

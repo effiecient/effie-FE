@@ -1,13 +1,15 @@
 import { useBrowserStore, useSnackbarStore } from "@/hooks";
 import NewFolderIcon from "@/public/icons/new-folder";
 import NewLinkIcon from "@/public/icons/new-link";
+import { shallow } from "zustand/shallow";
 
 export function LeftSideBar() {
     const [setIsNewLinkModalOpen, setIsNewFolderModalOpen] = useBrowserStore(
         (state: any) => [
             state.setIsNewLinkModalOpen,
             state.setIsNewFolderModalOpen,
-        ]
+        ],
+        shallow
     );
     const handleNewLinkClick = () => {
         setIsNewLinkModalOpen(true);

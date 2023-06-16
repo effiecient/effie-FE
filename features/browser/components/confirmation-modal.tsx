@@ -12,7 +12,6 @@ import { BE_BASE_URL } from "@/config";
 import { use, useEffect, useState } from "react";
 
 export function ConfirmationModal() {
-    const [startDelete, setStartDelete] = useState(false);
     const subdomain = useUserStore((state: any) => state.subdomain);
 
     const [
@@ -33,15 +32,27 @@ export function ConfirmationModal() {
         ],
         shallow
     );
+    const [
+        setShowSnackbar,
+        setSnackbarType,
+        setSnackbarTitle,
+        setSnackbarMessage,
+    ] = useSnackbarStore(
+        (state: any) => [
+            state.setShowSnackbar,
+            state.setSnackbarType,
+            state.setSnackbarTitle,
+            state.setSnackbarMessage,
+        ],
+        shallow
+    );
+    const [{ isLoading, isError, response }, fetcher] = useFetchEffieBE();
 
-    const handleCloseModal = () => {
-        setIsConfirmationModalOpen(false);
-    };
     const [pathnameWithRelativePath, setPathnameWithRelativePath] =
         useState("");
-
+    const [startDelete, setStartDelete] = useState(false);
     const [localPathname, setLocalPathname] = useState(pathname);
-    const [{ isLoading, isError, response }, fetcher] = useFetchEffieBE();
+
     useEffect(() => {
         // check if this is the folder in which the user is in or not.
         const isUserInThisFolder = focusedItemData?.children ? true : false;
@@ -73,24 +84,6 @@ export function ConfirmationModal() {
         }`;
         setPathnameWithRelativePath(tempPathnameWithRelativePath);
     }, [isConfirmationModalOpen]);
-    const onConfirm = () => {
-        fetcher({
-            url: `${BE_BASE_URL}/directory/${subdomain}${pathnameWithRelativePath}`,
-            method: "DELETE",
-        });
-        setStartDelete(true);
-    };
-    const [
-        setShowSnackbar,
-        setSnackbarType,
-        setSnackbarTitle,
-        setSnackbarMessage,
-    ] = useSnackbarStore((state: any) => [
-        state.setShowSnackbar,
-        state.setSnackbarType,
-        state.setSnackbarTitle,
-        state.setSnackbarMessage,
-    ]);
     // handle update
     useEffect(() => {
         if (startDelete) {
@@ -114,6 +107,17 @@ export function ConfirmationModal() {
             }
         }
     }, [isLoading]);
+    const onConfirm = () => {
+        fetcher({
+            url: `${BE_BASE_URL}/directory/${subdomain}${pathnameWithRelativePath}`,
+            method: "DELETE",
+        });
+        setStartDelete(true);
+    };
+    const handleCloseModal = () => {
+        setIsConfirmationModalOpen(false);
+    };
+
     return (
         <Modal
             isOpen={isConfirmationModalOpen}
