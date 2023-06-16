@@ -21,7 +21,6 @@ type DirectoryItemCardProps = {
         | "display link"
         | "display folder";
     DirectoryItemData?: FolderLinkData;
-    onDoubleClick?: () => void;
     className?: string;
     disabled?: boolean;
 };
@@ -29,7 +28,6 @@ type DirectoryItemCardProps = {
 export default function DirectoryItemCard({
     content,
     DirectoryItemData,
-    onDoubleClick,
     className,
     disabled = false,
 }: DirectoryItemCardProps) {
@@ -37,21 +35,25 @@ export default function DirectoryItemCard({
 
     const [
         pathname,
+        setPathname,
         view,
         setIsNewFolderModalOpen,
         setFocusedItemData,
         setIsRightSideBarPropertiesOpen,
         setIsNewLinkModalOpen,
         focusedItemData,
+        setDoRefetch,
     ] = useBrowserStore(
         (state: any) => [
             state.pathname,
+            state.setPathname,
             state.view,
             state.setIsNewFolderModalOpen,
             state.setFocusedItemData,
             state.setIsRightSideBarPropertiesOpen,
             state.setIsNewLinkModalOpen,
             state.focusedItemData,
+            state.setDoRefetch,
         ],
         shallow
     );
@@ -68,17 +70,21 @@ export default function DirectoryItemCard({
         }
     };
 
-    // const handleDoubleClick = () => {
-    //     if (content === "folder") {
-    //         let newPathname = `${
-    //             pathname[pathname.length - 1] === "/"
-    //                 ? pathname
-    //                 : pathname + "/"
-    //         }${DirectoryItemData?.relativePath}`;
-    //         // setPathname(newPathname);
-    //         // setIsSomethingChanged(true);
-    //     }
-    // };
+    const handleDoubleClick = () => {
+        if (content === "folder") {
+            let newPathname = `${
+                pathname[pathname.length - 1] === "/"
+                    ? pathname
+                    : pathname + "/"
+            }${DirectoryItemData?.relativePath}`;
+            setPathname(newPathname);
+            setDoRefetch(true);
+            setFocusedItemData(undefined);
+        } else if (content === "link") {
+            // open url in new page
+            window.open(DirectoryItemData?.link, "_blank");
+        }
+    };
     const isFocused =
         focusedItemData?.relativePath === DirectoryItemData?.relativePath;
 
@@ -94,13 +100,13 @@ export default function DirectoryItemCard({
         <>
             <div
                 onClick={() => {
-                    if (!disabled && handleClick) {
+                    if (!disabled) {
                         handleClick();
                     }
                 }}
                 onDoubleClick={() => {
-                    if (!disabled && onDoubleClick) {
-                        onDoubleClick();
+                    if (!disabled) {
+                        handleDoubleClick();
                     }
                 }}
                 onContextMenu={(e) => {

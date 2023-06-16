@@ -73,18 +73,6 @@ export default function Browser({
         shallow
     );
 
-    const handleDirectoryCardClick = (child: any) => {
-        let newPathname = `${
-            pathname[pathname.length - 1] === "/" ? pathname : pathname + "/"
-        }${child}`;
-        setPathname(newPathname);
-        setDoRefetch(true);
-    };
-    const handleBreadcrumbClick = (newPathname: any) => {
-        setPathname(newPathname);
-        setDoRefetch(true);
-    };
-
     useEffect(() => {
         setPathname(window.location.pathname);
     }, []);
@@ -248,11 +236,6 @@ export default function Browser({
                                             key={index}
                                             content="folder"
                                             DirectoryItemData={folderData}
-                                            onDoubleClick={() => {
-                                                handleDirectoryCardClick(
-                                                    folderData.relativePath
-                                                );
-                                            }}
                                         />
                                     );
                                 }
@@ -284,13 +267,6 @@ export default function Browser({
                                             key={index}
                                             content="link"
                                             DirectoryItemData={linkData}
-                                            onDoubleClick={() => {
-                                                // open url in new page
-                                                window.open(
-                                                    linkData.link,
-                                                    "_blank"
-                                                );
-                                            }}
                                         />
                                     );
                                 }
@@ -299,12 +275,7 @@ export default function Browser({
                     </div>
                 </div>
                 {/* # header */}
-                {
-                    <BrowserHeader
-                        onBreadcrumbClick={handleBreadcrumbClick}
-                        isLoadingRefetch={isLoadingRefetch}
-                    />
-                }
+                {<BrowserHeader isLoadingRefetch={isLoadingRefetch} />}
                 {/* # right sidebar */}
                 <RightSideBarProperties
                     onClose={() => setIsRightSideBarPropertiesOpen(false)}
@@ -351,7 +322,7 @@ const Background = () => {
     );
 };
 
-const BrowserHeader = ({ onBreadcrumbClick, isLoadingRefetch }: any) => {
+const BrowserHeader = ({ isLoadingRefetch }: any) => {
     const [
         sortOption,
         setSortOption,
@@ -382,7 +353,7 @@ const BrowserHeader = ({ onBreadcrumbClick, isLoadingRefetch }: any) => {
             }`}
         >
             <div className="p-6 flex flex-col md:flex-row justify-between items-start md:items-center max-w-full gap-4 md:gap-0">
-                <BrowserBreadcrumb onBreadcrumbClick={onBreadcrumbClick} />
+                <BrowserBreadcrumb />
                 <div className="flex flex-row items-center justify-between md:justify-end gap-2 w-full md:w-auto">
                     <div className="flex flex-row-reverse md:flex-row items-center justify-between w-full">
                         {/* ## LOADING */}
