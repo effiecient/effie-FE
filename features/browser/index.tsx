@@ -52,6 +52,7 @@ export default function Browser({
         setFocusedItemData,
         doRefetch,
         setDoRefetch,
+        setCurrentDirectoryData,
     ] = useBrowserStore(
         (state: any) => [
             state.pathname,
@@ -69,6 +70,7 @@ export default function Browser({
             state.setFocusedItemData,
             state.doRefetch,
             state.setDoRefetch,
+            state.setCurrentDirectoryData,
         ],
         shallow
     );
@@ -129,18 +131,20 @@ export default function Browser({
 
     // return
     if (isError) {
-        console.log("isError");
+        // console.log("isError");
         // console.error(response.message);
         return <Page404 />;
     }
     if (isErrorRefetch) {
-        console.log("isErrorRefetch");
-        console.error(responseRefetch.message);
+        // console.log("isErrorRefetch");
+        // console.error(responseRefetch.message);
         return <Page404 />;
     }
 
     // preprocess data to be shown
     let responseData = responseRefetch ? responseRefetch.data : response.data;
+    
+    setCurrentDirectoryData(responseData);
 
     const { dataChildrenFolders, dataChildrenLinks } = sortDataToFolderAndLink(
         responseData,

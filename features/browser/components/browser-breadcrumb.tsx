@@ -5,8 +5,20 @@ import { shallow } from "zustand/shallow";
 
 export const BrowserBreadcrumb = () => {
     const subdomain = useUserStore((state: any) => state.subdomain);
-    const [pathname, setPathname, setDoRefetch] = useBrowserStore(
-        (state: any) => [state.pathname, state.setPathname, state.setDoRefetch],
+    const [
+        pathname,
+        setPathname,
+        setDoRefetch,
+        currentDirectoryData,
+        setFocusedItemData,
+    ] = useBrowserStore(
+        (state: any) => [
+            state.pathname,
+            state.setPathname,
+            state.setDoRefetch,
+            state.currentDirectoryData,
+            state.setFocusedItemData,
+        ],
         shallow
     );
 
@@ -27,9 +39,12 @@ export const BrowserBreadcrumb = () => {
             <Breadcrumb
                 path={subdomain}
                 onClick={() => {
-                    // if last breadcrumb is clicked, do nothing
-                    if (location.length === 0) return;
-                    handleBreadcrumbClick(`/`);
+                    // if last breadcrumb is clicked, focus on current directory
+                    if (location.length === 0) {
+                        setFocusedItemData(currentDirectoryData);
+                    } else {
+                        handleBreadcrumbClick(`/`);
+                    }
                 }}
                 className="pr-4"
             />
@@ -60,14 +75,18 @@ export const BrowserBreadcrumb = () => {
                                 key={index}
                                 path={loc}
                                 onClick={() => {
-                                    // if last breadcrumb is clicked, do nothing
-                                    if (index === location.length - 1) return;
-
-                                    handleBreadcrumbClick(
-                                        `/${location
-                                            .slice(0, index + 1)
-                                            .join("/")}`
-                                    );
+                                    // if last breadcrumb is clicked, focus on current directory
+                                    if (index === location.length - 1) {
+                                        setFocusedItemData(
+                                            currentDirectoryData
+                                        );
+                                    } else {
+                                        handleBreadcrumbClick(
+                                            `/${location
+                                                .slice(0, index + 1)
+                                                .join("/")}`
+                                        );
+                                    }
                                 }}
                                 className="px-4"
                             />

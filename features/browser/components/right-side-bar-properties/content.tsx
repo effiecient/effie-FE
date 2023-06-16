@@ -297,13 +297,13 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                                 ] === "/"
                                                     ? pathname
                                                     : pathname + "/"
-                                            }${relativePath}`}
+                                            }${relativePath || ""}`}
                                         >{`${FE_PROTOCOL}://${subdomain}.${FE_BASE_URL}${
                                             pathname[pathname.length - 1] ===
                                             "/"
                                                 ? pathname
                                                 : pathname + "/"
-                                        }${relativePath}`}</a>
+                                        }${relativePath || ""}`}</a>
                                     </div>
                                     <div className="flex justify-between pb-1">
                                         <h4 className="text-neutral-900">
