@@ -50,6 +50,8 @@ export default function Browser({
         setIsRightSideBarPropertiesOpen,
         focusedItemData,
         setFocusedItemData,
+        doRefetch,
+        setDoRefetch,
     ] = useBrowserStore(
         (state: any) => [
             state.pathname,
@@ -65,29 +67,22 @@ export default function Browser({
             state.setIsRightSideBarPropertiesOpen,
             state.focusedItemData,
             state.setFocusedItemData,
+            state.doRefetch,
+            state.setDoRefetch,
         ],
         shallow
     );
 
-    const [isSomethingChanged, setIsSomethingChanged] =
-        useState<boolean>(false);
-
-    const handleNewLinkClick = () => {
-        setIsNewLinkModalOpen(true);
-    };
-    const handleNewFolderClick = () => {
-        setIsNewFolderModalOpen(true);
-    };
     const handleDirectoryCardClick = (child: any) => {
         let newPathname = `${
             pathname[pathname.length - 1] === "/" ? pathname : pathname + "/"
         }${child}`;
         setPathname(newPathname);
-        setIsSomethingChanged(true);
+        setDoRefetch(true);
     };
     const handleBreadcrumbClick = (newPathname: any) => {
         setPathname(newPathname);
-        setIsSomethingChanged(true);
+        setDoRefetch(true);
     };
 
     useEffect(() => {
@@ -105,13 +100,11 @@ export default function Browser({
         refetcher,
     ] = useFetchEffieBENew();
 
-    // handle when something is changed
-    // 1. refetch when something is changed
     useEffect(() => {
         // based on the value of isSomethingChanged, and pathname, will:
         // 1. refetch
         // 2. update window.location if pathname is different
-        if (!isSomethingChanged) {
+        if (!doRefetch) {
             return;
         } else {
             const fetchURL = `${BE_BASE_URL}/directory/${subdomain}${pathname}`;
@@ -125,7 +118,7 @@ export default function Browser({
                 window.history.replaceState(null, "", newUrl);
             }
         }
-    }, [isSomethingChanged]);
+    }, [doRefetch]);
 
     // 2.
     useEffect(() => {
@@ -142,7 +135,7 @@ export default function Browser({
 
             setFocusedItemData(newFocusedItemData);
 
-            setIsSomethingChanged(false);
+            setDoRefetch(false);
         }
     }, [isLoadingRefetch, fetchStartedRefetch]);
 
@@ -182,12 +175,9 @@ export default function Browser({
                 <link rel="icon" href="/favicon.svg" />
             </Head>
             <main className="bg-white w-full h-full">
-                <Navbar setIsNewLinkModalOpen={setIsNewLinkModalOpen} />
+                <Navbar />
                 {/* # LEFT SIDEBAR */}
-                <LeftSideBar
-                    handleNewLinkClick={handleNewLinkClick}
-                    handleNewFolderClick={handleNewFolderClick}
-                />
+                <LeftSideBar />
                 {/* # BACKGROUND */}
                 <div
                     className={`z-0 h-full fixed bg-neutral-50 lg:ml-20 bottom-0 lg:top-16 left-0 right-0 lg:rounded-t-2xl duration-500 ease-in-out ${
@@ -247,7 +237,6 @@ export default function Browser({
                             {view === "grid" && (
                                 <DirectoryItemCard
                                     content="new folder"
-                                    onClick={handleNewFolderClick}
                                     disabled={isLoadingRefetch}
                                 />
                             )}
@@ -263,9 +252,6 @@ export default function Browser({
                                                 handleDirectoryCardClick(
                                                     folderData.relativePath
                                                 );
-                                            }}
-                                            onClick={() => {
-                                                setFocusedItemData(folderData);
                                             }}
                                         />
                                     );
@@ -287,7 +273,6 @@ export default function Browser({
                             {view === "grid" && (
                                 <DirectoryItemCard
                                     content="new link"
-                                    onClick={handleNewLinkClick}
                                     disabled={isLoadingRefetch}
                                 />
                             )}
@@ -305,9 +290,6 @@ export default function Browser({
                                                     linkData.link,
                                                     "_blank"
                                                 );
-                                            }}
-                                            onClick={() => {
-                                                setFocusedItemData(linkData);
                                             }}
                                         />
                                     );
@@ -329,18 +311,18 @@ export default function Browser({
                     isOpen={isRightSideBarPropertiesOpen}
                     itemData={focusedItemData}
                     relativePath={focusedItemData?.relativePath}
-                    onUpdate={() => setIsSomethingChanged(true)}
+                    onUpdate={() => setDoRefetch(true)}
                 />
                 {/* # MODALS */}
                 <NewLinkModal
                     isOpen={isNewLinkModalOpen}
                     onClose={() => setIsNewLinkModalOpen(false)}
-                    onNewItemCreated={() => setIsSomethingChanged(true)}
+                    onNewItemCreated={() => setDoRefetch(true)}
                 />
                 <NewFolderModal
                     isOpen={isNewFolderModalOpen}
                     onClose={() => setIsNewFolderModalOpen(false)}
-                    onNewItemCreated={() => setIsSomethingChanged(true)}
+                    onNewItemCreated={() => setDoRefetch(true)}
                 />
                 <RightContext />
                 {/* <KeyboardShortcuts

@@ -21,7 +21,6 @@ type DirectoryItemCardProps = {
         | "display link"
         | "display folder";
     DirectoryItemData?: FolderLinkData;
-    onClick?: () => void;
     onDoubleClick?: () => void;
     className?: string;
     disabled?: boolean;
@@ -30,7 +29,6 @@ type DirectoryItemCardProps = {
 export default function DirectoryItemCard({
     content,
     DirectoryItemData,
-    onClick,
     onDoubleClick,
     className,
     disabled = false,
@@ -57,6 +55,30 @@ export default function DirectoryItemCard({
         ],
         shallow
     );
+
+    const handleClick = () => {
+        if (content === "new folder") {
+            setIsNewFolderModalOpen(true);
+        } else if (content === "new link") {
+            setIsNewLinkModalOpen(true);
+        } else if (content === "link" || content === "folder") {
+            setFocusedItemData(DirectoryItemData);
+            console.log("DirectoryItemData", DirectoryItemData);
+            // setIsRightSideBarPropertiesOpen(true);
+        }
+    };
+
+    // const handleDoubleClick = () => {
+    //     if (content === "folder") {
+    //         let newPathname = `${
+    //             pathname[pathname.length - 1] === "/"
+    //                 ? pathname
+    //                 : pathname + "/"
+    //         }${DirectoryItemData?.relativePath}`;
+    //         // setPathname(newPathname);
+    //         // setIsSomethingChanged(true);
+    //     }
+    // };
     const isFocused =
         focusedItemData?.relativePath === DirectoryItemData?.relativePath;
 
@@ -72,8 +94,8 @@ export default function DirectoryItemCard({
         <>
             <div
                 onClick={() => {
-                    if (!disabled && onClick) {
-                        onClick();
+                    if (!disabled && handleClick) {
+                        handleClick();
                     }
                 }}
                 onDoubleClick={() => {

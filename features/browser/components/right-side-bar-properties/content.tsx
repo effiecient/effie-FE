@@ -292,15 +292,18 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                         <a
                                             className="underline text-neutral-700 hover:text-neutral-900"
                                             href={`${FE_PROTOCOL}://${subdomain}.${FE_BASE_URL}${
-                                                pathname === ""
-                                                    ? ""
-                                                    : `/${pathname}`
-                                            }/${relativePath}`}
+                                                pathname[
+                                                    pathname.length - 1
+                                                ] === "/"
+                                                    ? pathname
+                                                    : pathname + "/"
+                                            }${relativePath}`}
                                         >{`${FE_PROTOCOL}://${subdomain}.${FE_BASE_URL}${
-                                            pathname === ""
-                                                ? ""
-                                                : `/${pathname}`
-                                        }/${relativePath}`}</a>
+                                            pathname[pathname.length - 1] ===
+                                            "/"
+                                                ? pathname
+                                                : pathname + "/"
+                                        }${relativePath}`}</a>
                                     </div>
                                     <div className="flex justify-between pb-1">
                                         <h4 className="text-neutral-900">

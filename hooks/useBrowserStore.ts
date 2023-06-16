@@ -10,6 +10,7 @@ export const useBrowserStore = create((set) => ({
     isNewFolderModalOpen: false,
     isRightSideBarPropertiesOpen: false,
     focusedItemData: undefined,
+    doRefetch: false,
     setPathname: (pathname: string) => set(() => ({ pathname })),
     setView: (view: string) => set(() => ({ view })),
     setSortOption: (sortOption: string) => set(() => ({ sortOption })),
@@ -21,6 +22,7 @@ export const useBrowserStore = create((set) => ({
     setIsRightSideBarPropertiesOpen: (by: boolean) =>
         set(() => ({ isRightSideBarPropertiesOpen: by })),
     setFocusedItemData: (data: any) => set(() => ({ focusedItemData: data })),
+    setDoRefetch: (by: boolean) => set(() => ({ doRefetch: by })),
 }));
 
 export default useBrowserStore;

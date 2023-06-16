@@ -8,22 +8,24 @@ import registerIcon from "@/public/icons/register.svg";
 import DirectoriesWhiteIcon from "@/public/icons/directories-white";
 // import newLinkIcon from "@/public/icons/new-link.svg";
 import defaultUserImg from "@/public/images/user.png";
-import { useRegister, useSnackbarStore, useUserStore } from "@/hooks";
+import {
+    useBrowserStore,
+    useRegister,
+    useSnackbarStore,
+    useUserStore,
+} from "@/hooks";
 import Link from "next/link";
 // TODO: update this to import from config only
 import { FE_BASE_URL, FE_FULL_BASE_URL, FE_PROTOCOL } from "@/config/fe-config";
 import RightClickOptionDropdown from "./right-click-option-dropdown";
 import NewLinkIcon from "@/public/icons/new-link-white";
+import { stat } from "fs";
 
 type NavbarProps = {
-    setIsNewLinkModalOpen?: (isOpen: boolean) => void;
     isOnLanding?: boolean;
 };
 
-export default function Navbar({
-    isOnLanding = false,
-    setIsNewLinkModalOpen,
-}: NavbarProps) {
+export default function Navbar({ isOnLanding = false }: NavbarProps) {
     const isRegisterOpen = useRegister((state) => state.isRegisterOpen);
     const setIsRegisterOpen = useRegister((state) => state.setIsRegisterOpen);
     const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -32,6 +34,10 @@ export default function Navbar({
     const username = useUserStore((state: any) => state.username);
     const photoURL = useUserStore((state: any) => state.photoURL);
     const profileRef = useRef<HTMLImageElement>(null);
+
+    const setIsNewLinkModalOpen = useBrowserStore(
+        (state: any) => state.setIsNewLinkModalOpen
+    );
 
     return (
         <>

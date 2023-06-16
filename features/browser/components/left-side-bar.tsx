@@ -1,16 +1,21 @@
-import { useSnackbarStore } from "@/hooks";
+import { useBrowserStore, useSnackbarStore } from "@/hooks";
 import NewFolderIcon from "@/public/icons/new-folder";
 import NewLinkIcon from "@/public/icons/new-link";
 
-type SideBarProps = {
-    handleNewLinkClick: () => void;
-    handleNewFolderClick: () => void;
-};
+export default function LeftSideBar() {
+    const [setIsNewLinkModalOpen, setIsNewFolderModalOpen] = useBrowserStore(
+        (state: any) => [
+            state.setIsNewLinkModalOpen,
+            state.setIsNewFolderModalOpen,
+        ]
+    );
+    const handleNewLinkClick = () => {
+        setIsNewLinkModalOpen(true);
+    };
 
-export default function LeftSideBar({
-    handleNewLinkClick,
-    handleNewFolderClick,
-}: SideBarProps) {
+    const handleNewFolderClick = () => {
+        setIsNewFolderModalOpen(true);
+    };
     return (
         <>
             <div className="relative bottom-0 lg:top-16 left-0 z-50 w-full lg:w-20" />
