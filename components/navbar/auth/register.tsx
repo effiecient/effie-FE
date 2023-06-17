@@ -7,7 +7,7 @@ import { initializeApp } from "firebase/app";
 
 import { FIREBASE_CONFIG, BE_BASE_URL } from "@/config";
 import { useRouter } from "next/router";
-import { useFetchEffieBENew, useRenderingStore } from "@/hooks";
+import { useFetchEffieBE, useSnackbarStore } from "@/hooks";
 import { useState } from "react";
 
 type RegisterProps = {
@@ -23,20 +23,19 @@ export default function Register({ isOpen, onClose }: RegisterProps) {
     const provider = new GoogleAuthProvider();
     const router = useRouter();
 
-    const setShowSnackbar = useRenderingStore(
+    const setShowSnackbar = useSnackbarStore(
         (state: any) => state.setShowSnackbar
     );
-    const setSsnackbarType = useRenderingStore(
+    const setSsnackbarType = useSnackbarStore(
         (state: any) => state.setSnackbarType
     );
-    const setSnackbarTitle = useRenderingStore(
+    const setSnackbarTitle = useSnackbarStore(
         (state: any) => state.setSnackbarTitle
     );
-    const setSnackbarMessage = useRenderingStore(
+    const setSnackbarMessage = useSnackbarStore(
         (state: any) => state.setSnackbarMessage
     );
-    const [{ isLoading, isError, response, fetchStarted }, fetcher] =
-        useFetchEffieBENew();
+    const [{ isLoading, isError, response }, fetcher] = useFetchEffieBE();
     const [doneGoogleLogin, setDoneGoogleLogin] = useState(false);
 
     function handleOnRegisterButtonClick() {
@@ -76,7 +75,7 @@ export default function Register({ isOpen, onClose }: RegisterProps) {
             setSsnackbarType("error");
             setSnackbarTitle("register error!");
             setSnackbarMessage(response.message);
-        } else if (isLoading || !fetchStarted) {
+        } else if (isLoading) {
             console.log("loading...");
         } else {
             if (!response.data.isRegistered) {
@@ -104,9 +103,9 @@ export default function Register({ isOpen, onClose }: RegisterProps) {
                 <h1 className="text-neutral-900">Create a new Effie account</h1>
                 <Button
                     onClick={handleOnRegisterButtonClick}
-                    disabled={doneGoogleLogin && (isLoading || !fetchStarted)}
+                    disabled={doneGoogleLogin && isLoading}
                 >
-                    {doneGoogleLogin && (isLoading || !fetchStarted)
+                    {doneGoogleLogin && isLoading
                         ? "Loading..."
                         : "Register with Google"}
                 </Button>

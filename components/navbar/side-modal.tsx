@@ -26,7 +26,7 @@ export default function SideModal({
             />
             {/* Side Modal */}
             <div
-                className={`absolute bottom-0 top-0 right-0 ease-in-out bg-white duration-300 w-full md:w-1/2 lg:w-1/4  ${
+                className={`absolute bottom-0 top-0 right-0  bg-white duration-300 w-full md:w-1/2 lg:w-1/4  ${
                     isOpen ? "translate-x-0" : "translate-x-full"
                 }`}
             >

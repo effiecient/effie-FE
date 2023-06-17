@@ -73,6 +73,7 @@ export async function middleware(request: NextRequest) {
 
     // // check if isLink
     if (linkOrFolderData.data.type == "folder") {
+        // pass data to page. available on nextjs 13
         return NextResponse.next();
     }
 

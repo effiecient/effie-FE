@@ -1,54 +1,58 @@
 import { useState, useEffect, useRef } from "react";
 import { Button, LoadingAnimation, Modal } from "@/ui";
 import { BE_BASE_URL } from "@/config/be-config";
-import { useFetchEffieBENew, useRenderingStore, useUserStore } from "@/hooks";
+import {
+    useBrowserStore,
+    useFetchEffieBE,
+    useSnackbarStore,
+    useUserStore,
+} from "@/hooks";
 import Image from "next/image";
 import { FE_BASE_URL } from "@/config";
 
-type NewLinkProps = {
-    isOpen: boolean;
-    onClose: () => void;
-    onNewItemCreated: () => void;
-};
-
-export default function NewLink({
-    isOpen,
-    onClose,
-    onNewItemCreated,
-}: NewLinkProps) {
+export function NewLinkModal() {
     // USER CONSTANTS
     const subdomain = useUserStore((state: any) => state.subdomain);
     const USER_BASE_URL = `${subdomain}.${FE_BASE_URL}/`;
-    const currPathArray = window.location.pathname
+    const [pathname, isNewLinkModalOpen, setIsNewLinkModalOpen, setDoRefetch] =
+        useBrowserStore((state: any) => [
+            state.pathname,
+            state.isNewLinkModalOpen,
+            state.setIsNewLinkModalOpen,
+            state.setDoRefetch,
+        ]);
+    const currPathArray = pathname
         .split("/")
         .slice(1)
-        .filter((item) => item !== "");
+        .filter((item: any) => item !== "");
 
     // USER INTERFACE CONFIGURATIONS
     const linkNameRef = useRef<HTMLInputElement>(null);
     const [isMoreOptionsOpen, setIsMoreOptionsOpen] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
 
-    const [{ isLoading, isError, response, fetchStarted }, fetcher] =
-        useFetchEffieBENew();
-    const setShowSnackbar = useRenderingStore(
-        (state: any) => state.setShowSnackbar
-    );
-    const setSsnackbarType = useRenderingStore(
-        (state: any) => state.setSnackbarType
-    );
-    const setSnackbarTitle = useRenderingStore(
-        (state: any) => state.setSnackbarTitle
-    );
-    const setSnackbarMessage = useRenderingStore(
-        (state: any) => state.setSnackbarMessage
-    );
+    const [{ isLoading, isError, response }, fetcher] = useFetchEffieBE();
+
+    const [
+        setShowSnackbar,
+        setSnackbarType,
+        setSnackbarTitle,
+        setSnackbarMessage,
+    ] = useSnackbarStore((state: any) => [
+        state.setShowSnackbar,
+        state.setSnackbarType,
+        state.setSnackbarTitle,
+        state.setSnackbarMessage,
+    ]);
+
     useEffect(() => {
-        const input = document.getElementById("link-name");
-        if (input) {
-            input.focus();
+        if (isNewLinkModalOpen) {
+            const input = document.getElementById("link-name");
+            if (input) {
+                input.focus();
+            }
         }
-    }, [isOpen]);
+    }, [isNewLinkModalOpen]);
 
     const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
         if (e.key === "Enter" || e.key === " ") {
@@ -58,8 +62,8 @@ export default function NewLink({
 
     const onURLblur = (e: React.FocusEvent<HTMLInputElement>) => {};
 
-    const closeModal = () => {
-        onClose();
+    const handleCloseModal = () => {
+        setIsNewLinkModalOpen(false);
         setIsMoreOptionsOpen(false);
     };
 
@@ -69,7 +73,7 @@ export default function NewLink({
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const linkName: any = formData.get("link-name");
-        let path = window.location.pathname;
+        let path = pathname;
         const linkUrl = formData.get("link-url");
         const title = formData.get("title") || linkName;
 
@@ -93,20 +97,24 @@ export default function NewLink({
     if (isSubmitted) {
         if (isError) {
             setShowSnackbar(true);
-            setSsnackbarType("error");
+            setSnackbarType("error");
             setSnackbarTitle("create new link error!");
             setSnackbarMessage(response.message);
             setIsSubmitted(false);
-        } else if (isLoading || !fetchStarted) {
+        } else if (isLoading) {
             console.log("Loading...");
         } else {
-            onNewItemCreated();
-            onClose();
+            setIsNewLinkModalOpen(false);
             setIsSubmitted(false);
+            setDoRefetch(true);
         }
     }
     return (
-        <Modal isOpen={isOpen} onClose={closeModal} onOutsideClick={closeModal}>
+        <Modal
+            isOpen={isNewLinkModalOpen}
+            onClose={handleCloseModal}
+            onOutsideClick={handleCloseModal}
+        >
             <h3 className="text-neutral-800 mb-8">New Link</h3>
             <form onSubmit={onSubmit}>
                 <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-0 mb-6">
@@ -129,6 +137,7 @@ export default function NewLink({
                         className="input text-lg text-primary-500 font-bold flex-grow"
                         autoFocus
                         required
+                        autoComplete="off"
                     />
                 </div>
                 <div className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
@@ -140,12 +149,13 @@ export default function NewLink({
                         required
                         className="input flex-grow"
                         onBlur={onURLblur}
+                        autoComplete="off"
                     />
                     <Button
                         className="h-8 w-24"
-                        disabled={isSubmitted && (isLoading || !fetchStarted)}
+                        disabled={isSubmitted && isLoading}
                     >
-                        {isSubmitted && (isLoading || !fetchStarted) ? (
+                        {isSubmitted && isLoading ? (
                             <LoadingAnimation bg="rgb(var(--color-neutral-100))" />
                         ) : (
                             "Save Link"
@@ -184,16 +194,9 @@ export default function NewLink({
                             name="title"
                             placeholder="Custom Title"
                             className="input"
+                            autoComplete="off"
                         />
                     </div>
-                    {/* TODO: adapt to the new directory item card to follow product on figma */}
-                    {/* <DirectoryItemCard
-                        content="display link"
-                        title={title}
-                        url={linkNameRef.current?.value || ""}
-                        effieUrl=""
-                        className="h-fit"
-                    /> */}
                 </div>
             </form>
         </Modal>

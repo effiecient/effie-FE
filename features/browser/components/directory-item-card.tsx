@@ -1,17 +1,16 @@
 import { useRef } from "react";
 import Image from "next/image";
-// import NewLink from "./create-modal/new-link";
-// import NewFolder from "./create-modal/new-folder";
 import { FE_BASE_URL, FE_PROTOCOL } from "@/config";
-import { useRenderingStore, useUserStore } from "@/hooks";
-// import { useRouter } from "next/router";
+import { useBrowserStore, useSnackbarStore, useUserStore } from "@/hooks";
 import { FolderLinkData } from "@/type";
 import NewFolderIcon from "@/public/icons/new-folder";
 import NewLinkIcon from "@/public/icons/new-link";
-import CopyButton from "./copy-button";
+import CopyButton from "../../../components/copy-button";
 import PinIcon from "@/public/icons/pin";
 import DirectoriesIcon from "@/public/icons/directories";
 import LinkIcon from "@/public/icons/link";
+import { useRightContext } from "../../../components/right-context";
+import { shallow } from "zustand/shallow";
 
 type DirectoryItemCardProps = {
     content:
@@ -22,55 +21,126 @@ type DirectoryItemCardProps = {
         | "display link"
         | "display folder";
     DirectoryItemData?: FolderLinkData;
-    onClick?: () => void;
-    onDoubleClick?: () => void;
     className?: string;
-    relativePath?: string;
-    isFocused?: boolean;
-    view: string;
     disabled?: boolean;
 };
 
-export default function DirectoryItemCard({
+export function DirectoryItemCard({
     content,
     DirectoryItemData,
-    onClick,
-    onDoubleClick,
     className,
-    relativePath,
-    isFocused = false,
-    view,
     disabled = false,
 }: DirectoryItemCardProps) {
-    let pathname = window.location.pathname;
     let subdomain = useUserStore((state: any) => state.subdomain);
+
+    const [
+        pathname,
+        setPathname,
+        view,
+        setIsNewFolderModalOpen,
+        setFocusedItemData,
+        setIsRightSideBarPropertiesOpen,
+        setIsNewLinkModalOpen,
+        focusedItemData,
+        setDoRefetch,
+    ] = useBrowserStore(
+        (state: any) => [
+            state.pathname,
+            state.setPathname,
+            state.view,
+            state.setIsNewFolderModalOpen,
+            state.setFocusedItemData,
+            state.setIsRightSideBarPropertiesOpen,
+            state.setIsNewLinkModalOpen,
+            state.focusedItemData,
+            state.setDoRefetch,
+        ],
+        shallow
+    );
+
+    const handleClick = () => {
+        if (content === "new folder") {
+            setIsNewFolderModalOpen(true);
+        } else if (content === "new link") {
+            setIsNewLinkModalOpen(true);
+        } else if (content === "link" || content === "folder") {
+            setFocusedItemData(DirectoryItemData);
+            console.log("DirectoryItemData", DirectoryItemData);
+            // setIsRightSideBarPropertiesOpen(true);
+        }
+    };
+
+    const handleDoubleClick = () => {
+        if (content === "folder") {
+            let newPathname = `${
+                pathname[pathname.length - 1] === "/"
+                    ? pathname
+                    : pathname + "/"
+            }${DirectoryItemData?.relativePath}`;
+            setPathname(newPathname);
+            setDoRefetch(true);
+            setFocusedItemData(undefined);
+        } else if (content === "link") {
+            // open url in new page
+            window.open(DirectoryItemData?.link, "_blank");
+        }
+    };
+    const isFocused =
+        focusedItemData?.relativePath === DirectoryItemData?.relativePath;
+
+    const { setOptions, handleRightClick } = useRightContext();
+
     // add / in the back if doesn't exist
-    if (pathname[pathname.length - 1] !== "/") {
-        pathname = pathname + "/";
-    }
-    const effieURL = `${FE_PROTOCOL}://${subdomain}.${FE_BASE_URL}${pathname}${relativePath}`;
 
-    const showSkeleton = useRenderingStore((state: any) => state.showSkeleton);
-
-    if (showSkeleton) {
-        return (
-            <div
-                className={`animate-pulse pt-3 pb-2 px-5 rounded-xl bg-neutral-200 w-[32vw] md:w-[44vw] lg:w-[20vw] max-w-[16rem] min-w-[8rem] min-h-[4rem]`}
-            />
-        );
-    }
+    const effieURL = `${FE_PROTOCOL}://${subdomain}.${FE_BASE_URL}${
+        pathname[pathname.length - 1] === "/" ? pathname : pathname + "/"
+    }${DirectoryItemData?.relativePath}`;
 
     return (
         <>
             <div
                 onClick={() => {
-                    if (!disabled && onClick) {
-                        onClick();
+                    if (!disabled) {
+                        handleClick();
                     }
                 }}
                 onDoubleClick={() => {
-                    if (!disabled && onDoubleClick) {
-                        onDoubleClick();
+                    if (!disabled) {
+                        handleDoubleClick();
+                    }
+                }}
+                onContextMenu={(e) => {
+                    if (!disabled) {
+                        if (content === "new folder") {
+                            setOptions([
+                                {
+                                    title: "create new folder",
+                                    onClick: () => {
+                                        setIsNewFolderModalOpen(true);
+                                    },
+                                },
+                            ]);
+                        } else if (content === "new link") {
+                            setOptions([
+                                {
+                                    title: "create new link",
+                                    onClick: () => {
+                                        setIsNewLinkModalOpen(true);
+                                    },
+                                },
+                            ]);
+                        } else {
+                            setOptions([
+                                {
+                                    title: "info",
+                                    onClick: () => {
+                                        setFocusedItemData(DirectoryItemData);
+                                        setIsRightSideBarPropertiesOpen(true);
+                                    },
+                                },
+                            ]);
+                        }
+                        handleRightClick(e);
                     }
                 }}
                 className={`

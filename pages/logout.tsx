@@ -7,11 +7,7 @@ import { initializeApp } from "firebase/app";
 import { FIREBASE_CONFIG } from "@/config";
 
 // TODO: update this to import from config only
-import {
-    FE_DOMAIN,
-    FE_FULL_BASE_URL,
-    FE_TOP_LEVEL_DOMAIN,
-} from "@/config/fe-config";
+import { FE_FULL_BASE_URL } from "@/config";
 import { useEffect } from "react";
 import { removeFromCookie } from "@/helper";
 

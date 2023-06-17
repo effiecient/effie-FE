@@ -1,4 +1,4 @@
-import { useRenderingStore } from "@/hooks";
+import { useSnackbarStore } from "@/hooks";
 
 type ButtonProps = {
     type?: "default" | "danger" | "success" | "warning" | "info" | "custom";
@@ -19,7 +19,6 @@ export default function Button({
     pill = false,
     borderMode = false,
 }: ButtonProps) {
-    const showSkeleton = useRenderingStore((state: any) => state.showSkeleton);
     let buttonClassNames = "";
 
     if (
@@ -40,8 +39,7 @@ export default function Button({
         }`;
         // set on hover
         buttonClassNames += ` ${
-            !disabled &&
-            `hover:bg-${type}-${borderMode ? "50" : "500"}`
+            !disabled && `hover:bg-${type}-${borderMode ? "50" : "500"}`
         }`;
     } else if (type === "default") {
         // set color
@@ -65,12 +63,6 @@ export default function Button({
         buttonClassNames += " border-2";
     }
 
-    if (showSkeleton) {
-        return (
-            <div className="w-24 h-10 bg-neutral-200 animate-pulse rounded-full" />
-        );
-    }
-
     return (
         <button
             onClick={onClick}
@@ -84,9 +76,7 @@ export default function Button({
                               : "text-white"
                       } ${
                           !disabled &&
-                          `hover:bg-primary-${
-                              borderMode ? "50" : "700"
-                          }`
+                          `hover:bg-primary-${borderMode ? "50" : "700"}`
                       }`
                     : type === "custom"
                     ? ""
@@ -98,9 +88,7 @@ export default function Button({
                               : "text-white"
                       }  ${
                           !disabled &&
-                          `hover:bg-${type}-${
-                              borderMode ? "50" : "500"
-                          }`
+                          `hover:bg-${type}-${borderMode ? "50" : "500"}`
                       }`
             } ${borderMode ? "border-2" : ""}
         ${pill ? "rounded-full" : "rounded-md"} px-3 py-2 duration-200 

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { useUserStore } from "@/hooks";
+import { useBrowserStore, useUserStore } from "@/hooks";
 import React, { useEffect, useRef } from "react";
 import ThemeIcon from "@/public/icons/theme";
 import { FE_DOMAIN, FE_TOP_LEVEL_DOMAIN } from "@/config";
@@ -18,7 +18,7 @@ export default function RightClickOptionDropdown({
     profileRef,
 }: RightClickOptionDropdownProps) {
     const username = useUserStore((state: any) => state.username);
-    const currTheme = useUserStore((state: any) => state.theme);
+    const currTheme = useBrowserStore((state: any) => state.theme);
     const setCurrTheme = useUserStore((state: any) => state.setTheme);
     const modalRef = useRef<HTMLDivElement>(null);
 

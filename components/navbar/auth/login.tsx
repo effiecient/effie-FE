@@ -6,7 +6,7 @@ import { initializeApp } from "firebase/app";
 import { useState } from "react";
 
 import { BE_BASE_URL, FIREBASE_CONFIG } from "@/config";
-import { useRenderingStore, useUserStore } from "@/hooks";
+import { useSnackbarStore, useUserStore } from "@/hooks";
 import { useRouter } from "next/router";
 
 // TODO: update this to import from config only
@@ -18,7 +18,7 @@ import {
 } from "@/config/fe-config";
 
 import { EFFIE_AUTH_TOKEN } from "@/constants";
-import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
+import { useFetchEffieBE } from "@/hooks";
 type LoginProps = {
     isOpen: boolean;
     onClose: () => void;
@@ -33,22 +33,23 @@ export default function Login({ isOpen, onClose }: LoginProps) {
 
     const isLoggedIn = useUserStore((state: any) => state.isLoggedIn);
     const username = useUserStore((state: any) => state.username);
+    const pathname = useUserStore((state: any) => state.pathname);
 
     const router = useRouter();
-    const setShowSnackbar = useRenderingStore(
+    const setShowSnackbar = useSnackbarStore(
         (state: any) => state.setShowSnackbar
     );
-    const setSsnackbarType = useRenderingStore(
+    const setSsnackbarType = useSnackbarStore(
         (state: any) => state.setSnackbarType
     );
-    const setSnackbarTitle = useRenderingStore(
+    const setSnackbarTitle = useSnackbarStore(
         (state: any) => state.setSnackbarTitle
     );
-    const setSnackbarMessage = useRenderingStore(
+    const setSnackbarMessage = useSnackbarStore(
         (state: any) => state.setSnackbarMessage
     );
-    const [{ isLoading, isError, response, fetchStarted }, fetcher] =
-        useFetchEffieBENew();
+
+    const [{ isLoading, isError, response }, fetcher] = useFetchEffieBE();
 
     const [doneGoogleLogin, setDoneGoogleLogin] = useState(false);
 
@@ -82,7 +83,7 @@ export default function Login({ isOpen, onClose }: LoginProps) {
             setSnackbarTitle("login error!");
             setSnackbarMessage(response.message);
             setDoneGoogleLogin(false);
-        } else if (isLoading || !fetchStarted) {
+        } else if (isLoading) {
         } else {
             // set token to local storage
             if (typeof localStorage !== "undefined") {
@@ -97,7 +98,7 @@ export default function Login({ isOpen, onClose }: LoginProps) {
 
             // if login in landing, redirect to dashboard. if not, reload page
             // onClose();
-            if (window.location.pathname === "/") {
+            if (pathname === "/") {
                 router.push(
                     `${FE_PROTOCOL}://${response.data.username}.${FE_BASE_URL}`
                 );
@@ -116,9 +117,9 @@ export default function Login({ isOpen, onClose }: LoginProps) {
 
             <Button
                 onClick={handleLoginButton}
-                disabled={doneGoogleLogin && (isLoading || !fetchStarted)}
+                disabled={doneGoogleLogin && isLoading}
             >
-                {doneGoogleLogin && (isLoading || !fetchStarted)
+                {doneGoogleLogin && isLoading
                     ? "Loading..."
                     : "Login with Google"}
             </Button>

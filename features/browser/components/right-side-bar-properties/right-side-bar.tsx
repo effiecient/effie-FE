@@ -9,11 +9,12 @@ export const RightSideBar = ({
     isOpen = false,
     className = "",
 }: RightSideBarProps) => {
+    console.log("isOpen", isOpen);
     return (
         <>
             {/* create a fake div behind. holyshit i spend 3 hours for this few lines*/}
             <div
-                className={`duration-500 ease-in-out  ${
+                className={`duration-500 ease-in-out ${
                     isOpen ? "mr-[20vw]" : "mr-6"
                 }`}
             ></div>
@@ -22,7 +23,9 @@ export const RightSideBar = ({
                     isOpen ? "w-[20vw]" : "w-6"
                 }`}
             >
-                <div className={`${className} w-[20vw] p-6 fixed flex flex-col justify-between`}>
+                <div
+                    className={`${className} w-[20vw] p-6 fixed flex flex-col justify-between`}
+                >
                     {children}
                 </div>
             </div>

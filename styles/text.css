@@ -22,6 +22,11 @@ select {
     line-height: 16px;
 }
 
+/* on input focus, disable effect */
+input:focus {
+    outline: none;
+}
+
 button,
 th,
 td {

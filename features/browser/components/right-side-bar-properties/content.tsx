@@ -8,7 +8,7 @@ import { Button, Input, Select } from "@/ui";
 
 import { BE_BASE_URL, FE_BASE_URL, FE_PROTOCOL } from "@/config";
 
-import { useUserStore } from "@/hooks";
+import { useBrowserStore, useSnackbarStore, useUserStore } from "@/hooks";
 
 import editIcon from "@/public/icons/edit.svg";
 import trashIcon from "@/public/icons/trash.svg";
@@ -19,102 +19,133 @@ import pinBlackIcon from "@/public/icons/pin-black.svg";
 
 import drawerImage from "@/public/images/drawer.svg";
 
-import { useFetchEffieBENew } from "@/hooks/useFetchEffieBENew";
+import { useFetchEffieBE } from "@/hooks";
 
 import { getObjectDifferences, checkIfObjectSame } from "@/utils";
-import { ConfirmationModal } from "@/components";
+import { useLegacyState } from "@/hooks";
 
 const ShareConfigurationOptions = ["none", "viewer", "editor"];
 
-export function useLegacyState<T>(initialState: any) {
-    // for object, only update key that is changed
-    const [state, setState] = useState<T>(initialState);
-    const setLegacyState: any = (newState: any) => {
-        setState((prevState: any) => {
-            return {
-                ...prevState,
-                ...newState,
-            };
-        });
-    };
-    return [state, setLegacyState];
-}
-
-export const Content = ({ itemData, relativePath, onUpdate }: any) => {
+export const Content = () => {
     const subdomain = useUserStore((state: any) => state.subdomain);
-    const pathname = useUserStore((state: any) => state.pathname);
+    const [
+        pathname,
+        focusedItemData,
+        setDoRefetch,
+        setIsConfirmationModalOpen,
+    ] = useBrowserStore((state: any) => [
+        state.pathname,
+        state.focusedItemData,
+        state.setDoRefetch,
+        state.setIsConfirmationModalOpen,
+    ]);
+    const [{ isLoading, isError, response }, fetcher] = useFetchEffieBE();
 
+    const [localPathname, setLocalPathname] = useState(pathname);
+    const [
+        setShowSnackbar,
+        setSnackbarType,
+        setSnackbarTitle,
+        setSnackbarMessage,
+    ] = useSnackbarStore((state: any) => [
+        state.setShowSnackbar,
+        state.setSnackbarType,
+        state.setSnackbarTitle,
+        state.setSnackbarMessage,
+    ]);
+    // right side bar variable
     const [isInEditMode, setIsInEditMode] = useState(false);
-
-    const [editedRelativePath, setEditedRelativePath] = useState(relativePath);
-    const [editedItemData, setEditedItemData] =
-        useLegacyState<FolderLinkData>(itemData);
-
     const [isChanged, setIsChanged] = useState(false);
-    const [isConfirmationModalOpen, setIsConfirmationModalOpen] =
-        useState(false);
 
-    // reset everything when the itemData is changed
+    const [editedItemData, setEditedItemData] =
+        useLegacyState<any>(focusedItemData);
+
+    const [pathnameWithRelativePath, setPathnameWithRelativePath] =
+        useState("");
+    const [effieLink, setEffieLink] = useState("");
+
+    const [startUpdate, setStartUpdate] = useState(false);
+
+    // reset everything when the focusedItemData is changed
     useEffect(() => {
-        setEditedRelativePath(relativePath);
-        setEditedItemData(itemData);
-
         setIsInEditMode(false);
         setIsChanged(false);
-    }, [itemData]);
+        setIsConfirmationModalOpen(false);
+        setEditedItemData(focusedItemData, true);
+
+        // check if this is the folder in which the user is in or not.
+        const isUserInThisFolder = focusedItemData?.children ? true : false;
+
+        let tempLocalPathname;
+        if (isUserInThisFolder) {
+            // truncate from the last slash
+            tempLocalPathname = pathname.substring(
+                0,
+                pathname.lastIndexOf("/")
+            );
+            // add "/" if the pathname doesn't start with "/"
+            if (tempLocalPathname[0] !== "/") {
+                tempLocalPathname = `/${tempLocalPathname}`;
+            }
+        } else {
+            tempLocalPathname = pathname;
+        }
+        setLocalPathname(tempLocalPathname);
+
+        let tempPathnameWithRelativePath = `${tempLocalPathname}${
+            focusedItemData?.relativePath &&
+            tempLocalPathname[tempLocalPathname.length - 1] !== "/"
+                ? "/"
+                : ""
+        }${
+            focusedItemData?.relativePath ||
+            pathname.substring(pathname.lastIndexOf("/") + 1)
+        }`;
+        setPathnameWithRelativePath(tempPathnameWithRelativePath);
+        setEffieLink(
+            `${FE_PROTOCOL}://${subdomain}.${FE_BASE_URL}${tempPathnameWithRelativePath}`
+        );
+    }, [focusedItemData]);
 
     // reset editedItemData when the exit edit mode
     useEffect(() => {
         if (!isInEditMode) {
-            setEditedItemData(itemData);
-            setEditedRelativePath(relativePath);
+            setEditedItemData(focusedItemData);
             setIsChanged(false);
         }
     }, [isInEditMode]);
 
-    // set isChanged
+    // set isChanged when the editedItemData is changed
     useEffect(() => {
-        // check if the itemData and editedItemData are the same
-        const isSame = checkIfObjectSame(itemData, editedItemData);
-
-        const isRelativePathSame = relativePath == editedRelativePath;
+        // check if the focusedItemData and editedItemData are the same
+        const isSame = checkIfObjectSame(focusedItemData, editedItemData);
 
         // TODO: handle bug input failed when setIsChanged is called
-        setIsChanged(!isSame || !isRelativePathSame);
-    }, [editedItemData, editedRelativePath]);
-
-    const [{ isLoading, isError, response, fetchStarted }, fetcher] =
-        useFetchEffieBENew();
-
-    const [startUpdate, setStartUpdate] = useState(false);
+        setIsChanged(!isSame);
+    }, [editedItemData]);
 
     useEffect(() => {
         if (startUpdate) {
-            // console.log(editedItemData);
-            let itemDataDifferences = getObjectDifferences(
-                itemData,
+            let focusedItemDataDifferences = getObjectDifferences(
+                focusedItemData,
                 editedItemData
             );
-            // if itemDataDifferences has shareConfiguration, then it changed(we need to do this because it part of it might be the same object as item data)
-            if (itemDataDifferences.shareConfiguration !== undefined) {
-                itemDataDifferences.shareConfiguration =
-                    editedItemData.shareConfiguration;
-            }
 
+            if (focusedItemDataDifferences.relativePath !== undefined) {
+                focusedItemDataDifferences["newRelativePath"] =
+                    focusedItemDataDifferences.relativePath;
+                delete focusedItemDataDifferences.relativePath;
+            }
             fetcher({
-                url: `${BE_BASE_URL}/directory/${
-                    itemData.type === "folder" ? "folder" : "link"
-                }`,
+                url: `${BE_BASE_URL}/directory/${focusedItemData.type}`,
                 method: "PATCH",
                 body: {
                     username: subdomain,
-                    path: "/" + pathname,
-                    relativePath: relativePath,
-                    // only include if the value is changed
-                    ...(editedRelativePath !== relativePath && {
-                        newRelativePath: editedRelativePath,
-                    }),
-                    ...itemDataDifferences,
+                    path: localPathname,
+                    relativePath:
+                        focusedItemData?.relativePath ||
+                        pathname.substring(pathname.lastIndexOf("/") + 1),
+                    ...focusedItemDataDifferences,
                 },
             });
         }
@@ -124,48 +155,20 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
     useEffect(() => {
         if (startUpdate) {
             if (isError) {
+                setShowSnackbar(true);
+                setSnackbarType("error");
+                setSnackbarTitle("Update error!");
+                setSnackbarMessage(response.message);
                 setStartUpdate(false);
-                setIsInEditMode(false);
-            } else if (isLoading || !fetchStarted) {
+                setIsInEditMode(true);
+            } else if (isLoading) {
             } else {
                 setStartUpdate(false);
-                onUpdate();
                 setIsInEditMode(false);
+                setDoRefetch(true);
             }
         }
-    }, [isLoading, isError, response, fetchStarted]);
-
-    // Handle delete
-    const [startDelete, setStartDelete] = useState(false);
-
-    useEffect(() => {
-        if (startDelete) {
-            fetcher({
-                url: `${BE_BASE_URL}/directory/${subdomain}/${
-                    pathname === "" ? "" : pathname + "/"
-                }${relativePath}`,
-                method: "DELETE",
-                body: {
-                    username: subdomain,
-                    path: "/" + pathname + "/" + relativePath,
-                },
-            });
-        }
-    }, [startDelete]);
-
-    useEffect(() => {
-        if (startDelete) {
-            if (isError) {
-                setStartDelete(false);
-                setIsInEditMode(false);
-            } else if (isLoading || !fetchStarted) {
-            } else {
-                setStartDelete(false);
-                onUpdate();
-                setIsInEditMode(false);
-            }
-        }
-    }, [isLoading, isError, response, fetchStarted]);
+    }, [isLoading]);
 
     function handleSaveButtonClick() {
         setStartUpdate(true);
@@ -175,15 +178,9 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
         setIsConfirmationModalOpen(true);
     }
 
-    function handleDeleteConfirm() {
-        setStartDelete(true);
-        setIsConfirmationModalOpen(false);
-    }
-
-    // console.log(itemData);
     return (
         <>
-            {itemData === undefined ? (
+            {focusedItemData === undefined ? (
                 <div className="mt-6 lg:mt-16 flex flex-col justify-center items-center">
                     <Image
                         src={drawerImage}
@@ -198,7 +195,7 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
             ) : (
                 <>
                     {/* data */}
-                    {itemData.type === "folder" ? (
+                    {focusedItemData.type === "folder" ? (
                         // folder
                         isInEditMode ? (
                             // folder in edit mode
@@ -207,13 +204,13 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                     <div className="flex flex-col break-words gap-8 p-1">
                                         <Input
                                             type="text"
-                                            placeholder={itemData.title}
+                                            placeholder={focusedItemData.title}
                                             className="text-lg my-1"
                                             onChange={(e: any) => {
                                                 setEditedItemData({
                                                     title:
                                                         e.target.value === ""
-                                                            ? itemData.title
+                                                            ? focusedItemData.title
                                                             : e.target.value,
                                                 });
                                             }}
@@ -241,21 +238,24 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                             <h5 className="text-neutral-800">
                                                 Link
                                             </h5>
-                                            <p className="underline text-neutral-700 hover:text-neutral-900">{`${FE_PROTOCOL}://${subdomain}.${FE_BASE_URL}${
-                                                pathname === ""
-                                                    ? ""
-                                                    : `/${pathname}`
-                                            }/`}</p>
+                                            <p className="underline text-neutral-700 hover:text-neutral-900">
+                                                {effieLink}
+                                            </p>
                                             <Input
                                                 type="text"
-                                                placeholder={relativePath}
+                                                placeholder={
+                                                    focusedItemData.relativePath
+                                                }
                                                 className="my-1"
                                                 onChange={(e: any) => {
-                                                    setEditedRelativePath(
-                                                        e.target.value == ""
-                                                            ? relativePath
-                                                            : e.target.value
-                                                    );
+                                                    setEditedItemData({
+                                                        relativePath:
+                                                            e.target.value ===
+                                                            ""
+                                                                ? focusedItemData.relativePath
+                                                                : e.target
+                                                                      .value,
+                                                    });
                                                 }}
                                             />
                                         </div>
@@ -277,7 +277,7 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                                     });
                                                 }}
                                                 defaultValue={
-                                                    itemData.publicAccess
+                                                    focusedItemData.publicAccess
                                                 }
                                             />
                                         </div>
@@ -291,20 +291,14 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                     <div className="pb-2">
                                         <a
                                             className="underline text-neutral-700 hover:text-neutral-900"
-                                            href={`${FE_PROTOCOL}://${subdomain}.${FE_BASE_URL}${
-                                                pathname === ""
-                                                    ? ""
-                                                    : `/${pathname}`
-                                            }/${relativePath}`}
-                                        >{`${FE_PROTOCOL}://${subdomain}.${FE_BASE_URL}${
-                                            pathname === ""
-                                                ? ""
-                                                : `/${pathname}`
-                                        }/${relativePath}`}</a>
+                                            href={effieLink}
+                                        >
+                                            {effieLink}
+                                        </a>
                                     </div>
                                     <div className="flex justify-between pb-1">
                                         <h4 className="text-neutral-900">
-                                            {itemData.title}
+                                            {focusedItemData.title}
                                         </h4>
                                         <div className="flex justify-end">
                                             <Image
@@ -323,7 +317,7 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                     <p className="text-neutral-400 pb-4 md:pb-12">
                                         created at{" "}
                                         {new Date(
-                                            itemData.createdAt
+                                            focusedItemData.createdAt
                                         ).toLocaleDateString()}
                                     </p>
 
@@ -332,7 +326,7 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                             Public Access
                                         </h5>
                                         <p className="text-neutral-500">
-                                            {itemData.publicAccess}
+                                            {focusedItemData.publicAccess}
                                         </p>
                                     </div>
 
@@ -347,7 +341,9 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                                 </p>
                                                 <div className="flex">
                                                     <h4 className="border-l-8 border-primary-500 my-2 p-2 text-neutral-700">
-                                                        {itemData.folderCount}
+                                                        {
+                                                            focusedItemData.folderCount
+                                                        }
                                                     </h4>
                                                 </div>
                                             </div>
@@ -357,7 +353,9 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                                 </p>
                                                 <div className="flex">
                                                     <h4 className="border-l-8 border-tertiary-500 my-2 p-2 text-neutral-700">
-                                                        {itemData.linkCount}
+                                                        {
+                                                            focusedItemData.linkCount
+                                                        }
                                                     </h4>
                                                 </div>
                                             </div>
@@ -374,13 +372,13 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                 <div className="flex flex-col break-words gap-8 p-1">
                                     <Input
                                         type="text"
-                                        placeholder={itemData.title}
+                                        placeholder={focusedItemData.title}
                                         className="text-lg my-1"
                                         onChange={(e: any) => {
                                             setEditedItemData({
                                                 title:
                                                     e.target.value === ""
-                                                        ? itemData.title
+                                                        ? focusedItemData.title
                                                         : e.target.value,
                                             });
                                         }}
@@ -408,21 +406,22 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                         <h5 className="text-neutral-800">
                                             Link
                                         </h5>
-                                        <p className="underline text-neutral-700 hover:text-neutral-900">{`${FE_PROTOCOL}://${subdomain}.${FE_BASE_URL}${
-                                            pathname === ""
-                                                ? ""
-                                                : `/${pathname}`
-                                        }/`}</p>
+                                        <p className="underline text-neutral-700 hover:text-neutral-900">
+                                            {effieLink}
+                                        </p>
                                         <Input
                                             type="text"
-                                            placeholder={relativePath}
+                                            placeholder={
+                                                focusedItemData.relativePath
+                                            }
                                             className="my-1"
                                             onChange={(e: any) => {
-                                                setEditedRelativePath(
-                                                    e.target.value == ""
-                                                        ? relativePath
-                                                        : e.target.value
-                                                );
+                                                setEditedItemData({
+                                                    relativePath:
+                                                        e.target.value === ""
+                                                            ? focusedItemData.relativePath
+                                                            : e.target.value,
+                                                });
                                             }}
                                         />
                                     </div>
@@ -431,13 +430,13 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                             Redirects to
                                         </h5>
                                         <Input
-                                            placeholder={itemData.link}
+                                            placeholder={focusedItemData.link}
                                             className="my-1"
                                             onChange={(e: any) => {
                                                 setEditedItemData({
                                                     link:
                                                         e.target.value === ""
-                                                            ? itemData.link
+                                                            ? focusedItemData.link
                                                             : e.target.value,
                                                 });
                                             }}
@@ -460,7 +459,9 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                                         e.target.value,
                                                 });
                                             }}
-                                            defaultValue={itemData.publicAccess}
+                                            defaultValue={
+                                                focusedItemData.publicAccess
+                                            }
                                         />
                                     </div>
                                 </div>
@@ -471,7 +472,7 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                         <div className="mt-6 lg:mt-16 h-full overflow-auto lg:mb-4">
                             <div className="flex flex-col break-words gap-8 p-1">
                                 <h4 className="text-neutral-900">
-                                    {itemData.title}
+                                    {focusedItemData.title}
                                 </h4>
                                 <div className="flex justify-end">
                                     <Image
@@ -489,22 +490,22 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                     <h5 className="text-neutral-800">Link</h5>
                                     <Link
                                         className="underline text-neutral-700 hover:text-neutral-900"
-                                        href={itemData.link}
+                                        href={focusedItemData.link}
                                         target="_blank"
-                                    >{`${FE_PROTOCOL}://${subdomain}.${FE_BASE_URL}${
-                                        pathname === "" ? "" : `/${pathname}`
-                                    }/${relativePath}`}</Link>
+                                    >
+                                        {effieLink}
+                                    </Link>
                                 </div>
                                 <div>
                                     <h5 className="text-neutral-800">
                                         Redirects to
                                     </h5>
                                     <Link
-                                        href={itemData.link}
+                                        href={focusedItemData.link}
                                         className="underline text-neutral-700 hover:text-neutral-900"
                                         target="_blank"
                                     >
-                                        {itemData.link}
+                                        {focusedItemData.link}
                                     </Link>
                                 </div>
                                 <div>
@@ -512,7 +513,7 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                         Public Access
                                     </h5>
                                     <p className="text-neutral-700">
-                                        {itemData.publicAccess}
+                                        {focusedItemData.publicAccess}
                                     </p>
                                 </div>
                             </div>
@@ -529,7 +530,7 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                                     disabled={!isChanged}
                                 >
                                     {startUpdate ? (
-                                        isLoading || !fetchStarted ? (
+                                        isLoading ? (
                                             <div className="animate-pulse text-2xl flex">
                                                 ...
                                             </div>
@@ -595,14 +596,6 @@ export const Content = ({ itemData, relativePath, onUpdate }: any) => {
                         )}
                     </div>
                 </>
-            )}
-            {isConfirmationModalOpen && (
-                <ConfirmationModal
-                    name={relativePath}
-                    isOpen={isConfirmationModalOpen}
-                    onClose={() => setIsConfirmationModalOpen(false)}
-                    onConfirm={handleDeleteConfirm}
-                />
             )}
         </>
     );

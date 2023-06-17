@@ -8,22 +8,24 @@ import registerIcon from "@/public/icons/register.svg";
 import DirectoriesWhiteIcon from "@/public/icons/directories-white";
 // import newLinkIcon from "@/public/icons/new-link.svg";
 import defaultUserImg from "@/public/images/user.png";
-import { useRegister, useRenderingStore, useUserStore } from "@/hooks";
+import {
+    useBrowserStore,
+    useRegister,
+    useSnackbarStore,
+    useUserStore,
+} from "@/hooks";
 import Link from "next/link";
 // TODO: update this to import from config only
 import { FE_BASE_URL, FE_FULL_BASE_URL, FE_PROTOCOL } from "@/config/fe-config";
 import RightClickOptionDropdown from "./right-click-option-dropdown";
 import NewLinkIcon from "@/public/icons/new-link-white";
+import { stat } from "fs";
 
 type NavbarProps = {
-    setIsNewLinkModalOpen?: (isOpen: boolean) => void;
     isOnLanding?: boolean;
 };
 
-export default function Navbar({
-    isOnLanding = false,
-    setIsNewLinkModalOpen,
-}: NavbarProps) {
+export default function Navbar({ isOnLanding = false }: NavbarProps) {
     const isRegisterOpen = useRegister((state) => state.isRegisterOpen);
     const setIsRegisterOpen = useRegister((state) => state.setIsRegisterOpen);
     const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -33,33 +35,10 @@ export default function Navbar({
     const photoURL = useUserStore((state: any) => state.photoURL);
     const profileRef = useRef<HTMLImageElement>(null);
 
-    const showSkeleton = useRenderingStore((state: any) => state.showSkeleton);
-    // skeleton
-    if (showSkeleton) {
-        return (
-            <>
-                <div className="relative right-0 left-0 top-0 h-16" />
-                <div className="fixed right-0 left-0 top-0 h-16 z-50 animate-pulse">
-                    <nav
-                        className={`flex flex-row justify-between w-full bg-white items-center px-6 py-3`}
-                    >
-                        {/* Logo */}
-                        <p className="h-8 bg-neutral-200 rounded-full w-16" />
-                        {/* Login-Register */}
-                        <div className="space-x-2">
-                            {/* Navbar for logged-in users */}
-                            <div className="flex flex-row items-center gap-1.5">
-                                <>
-                                    <Button type="default" pill={true}></Button>
-                                </>
-                                <div className="rounded-full w-[40px] h-[40px] bg-neutral-300"></div>
-                            </div>
-                        </div>
-                    </nav>
-                </div>
-            </>
-        );
-    }
+    const setIsNewLinkModalOpen = useBrowserStore(
+        (state: any) => state.setIsNewLinkModalOpen
+    );
+
     return (
         <>
             {/* Navbar */}
@@ -69,7 +48,11 @@ export default function Navbar({
                     className={`flex flex-row justify-between w-full bg-white items-center px-6 py-3`}
                 >
                     {/* Logo */}
-                    <Link href={`${FE_FULL_BASE_URL}`} target="_self">
+                    <Link
+                        href={`${FE_FULL_BASE_URL}`}
+                        as={`${FE_FULL_BASE_URL}`}
+                        target="_self"
+                    >
                         <h1 className="text-2xl">Effie</h1>
                     </Link>
                     {/* Login-Register */}

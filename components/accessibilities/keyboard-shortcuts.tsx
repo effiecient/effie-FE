@@ -1,17 +1,16 @@
-import Modal from "@/components/modal";
+import Modal from "@/ui/modal";
 
 type KeyboardShortcutsModalProps = {
     isOpen: boolean;
     onClose: () => void;
 };
 
-export default function KeyboardShortcuts({ isOpen, onClose }: KeyboardShortcutsModalProps) {
+export default function KeyboardShortcuts({
+    isOpen,
+    onClose,
+}: KeyboardShortcutsModalProps) {
     return (
-        <Modal
-            isOpen={isOpen}
-            onClose={onClose}
-            onOutsideClick={onClose}
-        >
+        <Modal isOpen={isOpen} onClose={onClose} onOutsideClick={onClose}>
             <div className="flex flex-col gap-4">
                 <h3 className="text-2xl font-bold">Keyboard Shortcuts</h3>
                 <div className="flex flex-col gap-2">
@@ -39,4 +38,4 @@ export default function KeyboardShortcuts({ isOpen, onClose }: KeyboardShortcuts
             </div>
         </Modal>
     );
-};
+}

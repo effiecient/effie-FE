@@ -1,56 +1,62 @@
 import { useState, useEffect, useRef } from "react";
 import { Button, LoadingAnimation, Modal } from "@/ui";
-import DirectoryItemCard from "../directory-item-card";
 import { BE_BASE_URL } from "@/config/be-config";
 import { FE_BASE_URL } from "@/config";
-// import { unfurl } from 'unfurl.js'
 import Image from "next/image";
-import { useRouter } from "next/router";
-import { useFetchEffieBENew, useRenderingStore, useUserStore } from "@/hooks";
+import {
+    useBrowserStore,
+    useFetchEffieBE,
+    useSnackbarStore,
+    useUserStore,
+} from "@/hooks";
 
-type NewFolderProps = {
-    isOpen: boolean;
-    onClose: () => void;
-    onNewItemCreated: () => void;
-};
-
-export default function NewFolder({
-    isOpen,
-    onClose,
-    onNewItemCreated,
-}: NewFolderProps) {
+export function NewFolderModal() {
     // USER CONSTANTS
     const subdomain = useUserStore((state: any) => state.subdomain);
     const USER_BASE_URL = `${subdomain}.${FE_BASE_URL}/`;
-    const currPathArray = window.location.pathname
+
+    const [
+        pathname,
+        isNewFolderModalOpen,
+        setIsNewFolderModalOpen,
+        setDoRefetch,
+    ] = useBrowserStore((state: any) => [
+        state.pathname,
+        state.isNewFolderModalOpen,
+        state.setIsNewFolderModalOpen,
+        state.setDoRefetch,
+    ]);
+
+    const currPathArray = pathname
         .split("/")
         .slice(1)
-        .filter((item) => item !== "");
+        .filter((item: any) => item !== "");
 
     const [isMoreOptionsOpen, setIsMoreOptionsOpen] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
 
-    const [{ isLoading, isError, response, fetchStarted }, fetcher] =
-        useFetchEffieBENew();
+    const [{ isLoading, isError, response }, fetcher] = useFetchEffieBE();
 
-    const setShowSnackbar = useRenderingStore(
+    const setShowSnackbar = useSnackbarStore(
         (state: any) => state.setShowSnackbar
     );
-    const setSsnackbarType = useRenderingStore(
+    const setSsnackbarType = useSnackbarStore(
         (state: any) => state.setSnackbarType
     );
-    const setSnackbarTitle = useRenderingStore(
+    const setSnackbarTitle = useSnackbarStore(
         (state: any) => state.setSnackbarTitle
     );
-    const setSnackbarMessage = useRenderingStore(
+    const setSnackbarMessage = useSnackbarStore(
         (state: any) => state.setSnackbarMessage
     );
     useEffect(() => {
-        const input = document.getElementById("folder-name");
-        if (input) {
-            input.focus();
+        if (isNewFolderModalOpen) {
+            const input = document.getElementById("folder-name");
+            if (input) {
+                input.focus();
+            }
         }
-    }, [isOpen]);
+    }, [isNewFolderModalOpen]);
 
     const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
         if (e.key === "Enter" || e.key === " ") {
@@ -64,7 +70,7 @@ export default function NewFolder({
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const linkName: any = formData.get("folder-name");
-        let path = window.location.pathname;
+        let path = pathname;
         const title = formData.get("title") || linkName;
         // Add "/" to the start of the link name if it doesn't exist
 
@@ -83,8 +89,8 @@ export default function NewFolder({
         setIsSubmitted(true);
     };
 
-    const closeModal = () => {
-        onClose();
+    const handleCloseModal = () => {
+        setIsNewFolderModalOpen(false);
         setIsMoreOptionsOpen(false);
     };
 
@@ -95,16 +101,20 @@ export default function NewFolder({
             setSnackbarTitle("create new folder error!");
             setSnackbarMessage(response.message);
             setIsSubmitted(false);
-        } else if (isLoading || !fetchStarted) {
+        } else if (isLoading) {
             console.log("Loading...");
         } else {
-            onNewItemCreated();
-            onClose();
+            setIsNewFolderModalOpen(false);
             setIsSubmitted(false);
+            setDoRefetch(true);
         }
     }
     return (
-        <Modal isOpen={isOpen} onClose={closeModal} onOutsideClick={closeModal}>
+        <Modal
+            isOpen={isNewFolderModalOpen}
+            onClose={handleCloseModal}
+            onOutsideClick={handleCloseModal}
+        >
             <h3 className="text-neutral-800 mb-8">New Folder</h3>
             <form onSubmit={onSubmit}>
                 <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-0 mb-6">
@@ -127,12 +137,13 @@ export default function NewFolder({
                         className="input text-lg text-primary-500 font-bold flex-grow"
                         autoFocus
                         required
+                        autoComplete="off"
                     />
                     <Button
                         className="md:ml-4 h-[2.7rem] px-4 w-24"
-                        disabled={isSubmitted && (isLoading || !fetchStarted)}
+                        disabled={isSubmitted && isLoading}
                     >
-                        {isSubmitted && (isLoading || !fetchStarted) ? (
+                        {isSubmitted && isLoading ? (
                             <LoadingAnimation bg="rgb(var(--color-neutral-100))" />
                         ) : (
                             "Add"
@@ -171,16 +182,9 @@ export default function NewFolder({
                             name="title"
                             placeholder="Custom Title"
                             className="input"
+                            autoComplete="off"
                         />
                     </div>
-                    {/* TODO: adapt to the new directory item card to follow product on figma */}
-                    {/* <DirectoryItemCard
-                        content="display link"
-                        title={title}
-                        url={linkNameRef.current?.value || ""}
-                        effieUrl=""
-                        className="h-fit"
-                    /> */}
                 </div>
             </form>
         </Modal>

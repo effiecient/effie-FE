@@ -13,6 +13,7 @@ export type FolderLinkDataArray = {
 };
 
 export type FolderLinkData = {
+    relativePath: string;
     id: string;
     title: string;
     isPinned: boolean;
