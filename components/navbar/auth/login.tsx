@@ -56,7 +56,7 @@ export default function Login({ isOpen, onClose }: LoginProps) {
     function handleLoginButton() {
         signInWithPopup(auth, provider)
             .then((result: any) => {
-                console.log(result);
+                // console.log(result);
                 // set user to local storage
                 fetcher({
                     url: `${BE_BASE_URL}/user/login-google`,

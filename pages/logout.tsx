@@ -21,7 +21,7 @@ export default function Logout() {
         signOut(auth)
             .then(() => {
                 // Sign-out successful.
-                console.log("sign out success");
+                // console.log("sign out success");
                 // remove user from local storage
                 if (typeof localStorage !== "undefined") {
                     localStorage.removeItem("uid");
@@ -30,7 +30,7 @@ export default function Logout() {
             })
             .catch((error) => {
                 // An error happened.
-                console.log("sign out failed");
+                // console.log("sign out failed");
             });
     }
 

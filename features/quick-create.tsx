@@ -72,7 +72,7 @@ export default function QuickCreate() {
             setSnackbarMessage(response.message);
             setIsSubmitted(false);
         } else if (isLoading) {
-            console.log("Loading...");
+            // console.log("Loading...");
         } else {
             setShowSnackbar(true);
             setSsnackbarType("success");
