@@ -76,7 +76,7 @@ export default function Register({ isOpen, onClose }: RegisterProps) {
             setSnackbarTitle("register error!");
             setSnackbarMessage(response.message);
         } else if (isLoading) {
-            console.log("loading...");
+            // console.log("loading...");
         } else {
             if (!response.data.isRegistered) {
                 // navigate to /createUsername

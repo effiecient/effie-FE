@@ -93,8 +93,8 @@ export const useRightContext = () => {
 
     const handleRightClick = (e: any) => {
         e.preventDefault();
-        setX(e.pageX);
-        setY(e.pageY);
+        setX(e.clientX);
+        setY(e.clientY);
         setIsOpen(true);
     };
 

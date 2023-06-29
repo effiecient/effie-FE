@@ -65,7 +65,7 @@ export function DirectoryItemCard({
             setIsNewLinkModalOpen(true);
         } else if (content === "link" || content === "folder") {
             setFocusedItemData(DirectoryItemData);
-            console.log("DirectoryItemData", DirectoryItemData);
+            // console.log("DirectoryItemData", DirectoryItemData);
             // setIsRightSideBarPropertiesOpen(true);
         }
     };

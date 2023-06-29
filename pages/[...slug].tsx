@@ -27,7 +27,7 @@ export default function Directory({
         isError,
         response,
     };
-    console.log("response", response);
+    // console.log("response", response);
 
     return (
         <GlobalStateSetter {...globalStateSetterProps}>
@@ -96,7 +96,7 @@ export async function getServerSideProps(context: any) {
 
     // get pathname
     const pathname = context.req.url;
-    console.log("pathname server side", pathname);
+    // console.log("pathname server side", pathname);
 
     if (subdomain && subdomain !== "www") {
         isSubdomain = true;

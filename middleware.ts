@@ -7,14 +7,14 @@ import { EFFIE_AUTH_TOKEN } from "./constants";
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
     if (request.nextUrl.pathname.startsWith("/_next")) {
-        console.log("out: _next");
+        // console.log("out: _next");
         return NextResponse.next();
     }
 
     const refererPath = request.headers.get("referer");
     const host: any = request.headers.get("host");
     if (!host) {
-        console.log("out: no host");
+        // console.log("out: no host");
         // console.log(request);
         return NextResponse.next();
     }
@@ -25,9 +25,9 @@ export async function middleware(request: NextRequest) {
     //     return NextResponse.next();
     // }
 
-    console.log("pathname", pathname);
+    // console.log("pathname", pathname);
     if (pathname === "/") {
-        console.log("out: pathname === /");
+        // console.log("out: pathname === /");
         return NextResponse.next();
     }
 
@@ -36,7 +36,7 @@ export async function middleware(request: NextRequest) {
     const subdomain = host.split(".")[0];
 
     if (!subdomain || subdomain === "www") {
-        console.log("out: invalid subdomain");
+        // console.log("out: invalid subdomain");
         return NextResponse.next();
     }
 
@@ -66,7 +66,7 @@ export async function middleware(request: NextRequest) {
 
     // handling response
     if (linkOrFolderData.status == BE_STATUS_ERROR) {
-        console.log("out: BE_STATUS_ERROR");
+        // console.log("out: BE_STATUS_ERROR");
 
         return NextResponse.next();
     }

@@ -102,7 +102,7 @@ export function NewFolderModal() {
             setSnackbarMessage(response.message);
             setIsSubmitted(false);
         } else if (isLoading) {
-            console.log("Loading...");
+            // console.log("Loading...");
         } else {
             setIsNewFolderModalOpen(false);
             setIsSubmitted(false);
