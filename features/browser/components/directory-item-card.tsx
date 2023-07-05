@@ -43,6 +43,7 @@ export function DirectoryItemCard({
         setIsNewLinkModalOpen,
         focusedItemData,
         setDoRefetch,
+        setIsClickedFromBreadcrumb,
     ] = useBrowserStore(
         (state: any) => [
             state.pathname,
@@ -54,6 +55,7 @@ export function DirectoryItemCard({
             state.setIsNewLinkModalOpen,
             state.focusedItemData,
             state.setDoRefetch,
+            state.setIsClickedFromBreadcrumb,
         ],
         shallow
     );
@@ -64,6 +66,7 @@ export function DirectoryItemCard({
         } else if (content === "new link") {
             setIsNewLinkModalOpen(true);
         } else if (content === "link" || content === "folder") {
+            setIsClickedFromBreadcrumb(false);
             setFocusedItemData(DirectoryItemData);
             // console.log("DirectoryItemData", DirectoryItemData);
             // setIsRightSideBarPropertiesOpen(true);
@@ -134,6 +137,7 @@ export function DirectoryItemCard({
                                 {
                                     title: "info",
                                     onClick: () => {
+                                        setIsClickedFromBreadcrumb(false);
                                         setFocusedItemData(DirectoryItemData);
                                         setIsRightSideBarPropertiesOpen(true);
                                     },
