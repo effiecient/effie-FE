@@ -33,15 +33,16 @@ export const Content = () => {
         focusedItemData,
         setDoRefetch,
         setIsConfirmationModalOpen,
+        isClickedFromBreadcrumb,
     ] = useBrowserStore((state: any) => [
         state.pathname,
         state.focusedItemData,
         state.setDoRefetch,
         state.setIsConfirmationModalOpen,
+        state.isClickedFromBreadcrumb,
     ]);
     const [{ isLoading, isError, response }, fetcher] = useFetchEffieBE();
 
-    const [localPathname, setLocalPathname] = useState(pathname);
     const [
         setShowSnackbar,
         setSnackbarType,
@@ -60,8 +61,10 @@ export const Content = () => {
     const [editedItemData, setEditedItemData] =
         useLegacyState<any>(focusedItemData);
 
-    const [pathnameWithRelativePath, setPathnameWithRelativePath] =
-        useState("");
+    const [localPathname, setLocalPathname] = useState(pathname);
+
+    const [localRelativePath, setLocalRelativePath] = useState();
+    useState("");
     const [effieLink, setEffieLink] = useState("");
 
     const [startUpdate, setStartUpdate] = useState(false);
@@ -73,11 +76,9 @@ export const Content = () => {
         setIsConfirmationModalOpen(false);
         setEditedItemData(focusedItemData, true);
 
-        // check if this is the folder in which the user is in or not.
-        const isUserInThisFolder = focusedItemData?.children ? true : false;
-
         let tempLocalPathname;
-        if (isUserInThisFolder) {
+
+        if (isClickedFromBreadcrumb) {
             // truncate from the last slash
             tempLocalPathname = pathname.substring(
                 0,
@@ -87,24 +88,28 @@ export const Content = () => {
             if (tempLocalPathname[0] !== "/") {
                 tempLocalPathname = `/${tempLocalPathname}`;
             }
+            setLocalPathname(tempLocalPathname);
+
+            // without / at start
+            setLocalRelativePath(
+                pathname.substring(pathname.lastIndexOf("/") + 1)
+            );
+            setEffieLink(
+                `${FE_PROTOCOL}://${subdomain}.${FE_BASE_URL}${pathname}`
+            );
         } else {
             tempLocalPathname = pathname;
-        }
-        setLocalPathname(tempLocalPathname);
+            setLocalPathname(tempLocalPathname);
 
-        let tempPathnameWithRelativePath = `${tempLocalPathname}${
-            focusedItemData?.relativePath &&
-            tempLocalPathname[tempLocalPathname.length - 1] !== "/"
-                ? "/"
-                : ""
-        }${
-            focusedItemData?.relativePath ||
-            pathname.substring(pathname.lastIndexOf("/") + 1)
-        }`;
-        setPathnameWithRelativePath(tempPathnameWithRelativePath);
-        setEffieLink(
-            `${FE_PROTOCOL}://${subdomain}.${FE_BASE_URL}${tempPathnameWithRelativePath}`
-        );
+            setLocalRelativePath(focusedItemData?.relativePath);
+            setEffieLink(
+                `${FE_PROTOCOL}://${subdomain}.${FE_BASE_URL}${tempLocalPathname}${
+                    tempLocalPathname[tempLocalPathname.length - 1] !== "/"
+                        ? "/"
+                        : ""
+                }${focusedItemData?.relativePath}`
+            );
+        }
     }, [focusedItemData]);
 
     // reset editedItemData when the exit edit mode
@@ -142,9 +147,7 @@ export const Content = () => {
                 body: {
                     username: subdomain,
                     path: localPathname,
-                    relativePath:
-                        focusedItemData?.relativePath ||
-                        pathname.substring(pathname.lastIndexOf("/") + 1),
+                    relativePath: localRelativePath,
                     ...focusedItemDataDifferences,
                 },
             });
