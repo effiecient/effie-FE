@@ -223,9 +223,9 @@ export default function Browser({
                         <section
                             className={`${
                                 view === "grid"
-                                    ? "flex-row gap-4 pb-4"
-                                    : "flex-col"
-                            } flex w-full flex-wrap`}
+                                    ? "grid gap-4 grid-cols-[repeat(auto-fill,_minmax(200px,_1fr))] md:grid-cols-[repeat(auto-fill,_minmax(300px,_1fr))]"
+                                    : "flex flex-col"
+                            }`}
                         >
                             {view === "grid" && (
                                 <DirectoryItemCard
@@ -255,7 +255,9 @@ export default function Browser({
                         )}
                         <section
                             className={`${
-                                view === "grid" ? "flex-row gap-4" : "flex-col"
+                                view === "grid"
+                                    ? "grid gap-4 grid-cols-[repeat(auto-fill,_minmax(200px,_1fr))] md:grid-cols-[repeat(auto-fill,_minmax(300px,_1fr))]"
+                                    : "flex-col"
                             } flex w-full flex-wrap`}
                         >
                             {view === "grid" && (
