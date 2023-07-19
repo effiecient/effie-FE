@@ -53,9 +53,7 @@ export default function CopyButton({ effieURL, link, view }: copyButtonProps) {
             <div
                 ref={copySuccessRef}
                 className={`opacity-0
-                -translate-y-1 -z-10 absolute -bottom-12 ${
-                    view === "grid" ? "-right-12" : "right-0"
-                } bg-neutral-800 text-white rounded-md py-1 px-2 shadow-lg text-left duration-300 max-w-[12rem]`}
+                -translate-y-1 -z-10 absolute -bottom-12 right-0 bg-neutral-800 text-white rounded-md py-1 px-2 shadow-lg text-left duration-300 max-w-[12rem]`}
             >
                 <div className="text-xs">
                     Link copied!

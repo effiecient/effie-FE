@@ -8,6 +8,7 @@ export const BrowserBreadcrumb = () => {
     const [
         pathname,
         setPathname,
+        doRefetch,
         setDoRefetch,
         currentDirectoryData,
         setFocusedItemData,
@@ -16,6 +17,7 @@ export const BrowserBreadcrumb = () => {
         (state: any) => [
             state.pathname,
             state.setPathname,
+            state.doRefetch,
             state.setDoRefetch,
             state.currentDirectoryData,
             state.setFocusedItemData,
@@ -33,6 +35,10 @@ export const BrowserBreadcrumb = () => {
     const { width = 768 } = useWindowSize();
 
     const handleBreadcrumbClick = (newPathname: string) => {
+        // prevent refetch when loading
+        if (doRefetch) {
+            return;
+        }
         setPathname(newPathname);
         setDoRefetch(true);
     };
