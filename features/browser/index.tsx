@@ -223,7 +223,7 @@ export default function Browser({
                         <section
                             className={`${
                                 view === "grid"
-                                    ? "grid gap-4 grid-cols-[repeat(auto-fill,_minmax(150px,_1fr))] md:grid-cols-[repeat(auto-fill,_minmax(300px,_1fr))]"
+                                    ? "grid gap-4 grid-cols-[repeat(auto-fill,_minmax(8rem,_1fr))] md:grid-cols-[repeat(auto-fill,_minmax(12rem,_1fr))]"
                                     : "flex flex-col"
                             }`}
                         >
@@ -256,7 +256,7 @@ export default function Browser({
                         <section
                             className={`${
                                 view === "grid"
-                                    ? "grid gap-4 grid-cols-[repeat(auto-fill,_minmax(150px,_1fr))] md:grid-cols-[repeat(auto-fill,_minmax(300px,_1fr))]"
+                                    ? "grid gap-4 grid-cols-[repeat(auto-fill,_minmax(8rem,_1fr))] md:grid-cols-[repeat(auto-fill,_minmax(12rem,_1fr))]"
                                     : "flex-col"
                             } flex w-full flex-wrap`}
                         >
