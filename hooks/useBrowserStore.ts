@@ -14,6 +14,8 @@ export const useBrowserStore = create((set) => ({
     currentDirectoryData: undefined,
     isConfirmationModalOpen: false,
     isClickedFromBreadcrumb: false,
+    isMoveModalOpen: false,
+    itemPathToMove: undefined,
     setPathname: (pathname: string) => set(() => ({ pathname })),
     setView: (view: string) => set(() => ({ view })),
     setSortOption: (sortOption: string) => set(() => ({ sortOption })),
@@ -32,6 +34,8 @@ export const useBrowserStore = create((set) => ({
         set(() => ({ isConfirmationModalOpen: by })),
     setIsClickedFromBreadcrumb: (by: boolean) =>
         set(() => ({ isClickedFromBreadcrumb: by })),
+    setIsMoveModalOpen: (by: boolean) => set(() => ({ isMoveModalOpen: by })),
+    setItemPathToMove: (path: string) => set(() => ({ itemPathToMove: path })),
 }));
 
 export default useBrowserStore;

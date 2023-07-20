@@ -34,12 +34,16 @@ export const Content = () => {
         setDoRefetch,
         setIsConfirmationModalOpen,
         isClickedFromBreadcrumb,
+        setIsMoveModalOpen,
+        setItemPathToMove,
     ] = useBrowserStore((state: any) => [
         state.pathname,
         state.focusedItemData,
         state.setDoRefetch,
         state.setIsConfirmationModalOpen,
         state.isClickedFromBreadcrumb,
+        state.setIsMoveModalOpen,
+        state.setItemPathToMove,
     ]);
     const [{ isLoading, isError, response }, fetcher] = useFetchEffieBE();
 
@@ -179,6 +183,15 @@ export const Content = () => {
 
     function handleDeleteButtonClick() {
         setIsConfirmationModalOpen(true);
+    }
+
+    function handleMoveButtonClick() {
+        setItemPathToMove(
+            `${pathname}${pathname === "/" ? "" : "/"}${
+                focusedItemData.relativePath
+            }`
+        );
+        setIsMoveModalOpen(true);
     }
 
     return (
@@ -594,6 +607,9 @@ export const Content = () => {
                                         width={24}
                                     />
                                     Delete
+                                </Button>
+                                <Button onClick={handleMoveButtonClick}>
+                                    move
                                 </Button>
                             </>
                         )}
