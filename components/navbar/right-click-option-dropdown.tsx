@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useBrowserStore, useUserStore } from "@/hooks";
 import React, { useEffect, useRef } from "react";
 import ThemeIcon from "@/public/icons/theme";
-import { FE_DOMAIN, FE_TOP_LEVEL_DOMAIN } from "@/config";
+import { FE_DOMAIN, FE_FULL_BASE_URL, FE_TOP_LEVEL_DOMAIN } from "@/config";
 import { saveToCookie } from "@/helper";
 
 type RightClickOptionDropdownProps = {
@@ -117,9 +117,24 @@ export default function RightClickOptionDropdown({
                     ))}
                 </div>
             </div>
+            {/* About */}
+            <div className="border-b border-neutral-100">
+                <Link
+                    href={`${FE_FULL_BASE_URL}/about`}
+                    className="flex gap-2 items-center pt-3 pb-4 px-5 hover:bg-neutral-50 rounded-b-lg duration-200"
+                >
+                    {/* <Image
+                    src="/icons/logout.svg"
+                    alt="logout icon"
+                    width={24}
+                    height={24}
+                /> */}
+                    <p>About</p>
+                </Link>
+            </div>
             {/* LOG OUT */}
             <Link
-                href="/logout"
+                href={`${FE_FULL_BASE_URL}/logout`}
                 className="flex gap-2 items-center text-danger-300 pt-3 pb-4 px-5 hover:bg-neutral-50 rounded-b-lg duration-200"
             >
                 <Image

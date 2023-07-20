@@ -19,6 +19,7 @@ import {
     NewFolderModal,
     DirectoryItemCard,
     ConfirmationModal,
+    MoveModal,
 } from "./components";
 import { sortDataToFolderAndLink } from "./utils/sortDataToFolderAndLink";
 
@@ -289,6 +290,7 @@ export default function Browser({
                 <NewLinkModal />
                 <NewFolderModal />
                 <ConfirmationModal />
+                <MoveModal />
                 <RightContext />
                 {/* <KeyboardShortcuts
                     isOpen={isKeyboardShortcutsModalOpen}

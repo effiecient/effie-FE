@@ -1,5 +1,4 @@
-import { Snackbar } from "@/components";
-import { Browser } from "@/features";
+import { About, Browser, CreateUsername, Logout } from "@/features";
 
 import { GlobalStateSetter } from "@/middlewares";
 import React from "react";
@@ -15,6 +14,7 @@ export default function Directory({
     authResponse,
     isSubdomain,
     subdomain,
+    pathname,
 }: any) {
     const globalStateSetterProps = {
         isLoggedIn,
@@ -28,7 +28,37 @@ export default function Directory({
         response,
     };
     // console.log("response", response);
+    console.log("pathname", pathname);
+    console.log(globalStateSetterProps);
 
+    // logout
+    if (pathname == "/logout" && !isSubdomain) {
+        return <Logout />;
+    }
+
+    // about
+    if (pathname == "/about" && !isSubdomain) {
+        return (
+            <>
+                <GlobalStateSetter {...globalStateSetterProps}>
+                    <About />
+                </GlobalStateSetter>
+            </>
+        );
+    }
+
+    // create username
+    if (pathname == "/create-username" && !isSubdomain) {
+        return (
+            <>
+                <GlobalStateSetter {...globalStateSetterProps}>
+                    <CreateUsername />
+                </GlobalStateSetter>
+            </>
+        );
+    }
+
+    // traversing directory
     return (
         <GlobalStateSetter {...globalStateSetterProps}>
             <Browser {...browserProps} />
@@ -95,8 +125,7 @@ export async function getServerSideProps(context: any) {
     subdomain = host.split(".")[0];
 
     // get pathname
-    const pathname = context.req.url;
-    // console.log("pathname server side", pathname);
+    const pathname = context.resolvedUrl;
 
     if (subdomain && subdomain !== "www") {
         isSubdomain = true;
@@ -131,6 +160,7 @@ export async function getServerSideProps(context: any) {
             isSubdomain,
             subdomain,
             theme,
+            pathname,
         },
     };
 }
