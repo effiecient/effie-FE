@@ -21,6 +21,7 @@ import {
     ConfirmationModal,
 } from "./components";
 import { sortDataToFolderAndLink } from "./utils/sortDataToFolderAndLink";
+import { MoveModal } from "./components/move-modal";
 
 export default function Browser({
     response,
@@ -289,6 +290,7 @@ export default function Browser({
                 <NewLinkModal />
                 <NewFolderModal />
                 <ConfirmationModal />
+                <MoveModal />
                 <RightContext />
                 {/* <KeyboardShortcuts
                     isOpen={isKeyboardShortcutsModalOpen}

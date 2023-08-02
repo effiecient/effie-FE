@@ -2,22 +2,31 @@ import { BE_BASE_URL } from "@/config";
 import { useBrowserStore, useFetchEffieBE, useUserStore } from "@/hooks";
 import { Button, Modal } from "@/ui";
 import { useEffect, useState } from "react";
-import { createFalse } from "typescript";
 
 export function MoveModal() {
     const subdomain = useUserStore((state: any) => state.subdomain);
 
-    const [isMoveModalOpen, setIsMoveModalOpen, itemPathToMove] =
+    const [isMoveModalOpen, setIsMoveModalOpen, itemPathToMove, setDoRefetch] =
         useBrowserStore((state: any) => [
             state.isMoveModalOpen,
             state.setIsMoveModalOpen,
             state.itemPathToMove,
+            state.setDoRefetch,
         ]);
 
     function handleCloseModal() {
         setIsMoveModalOpen(false);
     }
     const [{ isLoading, isError, response }, fetcher] = useFetchEffieBE();
+    const [
+        {
+            isLoading: isLoadingMove,
+            isError: isErrorMove,
+            response: responseMove,
+        },
+        fetcherMove,
+    ] = useFetchEffieBE();
+    const [doMove, setDoMove] = useState<boolean>(false);
 
     const [folderPath, setFolderPath] = useState<string[]>([]);
 
@@ -27,9 +36,36 @@ export function MoveModal() {
             const path = folderPath.join("/");
             fetcher({
                 url: `${BE_BASE_URL}/directory/${subdomain}/${path}`,
+                body: {
+                    newPath: "/" + folderPath.join("/"),
+                },
             });
         }
     }, [isMoveModalOpen, folderPath]);
+
+    // do move
+    useEffect(() => {
+        if (doMove) {
+            fetcherMove({
+                url: `${BE_BASE_URL}/directory/move/${subdomain}${itemPathToMove}`,
+                method: "PATCH",
+                body: {
+                    newPath: "/" + folderPath.join("/"),
+                },
+            });
+        }
+    }, [doMove]);
+
+    // subscribe to move folder path result
+    useEffect(() => {
+        if (!isLoadingMove && !isErrorMove && responseMove) {
+            console.log("response success");
+            setDoMove(false);
+            setDoRefetch(true);
+            setIsMoveModalOpen(false);
+        }
+        console.log(response);
+    }, [isLoadingMove, isErrorMove, responseMove]);
 
     // preprocess data
 
@@ -55,24 +91,30 @@ export function MoveModal() {
                     <div>{itemPathToMove}</div>
                     <div className="flex">
                         <p
+                            className="hover:cursor-pointer hover:underline"
                             onClick={() => {
-                                setFolderPath([]);
+                                if (folderPath.length > 0) setFolderPath([]);
                             }}
                         >
-                            {subdomain}/
+                            {subdomain}
                         </p>
+                        <p>/</p>
                         {folderPath.map((folder: any, index: number) => {
                             return (
                                 <>
                                     <p
+                                        className="hover:cursor-pointer hover:underline"
                                         onClick={() => {
+                                            if (folderPath.length === index + 1)
+                                                return;
                                             setFolderPath(
                                                 folderPath.slice(0, index + 1)
                                             );
                                         }}
                                     >
-                                        {folder}/
+                                        {folder}
                                     </p>
+                                    <p>/</p>
                                 </>
                             );
                         })}
@@ -82,11 +124,11 @@ export function MoveModal() {
                         <div>loading...</div>
                     ) : (
                         <>
-                            {folders.map((folder: any) => {
+                            {folders.map((folder: any, index: number) => {
                                 return (
-                                    <>
+                                    <div key={index} className="flex">
                                         <div
-                                            className="my-2 hover:cursor-pointer"
+                                            className="my-2 hover:cursor-pointer p-2 border-2 rounded-md bg-neutral-300 hover:bg-neutral-800 hover:text-neutral-50"
                                             onClick={() =>
                                                 setFolderPath([
                                                     ...folderPath,
@@ -96,7 +138,7 @@ export function MoveModal() {
                                         >
                                             <p>{folder.title}</p>
                                         </div>
-                                    </>
+                                    </div>
                                 );
                             })}
                         </>
@@ -105,8 +147,14 @@ export function MoveModal() {
 
                 {/* bottom section */}
                 <div className="flex justify-between">
-                    <Button>new folder</Button>
-                    <Button>move here</Button>
+                    {/* <Button>new folder</Button> */}
+                    <Button
+                        onClick={() => {
+                            setDoMove(true);
+                        }}
+                    >
+                        move here
+                    </Button>
                 </div>
             </div>
         </Modal>
