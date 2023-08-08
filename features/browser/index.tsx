@@ -19,6 +19,7 @@ import {
     NewFolderModal,
     DirectoryItemCard,
     ConfirmationModal,
+    MoveModal,
 } from "./components";
 import { sortDataToFolderAndLink } from "./utils/sortDataToFolderAndLink";
 import { MoveModal } from "./components/move-modal";

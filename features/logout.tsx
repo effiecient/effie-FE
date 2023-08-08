@@ -11,7 +11,7 @@ import { FE_FULL_BASE_URL } from "@/config";
 import { useEffect } from "react";
 import { removeFromCookie } from "@/helper";
 
-export default function Logout() {
+export function Logout() {
     // Initialize Firebase
     const app = initializeApp(FIREBASE_CONFIG);
     // Initialize Firebase Authentication and get a reference to the service
