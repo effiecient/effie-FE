@@ -145,8 +145,11 @@ export const Content = () => {
                     focusedItemDataDifferences.relativePath;
                 delete focusedItemDataDifferences.relativePath;
             }
+
             fetcher({
-                url: `${BE_BASE_URL}/directory/update/${subdomain}${localPathname}/${localRelativePath}`,
+                url: `${BE_BASE_URL}/directory/update/${subdomain}${localPathname}${
+                    localPathname === "/" ? "" : "/"
+                }${localRelativePath}`,
                 method: "PATCH",
                 body: {
                     ...focusedItemDataDifferences,

@@ -76,6 +76,21 @@ export default function RightClickOptionDropdown({
                 </div>
                 <p className="text-neutral-900 font-semibold">{username}</p>
             </div>
+            {/* About */}
+            <div className="border-b border-neutral-100">
+                <Link
+                    href={`${FE_FULL_BASE_URL}/about`}
+                    className="flex gap-2 items-center pt-3 pb-4 px-5 hover:bg-neutral-50 rounded-b-lg duration-200"
+                >
+                    {/* <Image
+                    src="/icons/logout.svg"
+                    alt="logout icon"
+                    width={24}
+                    height={24}
+                /> */}
+                    <p className="ml-[30px]">About</p>
+                </Link>
+            </div>
             {/* THEME */}
             <div className="px-5 py-3 border-b border-neutral-100">
                 {/* TITLE */}
@@ -117,21 +132,7 @@ export default function RightClickOptionDropdown({
                     ))}
                 </div>
             </div>
-            {/* About */}
-            <div className="border-b border-neutral-100">
-                <Link
-                    href={`${FE_FULL_BASE_URL}/about`}
-                    className="flex gap-2 items-center pt-3 pb-4 px-5 hover:bg-neutral-50 rounded-b-lg duration-200"
-                >
-                    {/* <Image
-                    src="/icons/logout.svg"
-                    alt="logout icon"
-                    width={24}
-                    height={24}
-                /> */}
-                    <p>About</p>
-                </Link>
-            </div>
+
             {/* LOG OUT */}
             <Link
                 href={`${FE_FULL_BASE_URL}/logout`}
