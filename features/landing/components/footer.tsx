@@ -9,15 +9,7 @@ export default function Footer() {
     return (
         <footer className="bg-white h-28 flex flex-row items-center justify-between">
             <div id="a" className="ml-8">
-                <p>
-                    created by{" "}
-                    <Link
-                        href="https://feliciasutandijo.my.id/"
-                        className="text-primary-500 hover:underline"
-                    >
-                        @feli
-                    </Link>
-                </p>
+                <Link href="about">About!</Link>
             </div>
             <div id="b" className="shrink">
                 <a href="mailto:13520004@std.stei.itb.ac.id">Contact Us</a>

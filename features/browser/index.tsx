@@ -22,7 +22,6 @@ import {
     MoveModal,
 } from "./components";
 import { sortDataToFolderAndLink } from "./utils/sortDataToFolderAndLink";
-import { MoveModal } from "./components/move-modal";
 
 export default function Browser({
     response,
