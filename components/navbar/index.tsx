@@ -115,7 +115,14 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
                             </div>
                         ) : (
                             // Navbar for non-logged-in users (landing page)
-                            <>
+                            <div className="flex justify-center items-center gap-2">
+                                {/* about */}
+                                <Link
+                                    href={`${FE_FULL_BASE_URL}/about`}
+                                    className="mr-6 text-neutral-600 hover:text-neutral-900"
+                                >
+                                    about
+                                </Link>
                                 {/* Login Button */}
                                 <Button
                                     onClick={() => {
@@ -156,7 +163,7 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
                                         Register
                                     </div>
                                 </Button>
-                            </>
+                            </div>
                         )}
                     </div>
                 </nav>

@@ -198,7 +198,7 @@ export function MoveModal() {
                 </div>
 
                 {/* bottom section */}
-                <div className="flex justify-between p-2 items-center">
+                <div className="flex flex-col md:flex-row justify-between p-2 items-center">
                     <div>
                         <p className="text-primary-300">
                             moving {itemPathToMove}
