@@ -12,7 +12,7 @@ export function About() {
                         {`thank you for reading this <3, much love to you. `}
                     </p>
                     <p className="text-lg mb-4">
-                        This tools is created by{" "}
+                        This tool is created by{" "}
                         <Link
                             href="https://feliciasutandijo.my.id/"
                             className="text-primary-500 hover:underline text-lg"

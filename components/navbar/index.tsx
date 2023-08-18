@@ -121,7 +121,7 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
                                     href={`${FE_FULL_BASE_URL}/about`}
                                     className="mr-6 text-neutral-600 hover:text-neutral-900"
                                 >
-                                    about
+                                    About
                                 </Link>
                                 {/* Login Button */}
                                 <Button
