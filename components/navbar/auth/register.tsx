@@ -84,7 +84,7 @@ export default function Register({ isOpen, onClose }: RegisterProps) {
                 router.push("/create-username");
             } else {
                 // if yes, then error (user already registered)
-                // TODO: Buat toast
+
                 setShowSnackbar(true);
                 setSsnackbarType("error");
                 setSnackbarTitle("user already registered!");

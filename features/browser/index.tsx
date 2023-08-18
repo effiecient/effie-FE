@@ -19,6 +19,7 @@ import {
     NewFolderModal,
     DirectoryItemCard,
     ConfirmationModal,
+    MoveModal,
 } from "./components";
 import { sortDataToFolderAndLink } from "./utils/sortDataToFolderAndLink";
 
@@ -38,8 +39,8 @@ export default function Browser({
         sortOption,
         isSortAsc,
         isRightSideBarPropertiesOpen,
-        focusedItemData,
         setFocusedItemData,
+        setFocusedPathname,
         doRefetch,
         setDoRefetch,
         setCurrentDirectoryData,
@@ -51,8 +52,8 @@ export default function Browser({
             state.sortOption,
             state.isSortAsc,
             state.isRightSideBarPropertiesOpen,
-            state.focusedItemData,
             state.setFocusedItemData,
+            state.setFocusedPathname,
             state.doRefetch,
             state.setDoRefetch,
             state.setCurrentDirectoryData,
@@ -94,41 +95,32 @@ export default function Browser({
         }
     }, [doRefetch]);
 
-    // 2.
+    // handle focused item data after refetch
     useEffect(() => {
         if (!isLoadingRefetch) {
             // update focused item data
 
-            // if previously focus on current folder, then focus on current folder
-            let newFocusedItemData = undefined;
-            if (focusedItemData?.children !== undefined && pathname !== "/") {
-                newFocusedItemData = responseRefetch?.data;
+            if (pathname === "/") {
+                setFocusedItemData(undefined);
+                setFocusedPathname(undefined);
             } else {
-                if (responseRefetch?.data?.children !== undefined) {
-                    responseRefetch.data.children.forEach((child: any) => {
-                        if (
-                            child.relativePath === focusedItemData?.relativePath
-                        ) {
-                            newFocusedItemData = child;
-                        }
-                    });
-                }
+                // focused on the folder fetched
+                setFocusedItemData(responseRefetch?.data);
+                setFocusedPathname(responseRefetch?.data?.path);
             }
-
-            setFocusedItemData(newFocusedItemData);
 
             setDoRefetch(false);
         }
     }, [isLoadingRefetch]);
 
     // return
-    if (isError) {
-        return <Page404 />;
-    }
-    if (isErrorRefetch) {
+    if (isError || isErrorRefetch) {
         return <Page404 />;
     }
 
+    // useEffect(()=>{}, [
+
+    // ])
     // preprocess data to be shown
     let responseData = responseRefetch ? responseRefetch.data : response.data;
 
@@ -143,7 +135,10 @@ export default function Browser({
     return (
         <>
             <Head>
-                <title>Effie</title>
+                <title>
+                    {pathname !== "/" ? pathname.split("/").pop() : subdomain} |
+                    Effie
+                </title>
                 <meta
                     name="description"
                     content="All your links, in one place."
@@ -168,6 +163,7 @@ export default function Browser({
                     onClick={() => {
                         // reset focused item
                         setFocusedItemData(undefined);
+                        setFocusedPathname(undefined);
                     }}
                 >
                     <div className="select-none absolute right-0 bottom-16 w-[50vw] h-[50vh]">
@@ -289,6 +285,7 @@ export default function Browser({
                 <NewLinkModal />
                 <NewFolderModal />
                 <ConfirmationModal />
+                <MoveModal />
                 <RightContext />
                 {/* <KeyboardShortcuts
                     isOpen={isKeyboardShortcutsModalOpen}

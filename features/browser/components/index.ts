@@ -6,3 +6,4 @@ export { BrowserHeader } from "./browser-header";
 export { RightSideBarProperties } from "./right-side-bar-properties";
 export { LeftSideBar } from "./left-side-bar";
 export { DirectoryItemCard } from "./directory-item-card";
+export { MoveModal } from "./move-modal";

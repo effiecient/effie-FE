@@ -16,7 +16,8 @@ import { useFetchEffieBE } from "@/hooks";
 import LoadingSVG from "@/components/loading-svg";
 import { useUserStore } from "@/hooks";
 import LoadingAnimation from "@/ui/loading-animation";
-export default function CreateUsername() {
+
+export function CreateUsername() {
     const router = useRouter();
 
     const isLoggedIn = useUserStore((state: any) => state.isLoggedIn);
@@ -80,7 +81,7 @@ export default function CreateUsername() {
 
     // Handle aftermath of creating username
     useEffect(() => {
-        if (isLoadingUsername === false) {
+        if (isLoadingUsername === false && responseUsername) {
             // Data is ready
             if (responseUsername.status === BE_STATUS_SUCCESS) {
                 setIsInputtingUsername(true);
@@ -113,8 +114,12 @@ export default function CreateUsername() {
     }
 
     if (isLoggedIn) {
-        router.push(`${FE_PROTOCOL}://${loggedInUsername}.${FE_BASE_URL}`);
-        return;
+        router.push(
+            `${FE_PROTOCOL}://${
+                loggedInUsername === "" ? "www" : loggedInUsername
+            }.${FE_BASE_URL}`
+        );
+        return <></>;
     }
 
     if (isDoneCreateUsername) {

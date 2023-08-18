@@ -39,6 +39,7 @@ export function DirectoryItemCard({
         view,
         setIsNewFolderModalOpen,
         setFocusedItemData,
+        setFocusedPathname,
         setIsRightSideBarPropertiesOpen,
         setIsNewLinkModalOpen,
         focusedItemData,
@@ -51,6 +52,7 @@ export function DirectoryItemCard({
             state.view,
             state.setIsNewFolderModalOpen,
             state.setFocusedItemData,
+            state.setFocusedPathname,
             state.setIsRightSideBarPropertiesOpen,
             state.setIsNewLinkModalOpen,
             state.focusedItemData,
@@ -68,6 +70,7 @@ export function DirectoryItemCard({
         } else if (content === "link" || content === "folder") {
             setIsClickedFromBreadcrumb(false);
             setFocusedItemData(DirectoryItemData);
+            setFocusedPathname(pathname);
             // console.log("DirectoryItemData", DirectoryItemData);
             // setIsRightSideBarPropertiesOpen(true);
         }
@@ -82,7 +85,10 @@ export function DirectoryItemCard({
             }${DirectoryItemData?.relativePath}`;
             setPathname(newPathname);
             setDoRefetch(true);
+            // setFocusedItemData(DirectoryItemData);
+            // setFocusedPathname(pathname);
             setFocusedItemData(undefined);
+            setFocusedPathname(undefined);
         } else if (content === "link") {
             // open url in new page
             window.open(DirectoryItemData?.link, "_blank");
@@ -138,6 +144,7 @@ export function DirectoryItemCard({
                                     onClick: () => {
                                         setIsClickedFromBreadcrumb(false);
                                         setFocusedItemData(DirectoryItemData);
+                                        setFocusedPathname(pathname);
                                         setIsRightSideBarPropertiesOpen(true);
                                     },
                                 },

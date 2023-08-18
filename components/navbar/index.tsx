@@ -8,12 +8,7 @@ import registerIcon from "@/public/icons/register.svg";
 import DirectoriesWhiteIcon from "@/public/icons/directories-white";
 // import newLinkIcon from "@/public/icons/new-link.svg";
 import defaultUserImg from "@/public/images/user.png";
-import {
-    useBrowserStore,
-    useRegister,
-    useSnackbarStore,
-    useUserStore,
-} from "@/hooks";
+import { useBrowserStore, useRegister, useUserStore } from "@/hooks";
 import Link from "next/link";
 // TODO: update this to import from config only
 import { FE_BASE_URL, FE_FULL_BASE_URL, FE_PROTOCOL } from "@/config/fe-config";
@@ -115,7 +110,7 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
                             </div>
                         ) : (
                             // Navbar for non-logged-in users (landing page)
-                            <>
+                            <div className="flex justify-center items-center gap-2">
                                 {/* Login Button */}
                                 <Button
                                     onClick={() => {
@@ -156,7 +151,7 @@ export default function Navbar({ isOnLanding = false }: NavbarProps) {
                                         Register
                                     </div>
                                 </Button>
-                            </>
+                            </div>
                         )}
                     </div>
                 </nav>

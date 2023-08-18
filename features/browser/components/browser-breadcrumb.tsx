@@ -12,6 +12,7 @@ export const BrowserBreadcrumb = () => {
         setDoRefetch,
         currentDirectoryData,
         setFocusedItemData,
+        setFocusedPathname,
         setIsClickedFromBreadcrumb,
     ] = useBrowserStore(
         (state: any) => [
@@ -21,6 +22,7 @@ export const BrowserBreadcrumb = () => {
             state.setDoRefetch,
             state.currentDirectoryData,
             state.setFocusedItemData,
+            state.setFocusedPathname,
             state.setIsClickedFromBreadcrumb,
         ],
         shallow
@@ -88,6 +90,9 @@ export const BrowserBreadcrumb = () => {
                                         setIsClickedFromBreadcrumb(true);
                                         setFocusedItemData(
                                             currentDirectoryData
+                                        );
+                                        setFocusedPathname(
+                                            currentDirectoryData.path
                                         );
                                     } else {
                                         handleBreadcrumbClick(

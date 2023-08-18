@@ -105,7 +105,7 @@ export async function getServerSideProps(context: any) {
     subdomain = host.split(".")[0];
 
     // get pathname
-    const pathname = context.req.url;
+    const pathname = context.resolvedUrl;
     // console.log("pathname server side", pathname);
 
     if (subdomain && subdomain !== "www") {

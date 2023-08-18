@@ -7,7 +7,7 @@ import LP1 from "@/public/images/lp1.png";
 import LP2 from "@/public/images/lp2.png";
 import LP3 from "@/public/images/lp3.png";
 import { useRegister, useWindowSize } from "@/hooks";
-import { Navbar, RightContext } from "@/components";
+import { Navbar, RightContext, Snackbar } from "@/components";
 import { useState } from "react";
 
 export default function Landing() {
@@ -120,6 +120,8 @@ export default function Landing() {
             </main>
 
             <Footer />
+            {/* modals */}
+            <Snackbar className="z-50" />
         </>
     );
 }
