@@ -135,7 +135,10 @@ export default function Browser({
     return (
         <>
             <Head>
-                <title>{pathname.split("/").pop()} | Effie</title>
+                <title>
+                    {pathname !== "/" ? pathname.split("/").pop() : subdomain} |
+                    Effie
+                </title>
                 <meta
                     name="description"
                     content="All your links, in one place."
