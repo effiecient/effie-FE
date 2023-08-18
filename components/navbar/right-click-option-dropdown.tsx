@@ -78,7 +78,7 @@ export default function RightClickOptionDropdown({
             </div>
 
             {/* THEME */}
-            <div className="px-5 py-3 border-b border-neutral-100">
+            <div className="px-5 py-3 border-b border-neutral-50">
                 {/* TITLE */}
                 <div className="flex gap-2 items-center mb-3">
                     <ThemeIcon className="h-6 w-6" />
@@ -118,20 +118,11 @@ export default function RightClickOptionDropdown({
                     ))}
                 </div>
             </div>
-            {/* ABOUT */}
-            <div className="border-b border-neutral-100">
-                <Link
-                    href={`${FE_FULL_BASE_URL}/about`}
-                    className="flex gap-2 items-center pt-3 pb-4 px-5 hover:bg-neutral-50 rounded-b-lg duration-200"
-                >
-                    <p className="ml-[30px]">About</p>
-                </Link>
-            </div>
 
             {/* LOG OUT */}
             <Link
                 href={`${FE_FULL_BASE_URL}/logout`}
-                className="flex gap-2 items-center text-danger-300 pt-3 pb-4 px-5 hover:bg-neutral-50 rounded-b-lg duration-200"
+                className="flex gap-2 items-center text-danger-300 pt-3 pb-4 px-5 hover:bg-neutral-50 duration-200 border-b border-neutral-300"
             >
                 <Image
                     src="/icons/logout.svg"
@@ -141,6 +132,18 @@ export default function RightClickOptionDropdown({
                 />
                 <p>Log out</p>
             </Link>
+            {/* ABOUT */}
+            <div className=" px-5 border-b border-neutral-100 flex justify-between py-2">
+                <div>
+                    <p className="text-neutral-300">Effie 08.23</p>
+                </div>
+                <Link
+                    href={`${FE_FULL_BASE_URL}/about`}
+                    className="flex items-center hover:text-neutral-800 rounded-b-lg duration-200 text-neutral-600"
+                >
+                    <p className="">About</p>
+                </Link>
+            </div>
         </div>
     );
 }
