@@ -119,7 +119,7 @@ export default function Browser({
     }
 
     // useEffect(()=>{}, [
-        
+
     // ])
     // preprocess data to be shown
     let responseData = responseRefetch ? responseRefetch.data : response.data;
@@ -135,7 +135,7 @@ export default function Browser({
     return (
         <>
             <Head>
-                <title>Effie</title>
+                <title>{pathname.split("/").pop()} | Effie</title>
                 <meta
                     name="description"
                     content="All your links, in one place."
