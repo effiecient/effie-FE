@@ -33,7 +33,7 @@ export const BrowserEmptyState = () => {
 
     let viewerMode = false;
     if (
-        currentDirectoryData?.publicAccess === "none" &&
+        currentDirectoryData?.publicAccess === "editor" &&
         subdomain !== username
     ) {
         viewerMode = true;
