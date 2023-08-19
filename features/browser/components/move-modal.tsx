@@ -76,7 +76,9 @@ export function MoveModal() {
         if (!doMove) {
             // do move
             fetcherMove({
-                url: `${BE_BASE_URL}/directory/move/${subdomain}${focusedPathname}/${focusedItemData.relativePath}`,
+                url: `${BE_BASE_URL}/directory/move/${subdomain}${focusedPathname}
+                ${focusedPathname === "/" ? "" : "/"}
+                ${focusedItemData.relativePath}`,
                 method: "PATCH",
                 body: {
                     newPath: "/" + folderPath.join("/"),
