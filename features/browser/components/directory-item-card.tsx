@@ -141,6 +141,10 @@ export function DirectoryItemCard({
                         } else {
                             setOptions([
                                 {
+                                    title: "open",
+                                    onClick: handleDoubleClick
+                                },
+                                {
                                     title: "info",
                                     onClick: () => {
                                         setFocusedItemData(DirectoryItemData);
