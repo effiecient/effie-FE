@@ -29,11 +29,11 @@ export const BrowserEmptyState = () => {
         state.username,
     ]);
 
-    // if subdomain !== username and currentDirectoryData  publicity is none, then return a different empty state
+    // if subdomain !== username and currentDirectoryData public access is not editor, then return a viewer mode empty state
 
     let viewerMode = false;
     if (
-        currentDirectoryData?.publicAccess === "editor" &&
+        currentDirectoryData?.publicAccess !== "editor" &&
         subdomain !== username
     ) {
         viewerMode = true;
