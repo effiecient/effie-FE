@@ -263,7 +263,7 @@ export function MoveModal() {
                     <Button
                         onClick={handleMoveButton}
                         disabled={doMove && isLoadingMove}
-                        className={`${width < 768 ? "w-full" : "w-32"}`}
+                        className={`${width < 768 ? "w-full" : "w-32"} h-8`}
                     >
                         {doMove && isLoadingMove ? (
                             <LoadingAnimation />
