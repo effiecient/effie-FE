@@ -1,5 +1,3 @@
-import { FolderLinkData } from "@/type";
-
 import Modal from "@/ui/modal";
 
 import { useBrowserStore, useWindowSize } from "@/hooks";

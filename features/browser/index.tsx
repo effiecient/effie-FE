@@ -18,7 +18,7 @@ import {
     NewLinkModal,
     NewFolderModal,
     DirectoryItemCard,
-    ConfirmationModal,
+    DeleteConfirmationModal,
     MoveModal,
 } from "./components";
 import { sortDataToFolderAndLink } from "./utils/sortDataToFolderAndLink";
@@ -39,11 +39,13 @@ export default function Browser({
         sortOption,
         isSortAsc,
         isRightSideBarPropertiesOpen,
+        focusedItemData,
         setFocusedItemData,
         setFocusedPathname,
         doRefetch,
         setDoRefetch,
         setCurrentDirectoryData,
+        setIsInEditMode,
     ] = useBrowserStore(
         (state: any) => [
             state.pathname,
@@ -52,11 +54,13 @@ export default function Browser({
             state.sortOption,
             state.isSortAsc,
             state.isRightSideBarPropertiesOpen,
+            state.focusedItemData,
             state.setFocusedItemData,
             state.setFocusedPathname,
             state.doRefetch,
             state.setDoRefetch,
             state.setCurrentDirectoryData,
+            state.setIsInEditMode,
         ],
         shallow
     );
@@ -96,17 +100,30 @@ export default function Browser({
     }, [doRefetch]);
 
     // handle focused item data after refetch
+    // check on previous relativePath. if exist, then focus on it. else, focus on current folder
     useEffect(() => {
         if (!isLoadingRefetch) {
-            // update focused item data
+            let newFocusedItemData = responseRefetch?.data?.children?.find(
+                (item: any) => {
+                    return item.id === focusedItemData?.id;
+                }
+            );
+            console.log("newFocusedItemData", newFocusedItemData);
 
-            if (pathname === "/") {
-                setFocusedItemData(undefined);
-                setFocusedPathname(undefined);
+            if (newFocusedItemData) {
+                setFocusedItemData(newFocusedItemData);
+                setFocusedPathname(pathname);
             } else {
-                // focused on the folder fetched
-                setFocusedItemData(responseRefetch?.data);
-                setFocusedPathname(responseRefetch?.data?.path);
+                if (pathname === "/") {
+                    setFocusedItemData(undefined);
+                    setFocusedPathname(undefined);
+                    setIsInEditMode(false);
+                } else {
+                    // focused on the folder fetched
+                    setFocusedItemData(responseRefetch?.data);
+                    setFocusedPathname(responseRefetch?.data?.path);
+                    setIsInEditMode(false);
+                }
             }
 
             setDoRefetch(false);
@@ -284,7 +301,7 @@ export default function Browser({
                 {/* # MODALS */}
                 <NewLinkModal />
                 <NewFolderModal />
-                <ConfirmationModal />
+                <DeleteConfirmationModal />
                 <MoveModal />
                 <RightContext />
                 {/* <KeyboardShortcuts

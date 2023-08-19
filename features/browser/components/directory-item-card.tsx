@@ -44,7 +44,9 @@ export function DirectoryItemCard({
         setIsNewLinkModalOpen,
         focusedItemData,
         setDoRefetch,
-        setIsClickedFromBreadcrumb,
+        setIsMoveModalOpen,
+        setIsDeleteConfirmationModalOpen,
+        setIsInEditMode,
     ] = useBrowserStore(
         (state: any) => [
             state.pathname,
@@ -57,7 +59,9 @@ export function DirectoryItemCard({
             state.setIsNewLinkModalOpen,
             state.focusedItemData,
             state.setDoRefetch,
-            state.setIsClickedFromBreadcrumb,
+            state.setIsMoveModalOpen,
+            state.setIsDeleteConfirmationModalOpen,
+            state.setIsInEditMode,
         ],
         shallow
     );
@@ -68,11 +72,9 @@ export function DirectoryItemCard({
         } else if (content === "new link") {
             setIsNewLinkModalOpen(true);
         } else if (content === "link" || content === "folder") {
-            setIsClickedFromBreadcrumb(false);
             setFocusedItemData(DirectoryItemData);
             setFocusedPathname(pathname);
-            // console.log("DirectoryItemData", DirectoryItemData);
-            // setIsRightSideBarPropertiesOpen(true);
+            setIsInEditMode(false);
         }
     };
 
@@ -83,12 +85,11 @@ export function DirectoryItemCard({
                     ? pathname
                     : pathname + "/"
             }${DirectoryItemData?.relativePath}`;
+
             setPathname(newPathname);
+            setIsInEditMode(false);
+
             setDoRefetch(true);
-            // setFocusedItemData(DirectoryItemData);
-            // setFocusedPathname(pathname);
-            setFocusedItemData(undefined);
-            setFocusedPathname(undefined);
         } else if (content === "link") {
             // open url in new page
             window.open(DirectoryItemData?.link, "_blank");
@@ -142,9 +143,34 @@ export function DirectoryItemCard({
                                 {
                                     title: "info",
                                     onClick: () => {
-                                        setIsClickedFromBreadcrumb(false);
                                         setFocusedItemData(DirectoryItemData);
                                         setFocusedPathname(pathname);
+                                        setIsInEditMode(false);
+                                        setIsRightSideBarPropertiesOpen(true);
+                                    },
+                                },
+                                {
+                                    title: "move",
+                                    onClick: () => {
+                                        setFocusedItemData(DirectoryItemData);
+                                        setFocusedPathname(pathname);
+                                        setIsMoveModalOpen(true);
+                                    },
+                                },
+                                {
+                                    title: "delete",
+                                    onClick: () => {
+                                        setFocusedItemData(DirectoryItemData);
+                                        setFocusedPathname(pathname);
+                                        setIsDeleteConfirmationModalOpen(true);
+                                    },
+                                },
+                                {
+                                    title: "edit",
+                                    onClick: () => {
+                                        setFocusedItemData(DirectoryItemData);
+                                        setFocusedPathname(pathname);
+                                        setIsInEditMode(true);
                                         setIsRightSideBarPropertiesOpen(true);
                                     },
                                 },

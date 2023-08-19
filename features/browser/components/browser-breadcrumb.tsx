@@ -13,7 +13,7 @@ export const BrowserBreadcrumb = () => {
         currentDirectoryData,
         setFocusedItemData,
         setFocusedPathname,
-        setIsClickedFromBreadcrumb,
+        setIsInEditMode,
     ] = useBrowserStore(
         (state: any) => [
             state.pathname,
@@ -23,7 +23,7 @@ export const BrowserBreadcrumb = () => {
             state.currentDirectoryData,
             state.setFocusedItemData,
             state.setFocusedPathname,
-            state.setIsClickedFromBreadcrumb,
+            state.setIsInEditMode,
         ],
         shallow
     );
@@ -42,6 +42,8 @@ export const BrowserBreadcrumb = () => {
             return;
         }
         setPathname(newPathname);
+        setFocusedItemData(undefined);
+        setFocusedPathname(undefined);
         setDoRefetch(true);
     };
     return (
@@ -87,13 +89,13 @@ export const BrowserBreadcrumb = () => {
                                 onClick={() => {
                                     // if last breadcrumb is clicked, focus on current directory
                                     if (index === location.length - 1) {
-                                        setIsClickedFromBreadcrumb(true);
                                         setFocusedItemData(
                                             currentDirectoryData
                                         );
                                         setFocusedPathname(
                                             currentDirectoryData.path
                                         );
+                                        setIsInEditMode(false);
                                     } else {
                                         handleBreadcrumbClick(
                                             `/${location
