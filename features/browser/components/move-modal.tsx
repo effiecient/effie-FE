@@ -143,11 +143,11 @@ export function MoveModal() {
             }`}
             withCloseButton={false}
         >
-            <div className="flex flex-col justify-between h-full">
-                <div className="">
-                    <div className="w-full">
+            <div className="h-full relative">
+                <>
+                    <>
                         {/* top section */}
-                        <div className="flex px-2 border-b-2 border-neutral-200 py-2 items-center">
+                        <div className="truncate flex px-2 border-b-2 border-neutral-200 py-2 items-center absolute top-0 w-full">
                             <div
                                 className="hover:cursor-pointer"
                                 onClick={() => {
@@ -176,7 +176,7 @@ export function MoveModal() {
                                                     fullBreadCrumb.length - 1
                                                         ? "text-neutral-800"
                                                         : "text-neutral-400 hover:text-neutral-600"
-                                                }`}
+                                                } truncate`}
                                                 onClick={() => {
                                                     // do nothing if last is clicked
                                                     if (
@@ -210,67 +210,91 @@ export function MoveModal() {
                                 })}
                         </div>
                         {/* middle section */}
-                        {isLoading ? (
-                            <>
-                                <div className="rounded-lg flex items-center">
-                                    <div className="my-2 p-2 animate-pulse w-16 h-5 bg-neutral-200 rounded-lg"></div>
+                        <div className="mt-12 mb-12 relative h-[75%] overflow-auto no-scrollbar">
+                            {isLoading ? (
+                                <>
+                                    <div className="rounded-lg flex items-center">
+                                        <div className="my-2 p-2 animate-pulse w-16 h-5 bg-neutral-200 rounded-lg"></div>
+                                    </div>
+                                    <div className="rounded-lg flex items-center">
+                                        <div className="my-2 p-2 animate-pulse w-24 h-5 bg-neutral-100 rounded-lg"></div>
+                                    </div>
+                                </>
+                            ) : (
+                                <div className="">
+                                    {folders.length === 0 ? (
+                                        <>
+                                            <p>this folder is empty!</p>
+                                        </>
+                                    ) : (
+                                        <>
+                                            {folders.map(
+                                                (
+                                                    folder: any,
+                                                    index: number
+                                                ) => {
+                                                    return (
+                                                        <div
+                                                            key={index}
+                                                            className="flex flex-row justify-between items-center
+                                        hover:bg-primary-100 rounded-lg px-2 hover:cursor-pointer w-full"
+                                                            onClick={() =>
+                                                                setFolderPath([
+                                                                    ...folderPath,
+                                                                    folder.title,
+                                                                ])
+                                                            }
+                                                        >
+                                                            <div className="flex flex-row items-center w-[90%]">
+                                                                <FolderIcon className="w-6 h-6" />
+                                                                <div className="m-2 w-full truncate">
+                                                                    <p className="truncate">
+                                                                        {
+                                                                            folder.title
+                                                                        }
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            <ChevronRightIcon className="w-6 h-6" />
+                                                        </div>
+                                                    );
+                                                }
+                                            )}
+                                        </>
+                                    )}
                                 </div>
-                                <div className="rounded-lg flex items-center">
-                                    <div className="my-2 p-2 animate-pulse w-24 h-5 bg-neutral-100 rounded-lg"></div>
-                                </div>
-                            </>
-                        ) : (
-                            <>
-                                {folders.map((folder: any, index: number) => {
-                                    return (
-                                        <div
-                                            key={index}
-                                            className="flex flex-row justify-between items-center
-                                        hover:bg-primary-100 rounded-lg px-2 hover:cursor-pointer"
-                                            onClick={() =>
-                                                setFolderPath([
-                                                    ...folderPath,
-                                                    folder.title,
-                                                ])
-                                            }
-                                        >
-                                            <div className="flex flex-row items-center">
-                                                <FolderIcon className="w-6 h-6" />
-                                                <div className="my-2 p-2">
-                                                    <p>{folder.title}</p>
-                                                </div>
-                                            </div>
-                                            <ChevronRightIcon className="w-6 h-6" />
-                                        </div>
-                                    );
-                                })}
-                            </>
-                        )}
-                    </div>
-                </div>
+                            )}
+                        </div>
+                    </>
+                </>
 
                 {/* bottom section */}
-                <div className="flex flex-col md:flex-row justify-between p-2 items-center">
-                    <div>
+                <div className="flex flex-col md:flex-row justify-between p-2 items-center absolute bottom-0 w-full">
+                    <div className="w-3/5">
                         <p className="text-primary-300 mr-2">
-                            moving {focusedPathname}
-                            {focusedPathname === "/" ? "" : "/"}
-                            {focusedItemData?.relativePath} to /
-                            {folderPath.join("/")}
+                            <p className="w-full truncate">
+                                moving {focusedPathname}
+                                {focusedPathname === "/" ? "" : "/"}
+                                {focusedItemData?.relativePath}
+                            </p>
+                            <p className="w-full truncate">
+                                to /{folderPath.join("/")}
+                            </p>
                         </p>
                     </div>
-
-                    <Button
-                        onClick={handleMoveButton}
-                        disabled={doMove && isLoadingMove}
-                        className={`${width < 768 ? "w-full" : "w-32"} h-8`}
-                    >
-                        {doMove && isLoadingMove ? (
-                            <LoadingAnimation />
-                        ) : (
-                            "move here"
-                        )}
-                    </Button>
+                    <div className="flex-none">
+                        <Button
+                            onClick={handleMoveButton}
+                            disabled={doMove && isLoadingMove}
+                            className={`${width < 768 ? "w-full" : "w-32"} h-8`}
+                        >
+                            {doMove && isLoadingMove ? (
+                                <LoadingAnimation />
+                            ) : (
+                                "move here"
+                            )}
+                        </Button>
+                    </div>
                 </div>
             </div>
         </Modal>
