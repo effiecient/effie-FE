@@ -210,7 +210,7 @@ export function MoveModal() {
                                 })}
                         </div>
                         {/* middle section */}
-                        <div className="mt-12 mb-12 relative h-[75%] overflow-auto no-scrollbar">
+                        <div className="mt-12 mb-12 relative h-[68%] md:h-[75%] overflow-auto no-scrollbar">
                             {isLoading ? (
                                 <>
                                     <div className="rounded-lg flex items-center">
