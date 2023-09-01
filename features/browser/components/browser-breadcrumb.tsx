@@ -1,4 +1,5 @@
 import { useBrowserStore, useUserStore, useWindowSize } from "@/hooks";
+import ChevronRightIcon from "@/public/icons/chevron-right";
 import { Breadcrumb } from "@/ui";
 import { useEffect, useState } from "react";
 import { shallow } from "zustand/shallow";
@@ -13,7 +14,7 @@ export const BrowserBreadcrumb = () => {
         currentDirectoryData,
         setFocusedItemData,
         setFocusedPathname,
-        setIsClickedFromBreadcrumb,
+        setIsInEditMode,
     ] = useBrowserStore(
         (state: any) => [
             state.pathname,
@@ -23,7 +24,7 @@ export const BrowserBreadcrumb = () => {
             state.currentDirectoryData,
             state.setFocusedItemData,
             state.setFocusedPathname,
-            state.setIsClickedFromBreadcrumb,
+            state.setIsInEditMode,
         ],
         shallow
     );
@@ -42,6 +43,8 @@ export const BrowserBreadcrumb = () => {
             return;
         }
         setPathname(newPathname);
+        setFocusedItemData(undefined);
+        setFocusedPathname(undefined);
         setDoRefetch(true);
     };
     return (
@@ -56,12 +59,14 @@ export const BrowserBreadcrumb = () => {
                         handleBreadcrumbClick(`/`);
                     }
                 }}
-                className="pr-4"
+                className="pr-1 text-neutral-800"
             />
             {((width < 768 && location.length > 1) ||
                 (width && location.length > 3)) && (
                 <div className="flex">
-                    <span className="text-neutral-300">/</span>
+                    <span className="text-neutral-300 flex justify-center items-center">
+                        <ChevronRightIcon className="w-6 h-6 text-neutral-800" />
+                    </span>
                     <Breadcrumb
                         path="..."
                         onClick={() => {
@@ -71,7 +76,7 @@ export const BrowserBreadcrumb = () => {
                                     .join("/")}`
                             );
                         }}
-                        className="px-4"
+                        className="px-1 text-neutral-800"
                     />
                 </div>
             )}
@@ -80,20 +85,22 @@ export const BrowserBreadcrumb = () => {
                 .map((loc: any, index: any) => {
                     return (
                         <div className="flex" key={index}>
-                            <span className="text-neutral-300">/</span>
+                            <span className="text-neutral-300 flex justify-center items-center">
+                                <ChevronRightIcon className="w-6 h-6 text-neutral-800" />
+                            </span>
                             <Breadcrumb
                                 key={index}
                                 path={loc}
                                 onClick={() => {
                                     // if last breadcrumb is clicked, focus on current directory
                                     if (index === location.length - 1) {
-                                        setIsClickedFromBreadcrumb(true);
                                         setFocusedItemData(
                                             currentDirectoryData
                                         );
                                         setFocusedPathname(
                                             currentDirectoryData.path
                                         );
+                                        setIsInEditMode(false);
                                     } else {
                                         handleBreadcrumbClick(
                                             `/${location
@@ -102,7 +109,11 @@ export const BrowserBreadcrumb = () => {
                                         );
                                     }
                                 }}
-                                className="px-4"
+                                className={`px-1 text-neutral-800 ${
+                                    index === location.length - 1 || width < 768
+                                        ? "text-primary-400"
+                                        : "text-neutral-800"
+                                }`}
                             />
                         </div>
                     );

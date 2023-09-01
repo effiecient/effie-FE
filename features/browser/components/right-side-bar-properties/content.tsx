@@ -1,7 +1,5 @@
-import { FolderLinkData, UpdateFolderReq, UpdateLinkReq } from "@/type";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import { copyToClipboard } from "@/utils";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
 import { Button, Input, Select } from "@/ui";
@@ -29,21 +27,21 @@ const ShareConfigurationOptions = ["none", "viewer", "editor"];
 export const Content = () => {
     const subdomain = useUserStore((state: any) => state.subdomain);
     const [
-        pathname,
         focusedItemData,
         focusedPathname,
         setDoRefetch,
-        setIsConfirmationModalOpen,
+        setIsDeleteConfirmationModalOpen,
         setIsMoveModalOpen,
-        setItemPathToMove,
+        isInEditMode,
+        setIsInEditMode,
     ] = useBrowserStore((state: any) => [
-        state.pathname,
         state.focusedItemData,
         state.focusedPathname,
         state.setDoRefetch,
-        state.setIsConfirmationModalOpen,
+        state.setIsDeleteConfirmationModalOpen,
         state.setIsMoveModalOpen,
-        state.setItemPathToMove,
+        state.isInEditMode,
+        state.setIsInEditMode,
     ]);
     const [{ isLoading, isError, response }, fetcher] = useFetchEffieBE();
 
@@ -59,15 +57,11 @@ export const Content = () => {
         state.setSnackbarMessage,
     ]);
     // right side bar variable
-    const [isInEditMode, setIsInEditMode] = useState(false);
     const [isChanged, setIsChanged] = useState(false);
 
     const [editedItemData, setEditedItemData] =
         useLegacyState<any>(focusedItemData);
 
-    const [localPathname, setLocalPathname] = useState(pathname);
-
-    const [localRelativePath, setLocalRelativePath] = useState();
     useState("");
     const [effieLink, setEffieLink] = useState("");
 
@@ -75,14 +69,10 @@ export const Content = () => {
 
     // reset everything when the focusedItemData is changed
     useEffect(() => {
-        setIsInEditMode(false);
+        // setIsInEditMode(false);
         setIsChanged(false);
-        setIsConfirmationModalOpen(false);
+        // setIsDeleteConfirmationModalOpen(false);
         setEditedItemData(focusedItemData, true);
-
-        setLocalPathname(focusedPathname);
-
-        setLocalRelativePath(focusedItemData?.relativePath);
 
         setEffieLink(
             `${FE_PROTOCOL}://${subdomain}.${FE_BASE_URL}${focusedPathname}${
@@ -122,9 +112,9 @@ export const Content = () => {
             }
 
             fetcher({
-                url: `${BE_BASE_URL}/directory/update/${subdomain}${localPathname}${
-                    localPathname === "/" ? "" : "/"
-                }${localRelativePath}`,
+                url: `${BE_BASE_URL}/directory/update/${subdomain}${focusedPathname}${
+                    focusedPathname === "/" ? "" : "/"
+                }${focusedItemData.relativePath}`,
                 method: "PATCH",
                 body: {
                     ...focusedItemDataDifferences,
@@ -157,15 +147,10 @@ export const Content = () => {
     }
 
     function handleDeleteButtonClick() {
-        setIsConfirmationModalOpen(true);
+        setIsDeleteConfirmationModalOpen(true);
     }
 
     function handleMoveButtonClick() {
-        setItemPathToMove(
-            `${pathname}${pathname === "/" ? "" : "/"}${
-                focusedItemData.relativePath
-            }`
-        );
         setIsMoveModalOpen(true);
     }
 

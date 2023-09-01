@@ -13,10 +13,9 @@ export const useBrowserStore = create((set) => ({
     focusedPathname: undefined, //convention: always start with /
     doRefetch: false,
     currentDirectoryData: undefined,
-    isConfirmationModalOpen: false,
-    isClickedFromBreadcrumb: false,
+    isDeleteConfirmationModalOpen: false,
     isMoveModalOpen: false,
-    itemPathToMove: undefined, // temporary
+    isInEditMode: false,
     setPathname: (pathname: string) => set(() => ({ pathname })),
     setView: (view: string) => set(() => ({ view })),
     setSortOption: (sortOption: string) => set(() => ({ sortOption })),
@@ -33,12 +32,10 @@ export const useBrowserStore = create((set) => ({
     setDoRefetch: (by: boolean) => set(() => ({ doRefetch: by })),
     setCurrentDirectoryData: (data: any) =>
         set(() => ({ currentDirectoryData: data })),
-    setIsConfirmationModalOpen: (by: boolean) =>
-        set(() => ({ isConfirmationModalOpen: by })),
-    setIsClickedFromBreadcrumb: (by: boolean) =>
-        set(() => ({ isClickedFromBreadcrumb: by })),
+    setIsDeleteConfirmationModalOpen: (by: boolean) =>
+        set(() => ({ isDeleteConfirmationModalOpen: by })),
     setIsMoveModalOpen: (by: boolean) => set(() => ({ isMoveModalOpen: by })),
-    setItemPathToMove: (path: string) => set(() => ({ itemPathToMove: path })),
+    setIsInEditMode: (by: boolean) => set(() => ({ isInEditMode: by })),
 }));
 
 export default useBrowserStore;

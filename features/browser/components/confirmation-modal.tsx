@@ -11,20 +11,20 @@ import { shallow } from "zustand/shallow";
 import { BE_BASE_URL } from "@/config";
 import { use, useEffect, useState } from "react";
 
-export function ConfirmationModal() {
+export function DeleteConfirmationModal() {
     const subdomain = useUserStore((state: any) => state.subdomain);
 
     const [
-        isConfirmationModalOpen,
-        setIsConfirmationModalOpen,
+        isDeleteConfirmationModalOpen,
+        setIsDeleteConfirmationModalOpen,
         focusedItemData,
         pathname,
         setPathname,
         setDoRefetch,
     ] = useBrowserStore(
         (state: any) => [
-            state.isConfirmationModalOpen,
-            state.setIsConfirmationModalOpen,
+            state.isDeleteConfirmationModalOpen,
+            state.setIsDeleteConfirmationModalOpen,
             state.focusedItemData,
             state.pathname,
             state.setPathname,
@@ -83,7 +83,7 @@ export function ConfirmationModal() {
             pathname.substring(pathname.lastIndexOf("/") + 1)
         }`;
         setPathnameWithRelativePath(tempPathnameWithRelativePath);
-    }, [isConfirmationModalOpen]);
+    }, [isDeleteConfirmationModalOpen]);
     // handle update
     useEffect(() => {
         if (startDelete) {
@@ -100,7 +100,7 @@ export function ConfirmationModal() {
                 setSnackbarType("success");
                 setSnackbarTitle("delete success!");
                 setSnackbarMessage(response.message);
-                setIsConfirmationModalOpen(false);
+                setIsDeleteConfirmationModalOpen(false);
                 // go to the parent folder if the user is in the folder that is deleted
                 setPathname(localPathname);
                 setDoRefetch(true);
@@ -115,12 +115,12 @@ export function ConfirmationModal() {
         setStartDelete(true);
     };
     const handleCloseModal = () => {
-        setIsConfirmationModalOpen(false);
+        setIsDeleteConfirmationModalOpen(false);
     };
 
     return (
         <Modal
-            isOpen={isConfirmationModalOpen}
+            isOpen={isDeleteConfirmationModalOpen}
             onClose={handleCloseModal}
             onOutsideClick={handleCloseModal}
         >

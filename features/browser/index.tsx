@@ -18,8 +18,9 @@ import {
     NewLinkModal,
     NewFolderModal,
     DirectoryItemCard,
-    ConfirmationModal,
+    DeleteConfirmationModal,
     MoveModal,
+    BrowserEmptyState,
 } from "./components";
 import { sortDataToFolderAndLink } from "./utils/sortDataToFolderAndLink";
 
@@ -39,11 +40,13 @@ export default function Browser({
         sortOption,
         isSortAsc,
         isRightSideBarPropertiesOpen,
+        focusedItemData,
         setFocusedItemData,
         setFocusedPathname,
         doRefetch,
         setDoRefetch,
         setCurrentDirectoryData,
+        setIsInEditMode,
     ] = useBrowserStore(
         (state: any) => [
             state.pathname,
@@ -52,11 +55,13 @@ export default function Browser({
             state.sortOption,
             state.isSortAsc,
             state.isRightSideBarPropertiesOpen,
+            state.focusedItemData,
             state.setFocusedItemData,
             state.setFocusedPathname,
             state.doRefetch,
             state.setDoRefetch,
             state.setCurrentDirectoryData,
+            state.setIsInEditMode,
         ],
         shallow
     );
@@ -96,17 +101,29 @@ export default function Browser({
     }, [doRefetch]);
 
     // handle focused item data after refetch
+    // check on previous relativePath. if exist, then focus on it. else, focus on current folder
     useEffect(() => {
         if (!isLoadingRefetch) {
-            // update focused item data
+            let newFocusedItemData = responseRefetch?.data?.children?.find(
+                (item: any) => {
+                    return item.id === focusedItemData?.id;
+                }
+            );
 
-            if (pathname === "/") {
-                setFocusedItemData(undefined);
-                setFocusedPathname(undefined);
+            if (newFocusedItemData) {
+                setFocusedItemData(newFocusedItemData);
+                setFocusedPathname(pathname);
             } else {
-                // focused on the folder fetched
-                setFocusedItemData(responseRefetch?.data);
-                setFocusedPathname(responseRefetch?.data?.path);
+                if (pathname === "/") {
+                    setFocusedItemData(undefined);
+                    setFocusedPathname(undefined);
+                    setIsInEditMode(false);
+                } else {
+                    // focused on the folder fetched
+                    setFocusedItemData(responseRefetch?.data);
+                    setFocusedPathname(responseRefetch?.data?.path);
+                    setIsInEditMode(false);
+                }
             }
 
             setDoRefetch(false);
@@ -118,9 +135,6 @@ export default function Browser({
         return <Page404 />;
     }
 
-    // useEffect(()=>{}, [
-
-    // ])
     // preprocess data to be shown
     let responseData = responseRefetch ? responseRefetch.data : response.data;
 
@@ -189,93 +203,101 @@ export default function Browser({
                             : "lg:mr-6"
                     }`}
                 >
-                    <div
-                        className={`${
-                            view === "grid" ? "pt-6" : "pt-0"
-                        } pb-24 lg:pb-6 px-6 relative`}
-                    >
-                        {/* ## FOLDER */}
+                    {/* # FOLDER & LINK */}
+                    {/* empty state */}
+                    {dataChildrenFolders.length === 0 &&
+                    dataChildrenLinks.length === 0 ? (
+                        <BrowserEmptyState />
+                    ) : (
+                        // filled state
+                        <div
+                            className={`${
+                                view === "grid" ? "pt-6" : "pt-0"
+                            } pb-24 lg:pb-6 px-6 relative`}
+                        >
+                            {/* ## FOLDER */}
 
-                        {view === "grid" && (
-                            <div className="flex justify-between items-center">
-                                <h5 className="text-neutral-400 relative z-10 pb-2">
-                                    Folders
+                            {view === "grid" && (
+                                <div className="flex justify-between items-center">
+                                    <h5 className="text-neutral-400 relative z-10 pb-2">
+                                        Folders
+                                    </h5>
+                                </div>
+                            )}
+                            {view === "list" && (
+                                <div className="py-3 grid grid-cols-[24px_1fr_1fr_60px] md:grid-cols-[24px_1fr_3fr_8rem_60px] items-center gap-4 border-b-2 !border-neutral-200 border-dashed sticky top-44 md:top-32 bg-neutral-50 z-30">
+                                    <p className="font-bold text-neutral-900 col-start-2">
+                                        Name
+                                    </p>
+                                    <p className="font-bold text-neutral-900">
+                                        Link
+                                    </p>
+                                    <p className="hidden md:block font-bold text-neutral-900">
+                                        Access
+                                    </p>
+                                </div>
+                            )}
+                            <section
+                                className={`${
+                                    view === "grid"
+                                        ? "grid gap-4 grid-cols-[repeat(auto-fill,_minmax(8rem,_1fr))] md:grid-cols-[repeat(auto-fill,_minmax(12rem,_1fr))]"
+                                        : "flex flex-col"
+                                }`}
+                            >
+                                {view === "grid" && (
+                                    <DirectoryItemCard
+                                        content="new folder"
+                                        disabled={isLoadingRefetch}
+                                    />
+                                )}
+                                {dataChildrenFolders.map(
+                                    (folderData: any, index: any) => {
+                                        return (
+                                            <DirectoryItemCard
+                                                disabled={isLoadingRefetch}
+                                                key={index}
+                                                content="folder"
+                                                DirectoryItemData={folderData}
+                                            />
+                                        );
+                                    }
+                                )}
+                            </section>
+                            {/* ## LINK */}
+
+                            {view === "grid" && (
+                                <h5 className="text-neutral-400 relative z-10 pt-2 pb-2">
+                                    Links
                                 </h5>
-                            </div>
-                        )}
-                        {view === "list" && (
-                            <div className="py-3 grid grid-cols-[24px_1fr_1fr_60px] md:grid-cols-[24px_1fr_3fr_8rem_60px] items-center gap-4 border-b-2 !border-neutral-200 border-dashed sticky top-44 md:top-32 bg-neutral-50 z-30">
-                                <p className="font-bold text-neutral-900 col-start-2">
-                                    Name
-                                </p>
-                                <p className="font-bold text-neutral-900">
-                                    Link
-                                </p>
-                                <p className="hidden md:block font-bold text-neutral-900">
-                                    Access
-                                </p>
-                            </div>
-                        )}
-                        <section
-                            className={`${
-                                view === "grid"
-                                    ? "grid gap-4 grid-cols-[repeat(auto-fill,_minmax(8rem,_1fr))] md:grid-cols-[repeat(auto-fill,_minmax(12rem,_1fr))]"
-                                    : "flex flex-col"
-                            }`}
-                        >
-                            {view === "grid" && (
-                                <DirectoryItemCard
-                                    content="new folder"
-                                    disabled={isLoadingRefetch}
-                                />
                             )}
-                            {dataChildrenFolders.map(
-                                (folderData: any, index: any) => {
-                                    return (
-                                        <DirectoryItemCard
-                                            disabled={isLoadingRefetch}
-                                            key={index}
-                                            content="folder"
-                                            DirectoryItemData={folderData}
-                                        />
-                                    );
-                                }
-                            )}
-                        </section>
-                        {/* ## LINK */}
-
-                        {view === "grid" && (
-                            <h5 className="text-neutral-400 relative z-10 pt-2 pb-2">
-                                Links
-                            </h5>
-                        )}
-                        <section
-                            className={`${
-                                view === "grid"
-                                    ? "grid gap-4 grid-cols-[repeat(auto-fill,_minmax(8rem,_1fr))] md:grid-cols-[repeat(auto-fill,_minmax(12rem,_1fr))]"
-                                    : "flex-col"
-                            } flex w-full flex-wrap`}
-                        >
-                            {view === "grid" && (
-                                <DirectoryItemCard
-                                    content="new link"
-                                    disabled={isLoadingRefetch}
-                                />
-                            )}
-                            {dataChildrenLinks.map(
-                                (linkData: any, index: any) => {
-                                    return (
-                                        <DirectoryItemCard
-                                            disabled={isLoadingRefetch}
-                                            key={index}
-                                            content="link"
-                                            DirectoryItemData={linkData}
-                                        />
-                                    );
-                                }
-                            )}
-                        </section>
-                    </div>
+                            <section
+                                className={`${
+                                    view === "grid"
+                                        ? "grid gap-4 grid-cols-[repeat(auto-fill,_minmax(8rem,_1fr))] md:grid-cols-[repeat(auto-fill,_minmax(12rem,_1fr))]"
+                                        : "flex-col"
+                                } flex w-full flex-wrap`}
+                            >
+                                {view === "grid" && (
+                                    <DirectoryItemCard
+                                        content="new link"
+                                        disabled={isLoadingRefetch}
+                                    />
+                                )}
+                                {dataChildrenLinks.map(
+                                    (linkData: any, index: any) => {
+                                        return (
+                                            <DirectoryItemCard
+                                                disabled={isLoadingRefetch}
+                                                key={index}
+                                                content="link"
+                                                DirectoryItemData={linkData}
+                                            />
+                                        );
+                                    }
+                                )}
+                            </section>
+                        </div>
+                    )}
                 </div>
                 {/* # header */}
                 {<BrowserHeader isLoadingRefetch={isLoadingRefetch} />}
@@ -284,7 +306,7 @@ export default function Browser({
                 {/* # MODALS */}
                 <NewLinkModal />
                 <NewFolderModal />
-                <ConfirmationModal />
+                <DeleteConfirmationModal />
                 <MoveModal />
                 <RightContext />
                 {/* <KeyboardShortcuts

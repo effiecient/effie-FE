@@ -105,7 +105,7 @@ const RightContextOption = ({ title, onClick }: any) => {
     return (
         <div>
             <button
-                className="hover:bg-neutral-200 text-neutral-900 text-md p-3"
+                className="hover:bg-neutral-200 text-neutral-900 text-md p-3 w-full text-left"
                 onClick={onClick}
             >
                 {title}
