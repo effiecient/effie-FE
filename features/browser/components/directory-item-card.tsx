@@ -1,7 +1,7 @@
-import { useRef } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { FE_BASE_URL, FE_PROTOCOL } from "@/config";
-import { useBrowserStore, useSnackbarStore, useUserStore } from "@/hooks";
+import { useBrowserStore, useUserStore } from "@/hooks";
 import { FolderLinkData } from "@/type";
 import NewFolderIcon from "@/public/icons/new-folder";
 import NewLinkIcon from "@/public/icons/new-link";
@@ -65,6 +65,8 @@ export function DirectoryItemCard({
         ],
         shallow
     );
+
+    const [linkIconExists, setLinkIconExists] = useState(true);
 
     const handleClick = () => {
         if (content === "new folder") {
@@ -223,10 +225,13 @@ export function DirectoryItemCard({
                         {content === "link" || content === "display link" ? (
                             <div className="mr-2 w-1/5">
                                 <Image
-                                    src={`https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${DirectoryItemData?.link}&size=64`}
+                                    src={linkIconExists ? `https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${DirectoryItemData?.link}&size=64` : "/favicon.svg"}
                                     alt="link"
                                     width={28}
                                     height={28}
+                                    onError={() => {
+                                        setLinkIconExists(false);
+                                    }}
                                 />
                             </div>
                         ) : (
