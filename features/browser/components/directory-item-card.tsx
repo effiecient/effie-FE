@@ -72,6 +72,8 @@ export function DirectoryItemCard({
         shallow
     );
 
+    const [linkIconExists, setLinkIconExists] = useState(true);
+
     const handleClick = () => {
         if (content === "new folder") {
             setIsNewFolderModalOpen(true);
@@ -236,10 +238,13 @@ export function DirectoryItemCard({
                         {content === "link" || content === "display link" ? (
                             <div className="mr-2 w-1/5">
                                 <Image
-                                    src={`https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${DirectoryItemData?.link}&size=64`}
+                                    src={linkIconExists ? `https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${DirectoryItemData?.link}&size=64` : "/favicon.svg"}
                                     alt="link"
                                     width={28}
                                     height={28}
+                                    onError={() => {
+                                        setLinkIconExists(false);
+                                    }}
                                 />
                             </div>
                         ) : (
