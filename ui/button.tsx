@@ -39,7 +39,7 @@ export default function Button({
         }`;
         // set on hover
         buttonClassNames += ` ${
-            !disabled && `hover:bg-${type}-${borderMode ? "50" : "500"}`
+            `!disabled:hover:bg-${type}-${borderMode ? "50" : "500"}`
         }`;
     } else if (type === "default") {
         // set color
