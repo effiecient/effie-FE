@@ -94,6 +94,7 @@ colorDict = {
 '''
 type CopyIconProps = {
     className?: string;
+    fillClassName?: string;
 }
 
 export default function CopyIcon({ className } : CopyIconProps) {
@@ -120,10 +121,11 @@ iconName = "".join([word.capitalize() for word in filename.split("/")[-1].split(
 result += f'type {iconName}Props = '
 result += '{\n'
 result += '    className?: string;\n'
+result += '    fillClassName?: string;\n'
 result += '}\n\n'
 
 # COMPONENT
-result += f'export default function {iconName}({{ className }} : {iconName}Props) '
+result += f'export default function {iconName}({{ className, fillClassName }} : {iconName}Props) '
 result += '{\n'
 result += '    return (\n'
 
@@ -133,19 +135,19 @@ for line in lines:
         # Add className
         line = line.replace(">", f' className={{`${{className}}`}}>')
     if 'fill="white"' in line:
-        line = line.replace('fill="white"', f'className="fill-white" fill="white"')
+        line = line.replace('fill="white"', 'className={fillClassName ? fillClassName : "fill-white"} fill="white"')
     if 'fill="black"' in line:
-        line = line.replace('fill="black"', f'className="fill-black" fill="black"')
+        line = line.replace('fill="black"', 'className={fillClassName ? fillClassName : "fill-black"} fill="black"')
     if 'fill="#' in line and not 'className' in line:
         # replace color with colorDict
         color = line.split('fill="#')[1].split('"')[0]
         if color in colorDict:
-            line = line.replace('fill="#', f'className="fill-{colorDict[color]}" fill="#')
+            line = line.replace('fill="#', 'className={fillClassName ? fillClassName : "fill-' + colorDict[color] + '"} fill="#')
     if 'stroke="#' in line and not 'className' in line:
         # replace color with colorDict
         color = line.split('stroke="#')[1].split('"')[0]
         if color in colorDict:
-            line = line.replace('stroke="#', f'className="stroke-{colorDict[color]}" stroke="#')
+            line = line.replace('stroke="#', 'className={fillClassName ? fillClassName : "fill-' + colorDict[color] + '"} stroke="#')
     # replace all snake-case to camelCase
     line = line.replace('clip-path', 'clipPath')
     line = line.replace('clip-rule', 'clipRule')

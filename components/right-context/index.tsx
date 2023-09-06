@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
 type rightContextProps = {
     closeOnOutsideClick?: boolean;
@@ -45,6 +45,7 @@ const RightContext = ({
                     <RightContextOption
                         key={index}
                         title={option.title}
+                        icon={option.icon}
                         onClick={() => {
                             option.onClick();
                             if (closeOnOptionClick) {
@@ -65,6 +66,7 @@ import { shallow } from "zustand/shallow";
 // options is an array of objects with title and onClick
 type option = {
     title: string;
+    icon: React.ReactNode;
     onClick: () => void;
 };
 type options = option[];
@@ -101,16 +103,21 @@ export const useRightContext = () => {
     return { handleRightClick, setOptions };
 };
 
-const RightContextOption = ({ title, onClick }: any) => {
+type RightContextOptionProps = {
+    title: string;
+    icon?: React.ReactNode;
+    onClick: () => void;
+};
+
+const RightContextOption = ({ title, icon, onClick }: RightContextOptionProps) => {
     return (
-        <div>
-            <button
-                className="hover:bg-neutral-200 text-neutral-900 text-md p-3 w-full text-left"
-                onClick={onClick}
-            >
-                {title}
-            </button>
-        </div>
+        <button className="flex gap-2 min-w-[12rem] hover:bg-neutral-200 text-neutral-900 duration-100 py-2 px-4 items-center" onClick={onClick}>
+            <div className="h-full aspect-square">
+                {icon}
+            </div>
+            {/* capitalize first letter */}
+            <p className="text-md text-left text-neutral-900">{title.charAt(0).toUpperCase() + title.slice(1)}</p>
+        </button>
     );
 };
 export default RightContext;
