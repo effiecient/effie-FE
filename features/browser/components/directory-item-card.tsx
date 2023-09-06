@@ -1,16 +1,22 @@
-import { useRef } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { FE_BASE_URL, FE_PROTOCOL } from "@/config";
-import { useBrowserStore, useSnackbarStore, useUserStore } from "@/hooks";
+import { useBrowserStore, useUserStore } from "@/hooks";
 import { FolderLinkData } from "@/type";
+
 import NewFolderIcon from "@/public/icons/new-folder";
 import NewLinkIcon from "@/public/icons/new-link";
-import CopyButton from "../../../components/copy-button";
 import PinIcon from "@/public/icons/pin";
 import DirectoriesIcon from "@/public/icons/directories";
 import LinkIcon from "@/public/icons/link";
+import InfoIcon from "@/public/icons/info";
+import TrashIcon from "@/public/icons/trash";
+
+import CopyButton from "../../../components/copy-button";
 import { useRightContext } from "../../../components/right-context";
 import { shallow } from "zustand/shallow";
+import EditIcon from "@/public/icons/edit";
+import OpenIcon from "@/public/icons/open";
 
 type DirectoryItemCardProps = {
     content:
@@ -124,6 +130,7 @@ export function DirectoryItemCard({
                             setOptions([
                                 {
                                     title: "create new folder",
+                                    icon: <NewFolderIcon fillClassName="fill-neutral-900" />,
                                     onClick: () => {
                                         setIsNewFolderModalOpen(true);
                                     },
@@ -133,6 +140,7 @@ export function DirectoryItemCard({
                             setOptions([
                                 {
                                     title: "create new link",
+                                    icon: <NewLinkIcon fillClassName="fill-neutral-900" />,
                                     onClick: () => {
                                         setIsNewLinkModalOpen(true);
                                     },
@@ -142,10 +150,12 @@ export function DirectoryItemCard({
                             setOptions([
                                 {
                                     title: "open",
+                                    icon: <OpenIcon fillClassName="fill-neutral-900" />,
                                     onClick: handleDoubleClick
                                 },
                                 {
                                     title: "info",
+                                    icon: <InfoIcon fillClassName="fill-neutral-900" />,
                                     onClick: () => {
                                         setFocusedItemData(DirectoryItemData);
                                         setFocusedPathname(pathname);
@@ -155,6 +165,7 @@ export function DirectoryItemCard({
                                 },
                                 {
                                     title: "move",
+                                    icon: <DirectoriesIcon fillClassName="fill-neutral-900" />,
                                     onClick: () => {
                                         setFocusedItemData(DirectoryItemData);
                                         setFocusedPathname(pathname);
@@ -163,6 +174,7 @@ export function DirectoryItemCard({
                                 },
                                 {
                                     title: "delete",
+                                    icon: <TrashIcon fillClassName="fill-neutral-900" />,
                                     onClick: () => {
                                         setFocusedItemData(DirectoryItemData);
                                         setFocusedPathname(pathname);
@@ -171,6 +183,7 @@ export function DirectoryItemCard({
                                 },
                                 {
                                     title: "edit",
+                                    icon: <EditIcon fillClassName="fill-neutral-900" />,
                                     onClick: () => {
                                         setFocusedItemData(DirectoryItemData);
                                         setFocusedPathname(pathname);
