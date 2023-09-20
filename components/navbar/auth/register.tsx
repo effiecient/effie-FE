@@ -9,6 +9,7 @@ import { FIREBASE_CONFIG, BE_BASE_URL, FE_FULL_BASE_URL } from "@/config";
 import { useRouter } from "next/router";
 import { useFetchEffieBE, useSnackbarStore } from "@/hooks";
 import { useState } from "react";
+import { saveToCookie } from "@/helper";
 
 type RegisterProps = {
     isOpen: boolean;
@@ -43,11 +44,11 @@ export default function Register({ isOpen, onClose }: RegisterProps) {
             .then(async (result: any) => {
                 // The signed-in user info.
                 // set user to local storage
-                setToLocalStorage("uid", result.user.uid);
+                saveToCookie("uid", result.user.uid);
 
                 // get id token
-                setToLocalStorage("accessToken", result.user.accessToken);
-                setToLocalStorage("photoURL", result.user.photoURL);
+                saveToCookie("accessToken", result.user.accessToken);
+                saveToCookie("photoURL", result.user.photoURL);
 
                 // now we have uid and accessToken
                 // hit api check (check if uid is associated with username)
