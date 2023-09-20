@@ -5,7 +5,7 @@ import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 import { initializeApp } from "firebase/app";
 
-import { FIREBASE_CONFIG, BE_BASE_URL } from "@/config";
+import { FIREBASE_CONFIG, BE_BASE_URL, FE_FULL_BASE_URL } from "@/config";
 import { useRouter } from "next/router";
 import { useFetchEffieBE, useSnackbarStore } from "@/hooks";
 import { useState } from "react";
@@ -81,7 +81,7 @@ export default function Register({ isOpen, onClose }: RegisterProps) {
             if (!response.data.isRegistered) {
                 // navigate to /createUsername
                 onClose();
-                router.push("/create-username");
+                router.push(`${FE_FULL_BASE_URL}/create-username`);
             } else {
                 // if yes, then error (user already registered)
 
