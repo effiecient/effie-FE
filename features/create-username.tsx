@@ -16,6 +16,7 @@ import { useFetchEffieBE } from "@/hooks";
 import LoadingSVG from "@/components/loading-svg";
 import { useUserStore } from "@/hooks";
 import LoadingAnimation from "@/ui/loading-animation";
+import { getKeyFromCookie } from "@/helper";
 
 export function CreateUsername() {
     const router = useRouter();
@@ -61,8 +62,8 @@ export function CreateUsername() {
             setErrorMessage("Username is not allowed");
             return;
         }
-        const accessToken = localStorage.getItem("accessToken");
-        const uid = localStorage.getItem("uid");
+        const accessToken = getKeyFromCookie("accessToken");
+        const uid = getKeyFromCookie("uid");
         // console.log(accessToken, "\n\n\n", uid, "\n\n\n", username);
         if (!accessToken || !uid || !username) {
             console.error("error");
@@ -86,9 +87,9 @@ export function CreateUsername() {
             if (responseUsername.status === BE_STATUS_SUCCESS) {
                 setIsInputtingUsername(true);
                 setIsDoneCreateUsername(true);
-                const accessToken = localStorage.getItem("accessToken");
-                const uid = localStorage.getItem("uid");
-                const photoURL = localStorage.getItem("photoURL");
+                const accessToken = getKeyFromCookie("accessToken");
+                const uid = getKeyFromCookie("uid");
+                const photoURL = getKeyFromCookie("photoURL");
                 doEffieLogin(accessToken, uid, photoURL);
             } else {
                 setIsInputtingUsername(false);
