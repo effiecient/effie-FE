@@ -46,7 +46,7 @@ export default function GlobalStateSetter({
             <>
                 <div>error: {authResponse.message}</div>
                 <Button>
-                    <Link href={`${FE_FULL_BASE_URL}/about`}>Logout</Link>
+                    <Link href={`${FE_FULL_BASE_URL}/logout`}>Logout</Link>
                 </Button>
             </>
         );
