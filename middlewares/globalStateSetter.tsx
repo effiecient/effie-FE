@@ -5,6 +5,7 @@ import { Button } from "@/ui";
 import { useUserStore } from "@/hooks";
 import { saveToCookie } from "@/helper";
 import { EFFIE_AUTH_TOKEN } from "@/constants";
+import { FE_FULL_BASE_URL } from "@/config";
 
 // set fetched data into zustand store
 export default function GlobalStateSetter({
@@ -45,7 +46,7 @@ export default function GlobalStateSetter({
             <>
                 <div>error: {authResponse.message}</div>
                 <Button>
-                    <Link href="/logout">Logout</Link>
+                    <Link href={`${FE_FULL_BASE_URL}/about`}>Logout</Link>
                 </Button>
             </>
         );
