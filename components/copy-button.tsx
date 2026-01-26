@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import CopyIcon from "@/public/icons/copy";
 import { copyToClipboard, stopEventPropagation } from "@/utils";
+import { useUmamiTracking } from "@/hooks/useUmamiTracking";
 
 type copyButtonProps = {
     effieURL: string;
@@ -10,9 +11,11 @@ type copyButtonProps = {
 
 export default function CopyButton({ effieURL, link, view }: copyButtonProps) {
     const copySuccessRef = useRef<HTMLDivElement>(null);
+    const { trackEvent } = useUmamiTracking();
 
     const copyEffieUrl = (e: any) => {
         stopEventPropagation(e);
+        
         copySuccessRef.current?.classList.remove(
             "opacity-0",
             "-translate-y-1",
@@ -20,6 +23,7 @@ export default function CopyButton({ effieURL, link, view }: copyButtonProps) {
         );
         // add z-30
         copySuccessRef.current?.classList.add("z-30");
+        trackEvent('content_copy', { buttonType: 'copy', buttonText: 'copy' });
         if (!navigator.clipboard) {
             // Fallback to unsupported browsers
             copyToClipboard(effieURL ?? "");
@@ -39,13 +43,14 @@ export default function CopyButton({ effieURL, link, view }: copyButtonProps) {
 
     return (
         <div>
-            <button
+<button
                 className={`${
                     view === "grid"
                         ? "group-hover:opacity-100 opacity-0 translate-x-1 group-hover:translate-x-0 absolute right-0 bottom-0 bg-white rounded-r-xl p-1"
                         : ""
                 }   flex items-end h-full duration-100`}
                 onClick={copyEffieUrl}
+
             >
                 <CopyIcon className="duration-100 h-6 w-6" />
             </button>

@@ -19,6 +19,7 @@ import {
 
 import { EFFIE_AUTH_TOKEN } from "@/constants";
 import { useFetchEffieBE } from "@/hooks";
+import { useUmamiTracking } from "@/hooks/useUmamiTracking";
 type LoginProps = {
     isOpen: boolean;
     onClose: () => void;
@@ -51,9 +52,12 @@ export default function Login({ isOpen, onClose }: LoginProps) {
 
     const [{ isLoading, isError, response }, fetcher] = useFetchEffieBE();
 
+    const { trackEvent } = useUmamiTracking();
+
     const [doneGoogleLogin, setDoneGoogleLogin] = useState(false);
 
     function handleLoginButton() {
+        trackEvent('auth_login', { buttonText: 'Login with Google' });
         signInWithPopup(auth, provider)
             .then((result: any) => {
                 // console.log(result);

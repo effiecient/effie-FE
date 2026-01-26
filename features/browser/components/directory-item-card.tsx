@@ -2,6 +2,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { FE_BASE_URL, FE_PROTOCOL } from "@/config";
 import { useBrowserStore, useUserStore } from "@/hooks";
+import { useUmamiTracking } from "@/hooks/useUmamiTracking";
 import { FolderLinkData } from "@/type";
 
 import NewFolderIcon from "@/public/icons/new-folder";
@@ -72,12 +73,16 @@ export function DirectoryItemCard({
         shallow
     );
 
+    const { trackEvent } = useUmamiTracking();
+
     const [linkIconExists, setLinkIconExists] = useState(true);
 
     const handleClick = () => {
         if (content === "new folder") {
+            trackEvent('content_create', { buttonType: 'folder', buttonText: 'new folder' });
             setIsNewFolderModalOpen(true);
         } else if (content === "new link") {
+            trackEvent('content_create', { buttonType: 'link', buttonText: 'new link' });
             setIsNewLinkModalOpen(true);
         } else if (content === "link" || content === "folder") {
             setFocusedItemData(DirectoryItemData);
@@ -100,6 +105,7 @@ export function DirectoryItemCard({
             setDoRefetch(true);
         } else if (content === "link") {
             // open url in new page
+            trackEvent('link_open', { buttonType: 'link', buttonText: DirectoryItemData?.title || 'link' });
             window.open(DirectoryItemData?.link, "_blank");
         }
     };

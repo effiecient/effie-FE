@@ -13,6 +13,7 @@ import { useBrowserStore, useUserStore } from "@/hooks";
 import { useEffect } from "react";
 import { getKeyFromCookie } from "@/helper";
 
+
 export default function App({ Component, pageProps }: AppProps) {
     const theme = useUserStore((state: any) => state.theme);
 
@@ -35,6 +36,8 @@ const SetGlobalStateFromCookie = ({ children }: any) => {
     const setView = useBrowserStore((state: any) => state.setView);
     const setSortOption = useBrowserStore((state: any) => state.setSortOption);
     const setIsSortAsc = useBrowserStore((state: any) => state.setIsSortAsc);
+    
+
 
     useEffect(() => {
         const theme = getKeyFromCookie("theme");
